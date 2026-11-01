@@ -274,7 +274,7 @@
       promptBox.innerHTML = `<span class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin"></i> Conectando con Gemini...</span>`;
 
       try {
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:generateContent?key=${GEMINI_API_KEY}`;
         
         const response = await fetch(url, {
           method: "POST",
@@ -331,7 +331,7 @@
       evalBox.innerHTML = `<p class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin"></i> Evaluando sintaxis y lógica con Gemini...</p>`;
 
       try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:generateContent?key=${GEMINI_API_KEY}`;
         
         const response = await fetch(url, {
           method: "POST",
