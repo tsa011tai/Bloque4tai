@@ -20,7 +20,6 @@
             sans: ['Montserrat', 'sans-serif'],
           },
           colors: {
-            // Verde Agua Marina personalizado
             aquamarine: {
               50: '#f0fdf4',
               100: '#dcfce7',
@@ -29,7 +28,6 @@
               700: '#0f766e',
               800: '#115e59',
               900: '#134e4a',
-              accent: '#00b4d8'
             }
           }
         }
@@ -96,7 +94,7 @@
           <i class="fa-solid fa-book-open text-teal-600"></i> Temario Oficial TAI (M1-M10)
         </h2>
       </div>
-      <div class="overflow-y-auto flex-1 space-y-2.5 pr-1 text-xs" id="modulesMenu">
+      <div class="overflow-y-auto flex-1 space-y-2 pr-1 text-xs" id="modulesMenu">
         <!-- Generado dinámicamente -->
       </div>
     </div>
@@ -121,7 +119,7 @@
         </div>
       </section>
 
-      <!-- 2º LA CONSOLTA TERMINAL INTERACTIVA -->
+      <!-- 2º LA CONSOLA TERMINAL INTERACTIVA -->
       <section class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-800 flex flex-col">
         <div class="bg-slate-800/80 backdrop-blur px-4 py-2.5 flex items-center justify-between border-b border-slate-700/60">
           <div class="flex items-center gap-2">
@@ -170,7 +168,7 @@
           <h4 class="text-xs font-bold text-slate-700 flex items-center gap-2">
             <i class="fa-solid fa-server text-teal-600"></i> Estado del Sistema Virtual (FHS, Discos y Servicios)
           </h4>
-          <i class="fa-solid fa-chevron-down text-slate-400 text-xs" id="systemStateChevron"></i>
+          <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform" id="systemStateChevron"></i>
         </div>
         <pre id="systemStateContent" class="font-mono text-[11px] text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200 overflow-x-auto shadow-inner max-h-32">/ (root)
 ├── etc/ (passwd, shadow, group, fstab, crontab, security/)
@@ -187,7 +185,7 @@
     let subpuntoActivo = null;
     let ejercicioActualText = "";
 
-    // Temario completo TAI AGE Módulos 1 al 10
+    // Temario completo TAI AGE Módulos 1 al 10 (con LVM, Discos, Cortafuegos, etc.)
     const temarioTAI = [
       {
         id: "m1",
@@ -240,4 +238,510 @@
               <div class="space-y-2">
                 <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Inspeccionar el contenido de ficheros de texto plano en consola sin abrir editores pesados.</p>
                 <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>cat</code> (Concatenate / Concatena y muestra), <code>head</code> (Cabeza/primeras líneas), <code>tail</code> (Cola/últimas líneas), <code>grep</code> (Global Regular Expression Print).</p>
-                <p><strong><i class="fa-solid
+                <p><strong><i class="fa-solid fa-sliders text-teal-600 mr-1"></i> Opciones clave:</strong> <code>tail -f</code> (sigue el fichero en tiempo real, ideal para logs), <code>grep -i</code> (ignora mayúsculas/minúsculas), <code>-v</code> (inierte la selección).</p>
+              </div>
+            `
+          }
+        ]
+      },
+      {
+        id: "m2",
+        titulo: "MÓDULO 2: Usuarios y Grupos",
+        subpuntos: [
+          { 
+            id: "2.1", 
+            nombre: "2.1. Ficheros de Seguridad", 
+            comando: "cat /etc/passwd | cut -d: -f1,3,6",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Analizar los 7 campos delimitados por comas de <code>/etc/passwd</code> (usuario, x, UID, GID, comentario, directorio home, shell) y la seguridad de contraseñas cifradas en <code>/etc/shadow</code>.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>passwd</code> (Password file), <code>shadow</code> (Fichero sombra de seguridad restringida).</p>
+              </div>
+            `
+          },
+          { 
+            id: "2.2", 
+            nombre: "2.2. Gestión de Cuentas", 
+            comando: "useradd -m -s /bin/bash -G sudo teresa",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Creación y modificación de usuarios y grupos del sistema operativo.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>useradd</code> (User Add), <code>usermod</code> (User Modify), <code>groupadd</code> (Group Add).</p>
+                <p><strong><i class="fa-solid fa-sliders text-teal-600 mr-1"></i> Opciones clave:</strong> <code>-m</code> (crea el directorio home si no existe), <code>-s</code> (asigna la shell por defecto), <code>-aG</code> (añade al grupo suplementario sin borrar los anteriores, ¡error muy común en examen!).</p>
+              </div>
+            `
+          }
+        ]
+      },
+      {
+        id: "m3",
+        titulo: "MÓDULO 3: Permisos y Atributos",
+        subpuntos: [
+          { 
+            id: "3.1", 
+            nombre: "3.1. Permisos Octales y Simbólicos", 
+            comando: "chmod 750 /var/www/html && chown -R www-data:www-data",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Controlar el acceso de lectura (4), escritura (2) y ejecución (1) para Usuario (u), Grupo (g) y Otros (o).</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>chmod</code> (Change Mode), <code>chown</code> (Change Owner), <code>chgrp</code> (Change Group).</p>
+              </div>
+            `
+          },
+          { 
+            id: "3.2", 
+            nombre: "3.2. Permisos Especiales (SUID, SGID, Sticky Bit)", 
+            comando: "chmod u+s /usr/bin/passwd && chmod +t /tmp",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> SUID ejecuta el fichero con permisos del propietario (ej. passwd), SGID con permisos del grupo, y el Sticky Bit en <code>/tmp</code> impide que un usuario borre ficheros ajenos.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>Set User ID</code>, <code>Set Group ID</code>, <code>Sticky Bit</code> (Bit pegajoso).</p>
+              </div>
+            `
+          }
+        ]
+      },
+      {
+        id: "m4",
+        titulo: "MÓDULO 4: Scripting, Cron y Backups",
+        subpuntos: [
+          { 
+            id: "4.1", 
+            nombre: "4.1. Redirecciones y Tuberías", 
+            comando: "ps aux | grep apache2 > procesos.txt 2>&1",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Redirigir la salida estándar (<code>></code>, <code>>></code>), errores (<code>2></code>) o concatenar comandos mediante tuberías (<code>|</code>).</p>
+              </div>
+            `
+          },
+          { 
+            id: "4.2", 
+            nombre: "4.2. Tareas Programadas Cron", 
+            comando: "crontab -e",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Automatización de scripts y tareas del sistema mediante 5 campos temporales: Minuto Hora DíaMes Mes DíaSemana.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>cron</code> (Cronos / Tiempo).</p>
+              </div>
+            `
+          },
+          { 
+            id: "4.3", 
+            nombre: "4.3. Empaquetado tar y rsync", 
+            comando: "tar -czvf backup.tar.gz /etc",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Agrupar ficheros sin comprimir (tar) y comprimir con gzip o bzip2.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>tar</code> (Tape Archive / Archivo de cinta), <code>c</code> (create), <code>z</code> (gzip), <code>v</code> (verbose), <code>f</code> (file).</p>
+              </div>
+            `
+          }
+        ]
+      },
+      {
+        id: "m5",
+        titulo: "MÓDULO 5: Procesos y Systemd",
+        subpuntos: [
+          { 
+            id: "5.1", 
+            nombre: "5.1. Inspección y Señales", 
+            comando: "ps -ef | grep nginx && kill -15 <PID>",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Monitorear procesos en ejecución (PID, PPID) y enviar señales de control (SIGTERM 15, SIGKILL 9, SIGHUP 1).</p>
+              </div>
+            `
+          },
+          { 
+            id: "5.2", 
+            nombre: "5.2. Control con Systemctl", 
+            comando: "systemctl status nginx --no-pager",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Administrar servicios del sistema (start, stop, restart, enable, disable).</p>
+              </div>
+            `
+          }
+        ]
+      },
+      {
+        id: "m6",
+        titulo: "MÓDULO 6: Redes y Logs",
+        subpuntos: [
+          { 
+            id: "6.1", 
+            nombre: "6.1. Configuración IP y Puertos", 
+            comando: "ip a && ss -tulpn",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Gestionar interfaces de red con iproute2 (<code>ip</code>) y auditar puertos abiertos y sockets escuchando en el sistema (<code>ss</code>).</p>
+              </div>
+            `
+          },
+          { 
+            id: "6.2", 
+            nombre: "6.2. Auditoría con Journalctl", 
+            comando: "journalctl -u ssh -f",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Consultar y filtrar los registros centralizados del sistema (systemd-journald).</p>
+              </div>
+            `
+          }
+        ]
+      },
+      {
+        id: "m7",
+        titulo: "MÓDULO 7: Paquetes y Repositorios",
+        subpuntos: [
+          { 
+            id: "7.1", 
+            nombre: "7.1. Debian (dpkg / apt)", 
+            comando: "apt update && apt install apache2",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Gestión de paquetes .deb en sistemas Debian/Ubuntu. <code>dpkg</code> opera a bajo nivel offline y <code>apt</code> gestiona dependencias online.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>dpkg</code> (Debian Package), <code>apt</code> (Advanced Packaging Tool).</p>
+              </div>
+            `
+          },
+          { 
+            id: "7.2", 
+            nombre: "7.2. RedHat (rpm / dnf)", 
+            comando: "dnf install httpd -y",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Gestión de paquetes RPM en distribuciones Enterprise Linux (RHEL, Rocky, Fedora).</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>rpm</code> (RPM Package Manager), <code>dnf</code> (Dandified YUM).</p>
+              </div>
+            `
+          }
+        ]
+      },
+      {
+        id: "m8",
+        titulo: "MÓDULO 8: Discos y Particiones",
+        subpuntos: [
+          { 
+            id: "8.1", 
+            nombre: "8.1. Estructura y Particionado", 
+            comando: "lsblk && fdisk -l",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Listar bloques de almacenamiento (lsblk), UUIDs (blkid) y particionar discos con fdisk o parted.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>lsblk</code> (List Block Devices), <code>fdisk</code> (Fixed Disk).</p>
+              </div>
+            `
+          },
+          { 
+            id: "8.2", 
+            nombre: "8.2. Montaje y fstab", 
+            comando: "mount /dev/sdb1 /mnt/datos && cat /etc/fstab",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Conectar sistemas de archivos al árbol de directorios (<code>mount</code>, <code>umount</code>) y configurar su persistencia automática en el arranque en <code>/etc/fstab</code>.</p>
+              </div>
+            `
+          }
+        ]
+      },
+      {
+        id: "m9",
+        titulo: "MÓDULO 9: LVM y Swap",
+        subpuntos: [
+          { 
+            id: "9.1", 
+            nombre: "9.1. Logical Volume Manager (LVM)", 
+            comando: "pvcreate /dev/sdb1 && vgcreate vg_datos /dev/sdb1 && lvcreate -L 10G -n lv_app vg_datos",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Gestión de almacenamiento lógico flexible en tres capas: Volúmenes Físicos (PV), Grupos de Volúmenes (VG) y Volúmenes Lógicos (LV). Permite redimensionar particiones en caliente.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>pvcreate</code> (Physical Volume Create), <code>vgcreate</code> (Volume Group Create), <code>lvcreate</code> (Logical Volume Create).</p>
+                <div class="p-3 bg-teal-50/80 rounded-xl border border-teal-100 text-teal-900 text-[11px]">
+                  <strong>💡 Nota de examen AGE:</strong> Tras ampliar un volumen lógico con <code>lvextend -L +5G /dev/vg_datos/lv_app</code>, no olvides redimensionar el sistema de archivos con <code>resize2fs</code> (si es ext4) o <code>xfs_growfs</code> (si es xfs). ¡Pregunta fija de examen práctico!
+                </div>
+              </div>
+            `
+          },
+          { 
+            id: "9.2", 
+            nombre: "9.2. Memoria de Intercambio (Swap)", 
+            comando: "mkswap /dev/sdb2 && swapon /dev/sdb2",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Habilitar espacio de intercambio en disco para aliviar la memoria RAM física.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>mkswap</code> (Make Swap), <code>swapon</code> (Swap On).</p>
+              </div>
+            `
+          }
+        ]
+      },
+      {
+        id: "m10",
+        titulo: "MÓDULO 10: Cortafuegos y SSH",
+        subpuntos: [
+          { 
+            id: "10.1", 
+            nombre: "10.1. Filtrado iptables y UFW", 
+            comando: "iptables -A INPUT -p tcp --dport 22 -j ACCEPT",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Configurar reglas de filtrado de paquetes a nivel de núcleo con iptables o mediante la interfaz simplificada UFW (Uncomplicated Firewall).</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>iptables</code> (IP Tables), <code>ACCEPT</code> (Aceptar), <code>DROP</code> (Descartar).</p>
+              </div>
+            `
+          },
+          { 
+            id: "10.2", 
+            nombre: "10.2. Acceso Remoto Seguro SSH", 
+            comando: "ssh-keygen -t rsa -b 4096 && ssh teresa@servidor",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Establecer conexiones cifradas seguras y autenticación mediante pares de claves pública/privada.</p>
+              </div>
+            `
+          }
+        ]
+      }
+    ];
+
+    // Inicialización al cargar el DOM
+    window.addEventListener("DOMContentLoaded", () => {
+      if (GEMINI_API_KEY) {
+        document.getElementById("apiKeyInput").value = GEMINI_API_KEY;
+      }
+      renderMenu();
+    });
+
+    function guardarKey() {
+      const k = document.getElementById("apiKeyInput").value.trim();
+      if (k) {
+        localStorage.setItem("gemini_api_key", k);
+        GEMINI_API_KEY = k;
+        alert("¡Clave API guardada con éxito en tu navegador!");
+      } else {
+        alert("Introduce una clave válida antes de guardar.");
+      }
+    }
+
+    // Renderizar menú lateral con acordeones desplegables
+    function renderMenu() {
+      const menuContainer = document.getElementById("modulesMenu");
+      menuContainer.innerHTML = "";
+      
+      temarioTAI.forEach((m) => {
+        const modEl = document.createElement("div");
+        modEl.className = "mb-2 border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50";
+        
+        const contentId = `mod_content_${m.id}`;
+        
+        modEl.innerHTML = `
+          <button onclick="toggleModulo('${contentId}', '${m.id}')" class="w-full text-left font-bold text-slate-700 bg-slate-100 hover:bg-teal-50 p-2.5 rounded-t-xl flex justify-between items-center transition text-xs">
+            <span class="truncate">${m.titulo}</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="chevron_${m.id}"></i>
+          </button>
+          <div id="${contentId}" class="space-y-1 p-2 bg-white hidden border-t border-slate-100"></div>
+        `;
+        
+        menuContainer.appendChild(modEl);
+        
+        // Rellenar subpuntos
+        const subList = document.getElementById(contentId);
+        m.subpuntos.forEach(s => {
+          const btn = document.createElement("button");
+          btn.className = "w-full text-left p-1.5 rounded-lg hover:bg-teal-50 hover:text-teal-800 text-[11px] block transition text-slate-600 font-medium";
+          btn.innerText = s.nombre;
+          btn.onclick = () => seleccionarSubpunto(s);
+          subList.appendChild(btn);
+        });
+      });
+    }
+
+    function toggleModulo(contentId, modId) {
+      const el = document.getElementById(contentId);
+      const chevron = document.getElementById(`chevron_${modId}`);
+      if (el.classList.contains("hidden")) {
+        el.classList.remove("hidden");
+        chevron.style.transform = "rotate(180deg)";
+      } else {
+        el.classList.add("hidden");
+        chevron.style.transform = "rotate(0deg)";
+      }
+    }
+
+    function toggleMobileMenu() {
+      const sidebar = document.getElementById("sidebarMenu");
+      const icon = document.getElementById("mobileMenuIcon");
+      if (sidebar.classList.contains("hidden")) {
+        sidebar.classList.remove("hidden");
+        icon.classList.remove("fa-bars");
+        icon.classList.add("fa-xmark");
+      } else {
+        sidebar.classList.add("hidden");
+        icon.classList.remove("fa-xmark");
+        icon.classList.add("fa-bars");
+      }
+    }
+
+    function toggleSystemState() {
+      const content = document.getElementById("systemStateContent");
+      const chevron = document.getElementById("systemStateChevron");
+      if (content.classList.contains("hidden")) {
+        content.classList.remove("hidden");
+        chevron.style.transform = "rotate(0deg)";
+      } else {
+        content.classList.add("hidden");
+        chevron.style.transform = "rotate(180deg)";
+      }
+    }
+
+    function seleccionarSubpunto(sub) {
+      subpuntoActivo = sub;
+      
+      // 1º Sección superior: Teoría Enriquecida
+      document.getElementById("theoryTitle").innerHTML = `
+        <i class="fa-solid fa-graduation-cap text-teal-600 text-base"></i> 
+        <span>${sub.nombre}</span>
+      `;
+      document.getElementById("theoryContent").innerHTML = `
+        <div class="mb-2 p-2.5 bg-slate-900 text-emerald-400 font-mono rounded-xl text-xs flex items-center justify-between shadow-inner">
+          <span>$ ${sub.comando}</span>
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider">Sintaxis TAI</span>
+        </div>
+        ${sub.teoria}
+      `;
+      
+      // En móvil, ocultar el menú lateral tras seleccionar
+      if (window.innerWidth < 768) {
+        toggleMobileMenu();
+      }
+
+      pedirNuevoEjercicio();
+    }
+
+    function limpiarTerminal() {
+      document.getElementById("terminalOutput").innerHTML = '<div class="text-teal-400">Terminal limpia. Listo para nuevos comandos.</div>';
+    }
+
+    async function pedirNuevoEjercicio() {
+      const promptBox = document.getElementById("exercisePrompt");
+      
+      if (!subpuntoActivo) {
+        promptBox.innerText = "¡Selecciona primero un tema del menú de la izquierda para que pueda prepararte el ejercicio!";
+        return;
+      }
+      
+      GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
+      if (!GEMINI_API_KEY) {
+        promptBox.innerText = "Por favor, introduce y guarda tu clave API de Gemini arriba a la derecha para activar al preparador.";
+        return;
+      }
+
+      promptBox.innerHTML = `<span class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Preparando caso práctico sobre ${subpuntoActivo.nombre}...</span>`;
+
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `Eres un preparador de oposiciones TAI (Informática AGE) muy cercano, empático, amable y motivador con tu alumna Teresa. Plantéale UN ÚNICO caso práctico o pregunta de examen muy realista sobre: '${subpuntoActivo.nombre}' (Teoría base: ${subpuntoActivo.teoria}). 
+                Háblale de tú a tú, con tono de apoyo y cariño, sin ser un examinador robótico, pero manteniendo el rigor técnico y el formato de los exámenes oficiales de la AGE. Pídele que escriba el comando exacto en su terminal virtual.`
+              }]
+            }]
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.candidates && data.candidates[0]) {
+          ejercicioActualText = data.candidates[0].content.parts[0].text;
+          promptBox.innerText = ejercicioActualText;
+          document.getElementById("aiEvaluation").innerHTML = `<p class="italic text-slate-400">Escribe tu comando en la consola superior y pulsa Ejecutar para que lo revise contigo.</p>`;
+        } else {
+          promptBox.innerText = `Error de API: ${data.error?.message || "La clave es inválida o fue rechazada."}`;
+        }
+      } catch (e) {
+        promptBox.innerText = "Error de red al conectar con el preparador IA.";
+      }
+    }
+
+    async function ejecutarComando(e) {
+      e.preventDefault();
+      const input = document.getElementById("commandInput");
+      const cmd = input.value.trim();
+      if (!cmd) return;
+
+      const output = document.getElementById("terminalOutput");
+      output.innerHTML += `<div><span class="text-teal-400 font-bold">teresa@ordenador:~$</span> ${cmd}</div>`;
+      input.value = "";
+      output.scrollTop = output.scrollHeight;
+
+      evaluarComandoConIA(cmd);
+    }
+
+    async function evaluarComandoConIA(comando) {
+      GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
+      const evalBox = document.getElementById("aiEvaluation");
+      
+      if (!GEMINI_API_KEY) {
+        evalBox.innerHTML = `<p class="text-rose-500">Introduce tu clave API arriba y pulsa Guardar.</p>`;
+        return;
+      }
+
+      evalBox.innerHTML = `<p class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Analizando tu comando con cariño y rigor técnico...</p>`;
+
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `Eres un preparador de oposiciones TAI (AGE) muy amable, cercano y de confianza que ayuda a Teresa. 
+                Enunciado del ejercicio que le propusiste: "${ejercicioActualText}".
+                Comando que acaba de escribir Teresa en su consola: "${comando}".
+                Evalúalo con tono cálido, humano y constructivo (como un buen tutor):
+                1. ¿Es CORRECTO o hay que pulir algo? (Díselo con claridad y alegría si está bien).
+                2. Explícale detalladamente el porqué técnico, el significado de las opciones usadas y su equivalente nemotécnico.
+                3. Dale ánimos personalizados para su estudio diario hacia la plaza.`
+              }]
+            }]
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.candidates && data.candidates[0]) {
+          const text = data.candidates[0].content.parts[0].text;
+          evalBox.innerHTML = `<div class="prose text-xs text-slate-700 leading-relaxed">${text.replace(/\n/g, '<br>')}</div>`;
+        } else {
+          evalBox.innerHTML = `<p class="text-rose-500">Error de API: ${data.error?.message || "La clave es inválida o fue rechazada."}</p>`;
+        }
+      } catch (e) {
+        evalBox.innerHTML = `<p class="text-rose-500">Error de red en la evaluación del comando.</p>`;
+      }
+    }
+
+    async function iniciarExamenGlobal() {
+      subpuntoActivo = { nombre: "EXAMEN GLOBAL TAI (M1-M10)", teoria: "Repaso integral de todo el temario Linux AGE" };
+      document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-graduation-cap text-teal-600 text-base"></i> <span>MODO EXAMEN GLOBAL (M1 al M10)</span>`;
+      document.getElementById("theoryContent").innerHTML = `
+        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs">
+          <strong>Modo de Máxima Exigencia:</strong> Se generarán preguntas cruzadas de cualquier módulo del temario oficial (Permisos, LVM, Redes, FHS, Procesos, Cortafuegos...). ¡A por todas!
+        </div>
+      `;
+      if (window.innerWidth < 768) {
+        toggleMobileMenu();
+      }
+      pedirNuevoEjercicio();
+    }
+  </script>
+</body>
+</html>
