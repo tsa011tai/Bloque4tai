@@ -150,7 +150,7 @@
       <section class="bg-white border-2 border-teal-200 rounded-2xl p-5 shadow-sm">
         <div class="flex justify-between items-center mb-3">
           <h3 class="text-xs font-bold text-teal-900 flex items-center gap-2 uppercase tracking-wide">
-            <i class="fa-solid fa-check-double text-teal-600"></i> Evaluación y Feedback (Gemini 1.5 Flash)
+            <i class="fa-solid fa-check-double text-teal-600"></i> Evaluación y Feedback (Gemini 3.1 Flash Lite)
           </h3>
           <span id="evalBadge" class="hidden text-[10px] px-2 py-1 rounded-full font-bold text-white uppercase tracking-wider"></span>
         </div>
@@ -358,17 +358,19 @@
       return text.replace(/```(?:html)?/gi, '').replace(/```/g, '').trim();
     }
 
+    // --- CONEXIONES API GEMINI 3.1 FLASH LITE ---
+
     async function pedirNuevoEjercicio() {
       const promptBox = document.getElementById("exercisePrompt");
       if (!subpuntoActivo || !GEMINI_API_KEY) {
-        promptBox.innerText = "Falta seleccionar un módulo o guardar tu API Key de Gemini (empieza por AIzaSy...).";
+        promptBox.innerText = "Falta seleccionar un módulo o guardar tu API Key de Gemini.";
         return;
       }
 
       promptBox.innerHTML = `<span class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Generando ejercicios 1/5...</span>`;
       
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -390,9 +392,9 @@
           ejercicioActualText = cleanRegEx(data.candidates[0].content.parts[0].text);
           promptBox.innerHTML = ejercicioActualText;
         } else {
-          promptBox.innerText = "Error de API: " + (data.error?.message || "Comprueba que tu clave API sea válida.");
+          promptBox.innerText = "Error de API: " + (data.error?.message || "Comprueba tu clave API.");
         }
-      } catch (e) { promptBox.innerText = "Fallo de red al conectar con el servidor."; }
+      } catch (e) { promptBox.innerText = "Fallo de conexión. Comprueba tu red o la cuota de la API."; }
     }
 
     async function ejecutarComando(e) {
@@ -421,7 +423,7 @@
       badge.classList.add("hidden");
 
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -466,7 +468,7 @@
       if (!subpuntoActivo || !GEMINI_API_KEY) return;
       evalBox.innerHTML = `<p class="text-amber-600 animate-pulse"><i class="fa-solid fa-lightbulb fa-fade mr-2"></i> Solicitando pista al preparador (sin penalizar expediente)...</p>`;
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -478,6 +480,7 @@
       } catch (e) { evalBox.innerHTML = "Error al solicitar pista."; }
     }
 
+    // --- DASHBOARD EXPEDIENTE ---
     function toggleExpediente() {
       const modal = document.getElementById("expedienteModal");
       modal.classList.toggle("hidden");
@@ -543,6 +546,7 @@
       }
     }
 
+    // --- SIMULACRO OFICIAL ---
     function iniciarExamenGlobal() {
       subpuntoActivo = { nombre: "SIMULACRO GLOBAL C1", teoria: "Repaso integral y agresivo de los 10 módulos. Detección de trampas cruzadas." };
       currentModuleId = "m1"; 
@@ -553,7 +557,7 @@
       timerUI.classList.remove("hidden");
       
       clearInterval(timerInterval);
-      let time = 1800;
+      let time = 1800; // 30 min
       timerInterval = setInterval(() => {
         time--;
         const m = Math.floor(time/60).toString().padStart(2,'0');
