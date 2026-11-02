@@ -4,139 +4,180 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Laboratorio TAI AGE - Linux SysAdmin</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .silver-border { border-color: #cbd5e1; }
-    .silver-bg { background-color: #f8fafc; }
-  </style>
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif'],
+          },
+          colors: {
+            // Verde Agua Marina personalizado
+            aquamarine: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+              accent: '#00b4d8'
+            }
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-white text-slate-800 font-sans min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
 
-  <!-- Header -->
-  <header class="border-b-2 border-slate-300 bg-slate-50 p-4 shadow-sm">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-3">
-        <div class="p-2.5 bg-teal-700 text-white rounded-lg shadow">
-          <i class="fa-solid fa-terminal text-2xl"></i>
+  <!-- Header Institucional / Académico -->
+  <header class="border-b border-slate-200 bg-white shadow-sm sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+      
+      <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+        <div class="flex items-center gap-3">
+          <div class="p-2.5 bg-teal-600 text-white rounded-xl shadow-md">
+            <i class="fa-solid fa-terminal text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-lg md:text-xl font-bold text-slate-900 tracking-tight">Academia TAI AGE</h1>
+            <p class="text-[11px] text-teal-700 font-semibold uppercase tracking-wider">Laboratorio de Linux SysAdmin (Módulos 1 al 10)</p>
+          </div>
         </div>
-        <div>
-          <h1 class="text-2xl font-bold text-teal-800 tracking-tight">Academia TAI AGE - Laboratorio de Linux</h1>
-          <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Módulos 1 al 6: De Fundamentos a Administración Avanzada</p>
-        </div>
+        <!-- Botón menú móvil para desplegar temario -->
+        <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-600 hover:text-teal-700 focus:outline-none">
+          <i class="fa-solid fa-bars text-xl" id="mobileMenuIcon"></i>
+        </button>
       </div>
 
-      <!-- Configuración Token API & Examen -->
-      <div class="flex flex-wrap items-center gap-2">
-        <button onclick="iniciarExamenGlobal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-3 py-2 rounded font-semibold transition flex items-center gap-1 shadow-sm">
-          <i class="fa-solid fa-graduation-cap"></i> Modo Examen TAI
+      <!-- Configuración Token API & Examen Global -->
+      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+        <button onclick="iniciarExamenGlobal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-3.5 py-2 rounded-lg font-semibold transition flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-graduation-cap"></i> Modo Examen Global
         </button>
-        <div class="flex items-center gap-2 bg-white p-1.5 rounded-lg border border-slate-300 shadow-inner">
-          <i class="fa-solid fa-key text-slate-400 pl-1"></i>
-          <input type="password" id="apiKeyInput" placeholder="Pega tu API Key de Gemini..." class="text-xs p-1 outline-none w-44 md:w-56 text-slate-700" />
-          <button onclick="guardarKey()" class="bg-teal-700 hover:bg-teal-800 text-white text-xs px-3 py-1 rounded font-medium transition">Guardar</button>
+        <div class="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-200 shadow-inner">
+          <i class="fa-solid fa-key text-slate-400 pl-2 text-xs"></i>
+          <input type="password" id="apiKeyInput" placeholder="Pega tu API Key de Gemini..." class="text-xs p-1 bg-transparent outline-none w-36 md:w-48 text-slate-700 font-medium" />
+          <button onclick="guardarKey()" class="bg-teal-600 hover:bg-teal-700 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow-sm">Guardar</button>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Prompt Banner -->
-  <section class="max-w-7xl mx-auto w-full p-4 pb-0">
-    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-wrap justify-between items-center text-xs">
-      <div class="font-mono bg-slate-900 text-white px-3 py-1.5 rounded shadow-inner">
+  <!-- Prompt Banner Informativo -->
+  <section class="max-w-7xl mx-auto w-full px-4 pt-3">
+    <div class="bg-white border border-slate-200 rounded-xl p-3 flex flex-wrap justify-between items-center text-xs shadow-sm">
+      <div class="font-mono bg-slate-900 text-white px-3 py-1.5 rounded-lg shadow-inner">
         <span class="text-emerald-400 font-bold">teresa</span><span class="text-slate-400">@</span><span class="text-cyan-400 font-bold">ordenador</span><span class="text-slate-300">:</span><span class="text-amber-400 font-bold">~</span><span class="text-slate-200 font-bold">$</span>
       </div>
       <div class="flex gap-4 text-slate-600 font-medium mt-2 sm:mt-0">
-        <span><i class="fa-solid fa-folder text-teal-600"></i> FHS Activo: <strong id="currentDirText">/home/teresa</strong></span>
-        <span><i class="fa-solid fa-user-shield text-teal-600"></i> Modo: <strong class="text-slate-800">Preparación AGE C1</strong></span>
+        <span><i class="fa-solid fa-folder text-teal-600 mr-1"></i> Directorio: <strong id="currentDirText" class="text-slate-800">/home/teresa</strong></span>
+        <span><i class="fa-solid fa-shield-halved text-teal-600 mr-1"></i> Perfil: <strong class="text-slate-800">Cuerpo de Técnicos Auxiliares de Informática AGE</strong></span>
       </div>
     </div>
   </section>
 
-  <!-- Cuerpo Principal -->
-  <main class="max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+  <!-- Cuerpo Principal (Grid asimétrico adaptativo) -->
+  <main class="max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1">
     
-    <!-- Navegación de Temario (3 columnas) -->
-    <div class="lg:col-span-3 bg-slate-50 border border-slate-200 rounded-xl p-4 shadow-sm flex flex-col max-h-[750px]">
-      <h2 class="text-sm font-bold text-teal-800 mb-3 flex items-center gap-2">
-        <i class="fa-solid fa-book-open text-teal-600"></i> Temario Oficial TAI
-      </h2>
-      <div class="overflow-y-auto flex-1 space-y-2 pr-1 text-xs" id="modulesMenu">
+    <!-- Navegación Lateral (3 columnas) - Desplegable en móvil -->
+    <div id="sidebarMenu" class="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col max-h-[750px] hidden md:flex transition-all">
+      <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
+        <h2 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-book-open text-teal-600"></i> Temario Oficial TAI (M1-M10)
+        </h2>
+      </div>
+      <div class="overflow-y-auto flex-1 space-y-2.5 pr-1 text-xs" id="modulesMenu">
         <!-- Generado dinámicamente -->
       </div>
     </div>
 
-    <!-- Terminal & Consola (5 columnas) -->
-    <div class="lg:col-span-5 flex flex-col gap-4">
+    <!-- Panel Derecho Organizado Requerido (9 columnas) -->
+    <div class="lg:col-span-9 flex flex-col gap-5">
       
-      <!-- Consola Terminal -->
-      <div class="bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-700 flex flex-col h-[450px]">
-        <div class="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700">
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
-            <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
-            <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
-            <span class="text-xs font-mono text-slate-400 ml-2">bash - teresa@ordenador</span>
-          </div>
-          <button onclick="limpiarTerminal()" class="text-slate-400 hover:text-white text-xs">Limpiar</button>
+      <!-- 1º SECCIÓN DE TEORÍA ENRIQUECIDA (Arriba del todo) -->
+      <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
+          <h3 id="theoryTitle" class="text-sm font-bold text-teal-900 flex items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-teal-600 text-base"></i> 
+            <span>Selecciona un tema del temario izquierdo para empezar</span>
+          </h3>
+          <span class="text-[10px] bg-teal-50 text-teal-700 px-2.5 py-1 rounded-full font-semibold border border-teal-200">Guía Nemotécnica Oficial</span>
         </div>
         
-        <div id="terminalOutput" class="p-4 font-mono text-xs overflow-y-auto flex-1 space-y-1.5 text-slate-200">
-          <div class="text-emerald-400">Entorno listo. Selecciona un subpunto del temario o pulsa "Modo Examen".</div>
+        <div id="theoryContent" class="text-xs text-slate-700 space-y-3 leading-relaxed">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-slate-500 italic">
+            Aquí encontrarás la explicación detallada de cada comando, sus opciones clave, su traducción y etimología en inglés para que no se te olvide jamás en el examen tipo test, y el razonamiento técnico de su uso en la Administración General del Estado.
+          </div>
+        </div>
+      </section>
+
+      <!-- 2º LA CONSOLTA TERMINAL INTERACTIVA -->
+      <section class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-800 flex flex-col">
+        <div class="bg-slate-800/80 backdrop-blur px-4 py-2.5 flex items-center justify-between border-b border-slate-700/60">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-rose-500 inline-block shadow-sm"></span>
+            <span class="w-3 h-3 rounded-full bg-amber-400 inline-block shadow-sm"></span>
+            <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block shadow-sm"></span>
+            <span class="text-xs font-mono text-slate-400 ml-2 font-medium">bash - teresa@ordenador:~</span>
+          </div>
+          <button onclick="limpiarTerminal()" class="text-slate-400 hover:text-white text-xs font-medium px-2 py-1 rounded hover:bg-slate-700 transition">Limpiar Consola</button>
+        </div>
+        
+        <div id="terminalOutput" class="p-4 font-mono text-xs overflow-y-auto h-48 space-y-1.5 text-slate-200">
+          <div class="text-teal-400 font-medium">✨ Terminal virtual inicializada. Escribe el comando que te pida el ejercicio o prueba tus propias órdenes.</div>
         </div>
 
-        <form onsubmit="ejecutarComando(event)" class="bg-slate-950 p-2 border-t border-slate-800 flex items-center gap-2">
-          <span class="text-emerald-400 font-mono text-xs pl-2">teresa@ordenador:~$</span>
-          <input type="text" id="commandInput" class="bg-transparent text-white font-mono text-xs outline-none flex-1" placeholder="Escribe el comando del ejercicio..." autocomplete="off"/>
-          <button type="submit" class="bg-teal-700 text-white text-xs px-3 py-1 rounded hover:bg-teal-600 transition">Enviar</button>
+        <form onsubmit="ejecutarComando(event)" class="bg-slate-950 p-2.5 border-t border-slate-800 flex items-center gap-2">
+          <span class="text-teal-400 font-mono text-xs pl-2 font-bold">teresa@ordenador:~$</span>
+          <input type="text" id="commandInput" class="bg-transparent text-white font-mono text-xs outline-none flex-1 placeholder:text-slate-600" placeholder="Ej: chmod 755 /var/www/html..." autocomplete="off"/>
+          <button type="submit" class="bg-teal-600 text-white text-xs px-4 py-1.5 rounded-lg hover:bg-teal-700 transition font-medium shadow-sm">Ejecutar</button>
         </form>
-      </div>
+      </section>
 
-      <!-- Visor de Árbol / Sistema -->
-      <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm flex-1">
-        <h3 class="text-xs font-bold text-teal-800 mb-1 flex items-center gap-2">
-          <i class="fa-solid fa-network-wired text-teal-600"></i> Estado del Sistema Virtual
-        </h3>
-        <pre id="systemStateView" class="font-mono text-[11px] text-slate-700 bg-white p-2.5 rounded border border-slate-200 overflow-x-auto shadow-inner max-h-40">/ (root)
-├── etc/ (passwd, shadow, group)
-├── home/teresa/
-└── var/log/ (syslog, auth.log)</pre>
-      </div>
-
-    </div>
-
-    <!-- Panel Teórico & Tutor Evaluador IA (4 columnas) -->
-    <div class="lg:col-span-4 flex flex-col gap-4">
-      
-      <!-- Panel de Teoría Activa -->
-      <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 shadow-sm h-64 overflow-y-auto">
-        <h3 class="text-xs font-bold text-teal-800 mb-2 flex items-center justify-between" id="theoryTitle">
-          <span><i class="fa-solid fa-graduation-cap text-teal-600"></i> Teoría del Subpunto</span>
-        </h3>
-        <div id="theoryContent" class="text-xs text-slate-600 space-y-2">
-          <p class="italic text-slate-400">Selecciona un tema a la izquierda para cargar la teoría técnica y las opciones de examen.</p>
-        </div>
-      </div>
-
-      <!-- Feedback e Interacción Gemini IA -->
-      <div class="bg-white border-2 border-teal-200 rounded-xl p-4 shadow-sm flex-1 flex flex-col min-h-[300px]">
-        <div class="flex justify-between items-center mb-2">
-          <h3 class="text-xs font-bold text-teal-800 flex items-center gap-2">
-            <i class="fa-solid fa-user-ninja text-teal-600"></i> Preparador IA (Corrección TAI)
+      <!-- 3º EL EJERCICIO DE GEMINI (Tono humano, amable, empático y de apoyo) -->
+      <section class="bg-white border-2 border-teal-200 rounded-2xl p-5 shadow-sm flex flex-col">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-xs font-bold text-teal-900 flex items-center gap-2 uppercase tracking-wide">
+            <i class="fa-solid fa-mug-hot text-teal-600 text-sm"></i> Tu Preparador Personal de TAI
           </h3>
-          <button onclick="pedirNuevoEjercicio()" class="text-[11px] bg-teal-50 text-teal-700 px-2 py-0.5 rounded border border-teal-200 hover:bg-teal-100">
-            Siguiente Ejercicio
+          <button onclick="pedirNuevoEjercicio()" class="text-xs bg-teal-50 text-teal-700 px-3 py-1.5 rounded-xl border border-teal-200 hover:bg-teal-100 font-semibold transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-arrow-rotate-right"></i> Siguiente Ejercicio
           </button>
         </div>
         
-        <div id="exercisePrompt" class="bg-slate-100 p-2.5 rounded text-xs font-semibold text-slate-800 mb-3 border-l-4 border-teal-600">
-          Carga un tema para recibir tu primer reto práctico.
+        <div id="exercisePrompt" class="bg-teal-50/60 p-3.5 rounded-xl text-xs font-medium text-slate-800 mb-4 border-l-4 border-teal-600 leading-relaxed">
+          ¡Hola Teresa! Elige un tema del menú de la izquierda y te plantearé un caso práctico estupendo para ir practicando sin presión. ¡Vamos a por esa plaza! 💪
         </div>
 
-        <div id="aiEvaluation" class="text-xs text-slate-600 overflow-y-auto flex-1 bg-slate-50 p-3 rounded border border-slate-200 space-y-2">
-          <p class="italic text-slate-400">Aquí recibirás la corrección detallada de tu comando enviada por la IA.</p>
+        <div id="aiEvaluation" class="text-xs text-slate-700 overflow-y-auto max-h-60 bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 leading-relaxed">
+          <p class="italic text-slate-400">Aquí aparecerá la corrección detallada y cercana de tu preparador en cuanto escribas un comando en la consola superior.</p>
         </div>
-      </div>
+      </section>
+
+      <!-- ESTADO DEL SISTEMA VIRTUAL (Abajo del todo, discreto y recogido) -->
+      <section class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+        <div class="flex justify-between items-center mb-2 cursor-pointer" onclick="toggleSystemState()">
+          <h4 class="text-xs font-bold text-slate-700 flex items-center gap-2">
+            <i class="fa-solid fa-server text-teal-600"></i> Estado del Sistema Virtual (FHS, Discos y Servicios)
+          </h4>
+          <i class="fa-solid fa-chevron-down text-slate-400 text-xs" id="systemStateChevron"></i>
+        </div>
+        <pre id="systemStateContent" class="font-mono text-[11px] text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200 overflow-x-auto shadow-inner max-h-32">/ (root)
+├── etc/ (passwd, shadow, group, fstab, crontab, security/)
+├── home/teresa/ (directorio de trabajo habitual)
+├── var/log/ (syslog, auth.log, journal/)
+└── mnt/ /media/ /sdb1 (puntos de montaje LVM y particiones)</pre>
+      </section>
 
     </div>
   </main>
@@ -146,229 +187,57 @@
     let subpuntoActivo = null;
     let ejercicioActualText = "";
 
+    // Temario completo TAI AGE Módulos 1 al 10
     const temarioTAI = [
       {
         id: "m1",
         titulo: "MÓDULO 1: Fundamentos y FHS",
         subpuntos: [
-          { id: "1.1", nombre: "1.1. Anatomía del Prompt", teoria: "Diferencia entre teresa@ordenador:~$ (usuario estándar) y root@ordenador:~# (superusuario con UID 0)." },
-          { id: "1.2", nombre: "1.2. Estándar FHS", teoria: "Estructura de la raíz (/): /etc (configuración), /var (contenido variable y logs), /tmp (temporales), /proc y /sys (pseudo-sistemas virtuales)." },
-          { id: "1.3", nombre: "1.3. Navegación y Gestión", teoria: "Comandos: pwd (-L, -P), cd, ls (-laRhS1iF), mkdir (-pv), touch (-am), cp (-ripa), mv (-ifin), rm (-rfi)." },
-          { id: "1.4", nombre: "1.4. Visualización y Filtros", teoria: "Comandos: cat (-n), head (-n), tail (-f), less, grep (-ivrnE), wc (-l)." }
-        ]
-      },
-      {
-        id: "m2",
-        titulo: "MÓDULO 2: Usuarios y Grupos",
-        subpuntos: [
-          { id: "2.1", nombre: "2.1. Ficheros de Seguridad", teoria: "Estudio al detalle de 7 campos en /etc/passwd, contraseñas cifradas en /etc/shadow (permisos 600/400), /etc/group y /etc/gshadow." },
-          { id: "2.2", nombre: "2.2. Rangos UID/GID", teoria: "UID 0 (root), 1-999 (servicios/sistema), 1000+ (usuarios normales)." },
-          { id: "2.3", nombre: "2.3. Gestión de Cuentas", teoria: "useradd (-u, -g, -G, -d, -s, -m), usermod (-aG imprescindible), userdel (-r), groupadd/mod/del, passwd (-l, -u, -e), su vs sudo." }
-        ]
-      },
-      {
-        id: "m3",
-        titulo: "MÓDULO 3: Permisos y Atributos",
-        subpuntos: [
-          { id: "3.1", nombre: "3.1. Clases y Acceso", teoria: "User (u), Group (g), Others (o). Lectura (4), Escritura (2), Ejecución (1)." },
-          { id: "3.3", nombre: "3.3. Cálculo Octal y Simbólico", teoria: "chmod 755, 644, 700. Notación simbólica: u+x, g-w, o-r." },
-          { id: "3.4", nombre: "3.4. Administración Permisos", teoria: "chmod (-R), chown (propietario:grupo), chgrp, umask (máscara por defecto)." },
-          { id: "3.5", nombre: "3.5. Permisos Especiales", teoria: "SUID (4000/u+s), SGID (2000/g+s), Sticky Bit (1000/o+t en /tmp)." }
-        ]
-      },
-      {
-        id: "m4",
-        titulo: "MÓDULO 4: Scripting, Cron y Backups",
-        subpuntos: [
-          { id: "4.1", nombre: "4.1. Redirecciones y Pipes", teoria: "Salidas >, >>, 2>, &>, entrada <, tuberías | (ej: ps aux | grep apache | wc -l)." },
-          { id: "4.2", nombre: "4.2. Tareas Programadas Cron", teoria: "Ficheros /etc/crontab, crontab -e/-l/-r. 5 campos: Minuto Hora DíaMes Mes DíaSemana." },
-          { id: "4.3", nombre: "4.3. Empaquetado y Compresión", teoria: "tar (-czvf, -xzvf), gzip/gunzip, bzip2/bunzip2, rsync." }
-        ]
-      },
-      {
-        id: "m5",
-        titulo: "MÓDULO 5: Procesos y Systemd",
-        subpuntos: [
-          { id: "5.1", nombre: "5.1. Definición y Estados", teoria: "PID, PPID, Estados: R (Running), S (Sleeping), Z (Zombie), T (Stopped)." },
-          { id: "5.2", nombre: "5.2. Inspección de Procesos", teoria: "ps aux (BSD), ps -ef (SysV), top, htop, pstree." },
-          { id: "5.3", nombre: "5.3. Señales y Control", teoria: "kill -15 (SIGTERM), kill -9 (SIGKILL), kill -1 (SIGHUP), killall, pkill, bg, fg, jobs, &." },
-          { id: "5.4", nombre: "5.4. Gestión con Systemd", teoria: "systemctl status/start/stop/restart/reload/enable/disable." }
-        ]
-      },
-      {
-        id: "m6",
-        titulo: "MÓDULO 6: Redes y Logs",
-        subpuntos: [
-          { id: "6.1", nombre: "6.1. Interfaces y Conexión", teoria: "ip a, ip route, ip link, ping, traceroute, tracepath." },
-          { id: "6.2", nombre: "6.2. Puertos y Servicios", teoria: "ss -tulpn, netstat, curl, wget, nslookup, dig." },
-          { id: "6.3", nombre: "6.3. Auditoría e Inspección Logs", teoria: "/var/log/syslog, /var/log/auth.log, journalctl -u servicio -f." }
-        ]
-      }
-    ];
-
-    // INTEGRACIÓN VITAL: Ejecutar siempre cuando el HTML base esté dibujado.
-    window.addEventListener("DOMContentLoaded", () => {
-      if (GEMINI_API_KEY) {
-        document.getElementById("apiKeyInput").value = GEMINI_API_KEY;
-      }
-      renderMenu();
-    });
-
-    function guardarKey() {
-      const k = document.getElementById("apiKeyInput").value.trim();
-      if (k) {
-        localStorage.setItem("gemini_api_key", k);
-        GEMINI_API_KEY = k;
-        alert("¡Clave API guardada en el navegador! Ya no tendrás que volver a introducirla.");
-      } else {
-        alert("Introduce una clave válida antes de guardar.");
-      }
-    }
-
-    function renderMenu() {
-      const menuContainer = document.getElementById("modulesMenu");
-      menuContainer.innerHTML = "";
-      temarioTAI.forEach(m => {
-        const modEl = document.createElement("div");
-        modEl.className = "mb-2";
-        modEl.innerHTML = `<div class="font-bold text-slate-700 bg-slate-200/60 p-1.5 rounded mb-1">${m.titulo}</div>`;
-        const subList = document.createElement("div");
-        subList.className = "space-y-1 pl-1";
-        
-        m.subpuntos.forEach(s => {
-          const btn = document.createElement("button");
-          btn.className = "w-full text-left p-1 rounded hover:bg-teal-50 hover:text-teal-700 text-[11px] block transition text-slate-600";
-          btn.innerText = s.nombre;
-          btn.onclick = () => seleccionarSubpunto(s);
-          subList.appendChild(btn);
-        });
-        modEl.appendChild(subList);
-        menuContainer.appendChild(modEl);
-      });
-    }
-
-    function seleccionarSubpunto(sub) {
-      subpuntoActivo = sub;
-      document.getElementById("theoryTitle").innerHTML = `<span><i class="fa-solid fa-graduation-cap text-teal-600"></i> ${sub.nombre}</span>`;
-      document.getElementById("theoryContent").innerHTML = `<p class="leading-relaxed">${sub.teoria}</p>`;
-      pedirNuevoEjercicio();
-    }
-
-    function limpiarTerminal() {
-      document.getElementById("terminalOutput").innerHTML = "";
-    }
-
-    async function pedirNuevoEjercicio() {
-      const promptBox = document.getElementById("exercisePrompt");
-      
-      if (!subpuntoActivo) {
-        promptBox.innerText = "Selecciona primero un tema del menú izquierdo.";
-        return;
-      }
-      
-      GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
-      if (!GEMINI_API_KEY) {
-        promptBox.innerText = "Por favor, introduce y guarda tu clave de API arriba en la barra superior.";
-        return;
-      }
-
-      promptBox.innerHTML = `<span class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin"></i> Conectando con Gemini...</span>`;
-
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
-        
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `Eres un preparador experto en oposiciones de Informática (TAI AGE). Genera UN único enunciado práctico de nivel medio-alto para el tema: '${subpuntoActivo.nombre}' (${subpuntoActivo.teoria}). El enunciado debe pedir escribir un comando concreto en el terminal Linux de la opositora (teresa@ordenador). Sé directo, no des la solución ni pistas obvias.`
-              }]
-            }]
-          })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok && data.candidates && data.candidates[0]) {
-          ejercicioActualText = data.candidates[0].content.parts[0].text;
-          promptBox.innerText = ejercicioActualText;
-          document.getElementById("aiEvaluation").innerHTML = `<p class="italic text-slate-400">Escribe el comando en la consola de la izquierda para enviarlo a corrección.</p>`;
-        } else {
-          promptBox.innerText = `Error de API: ${data.error?.message || "La clave es inválida o fue rechazada."}`;
-        }
-      } catch (e) {
-        promptBox.innerText = "Error de red al pedir el ejercicio.";
-      }
-    }
-
-    async function ejecutarComando(e) {
-      e.preventDefault();
-      const input = document.getElementById("commandInput");
-      const cmd = input.value.trim();
-      if (!cmd) return;
-
-      const output = document.getElementById("terminalOutput");
-      output.innerHTML += `<div><span class="text-emerald-400">teresa@ordenador:~$</span> ${cmd}</div>`;
-      input.value = "";
-      output.scrollTop = output.scrollHeight;
-
-      evaluarComandoConIA(cmd);
-    }
-
-    async function evaluarComandoConIA(comando) {
-      GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
-      const evalBox = document.getElementById("aiEvaluation");
-      
-      if (!GEMINI_API_KEY) {
-        evalBox.innerHTML = `<p class="text-red-500">Introduce tu clave arriba y pulsa Guardar.</p>`;
-        return;
-      }
-
-      evalBox.innerHTML = `<p class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin"></i> Evaluando sintaxis con Gemini ...</p>`;
-
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
-        
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `Eres un tribunal corrector de oposiciones TAI AGE. 
-                Enunciado del ejercicio: "${ejercicioActualText}".
-                Comando ejecutado por la opositora: "${comando}".
-                Evalúa detalladamente:
-                1. ¿Es la respuesta correcta o adecuada para el examen? (Indica CORRECTO o INCORRECTO en negrita).
-                2. Explicación técnica de la sintaxis y de los modificadores usados (etimología en inglés si aplica).
-                3. Errores cometidos o alternativas mejores según las normas de la Administración.`
-              }]
-            }]
-          })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok && data.candidates && data.candidates[0]) {
-          const text = data.candidates[0].content.parts[0].text;
-          evalBox.innerHTML = `<div class="prose text-xs text-slate-700">${text.replace(/\n/g, '<br>')}</div>`;
-        } else {
-          evalBox.innerHTML = `<p class="text-red-500">Error de API: ${data.error?.message || "La clave es inválida o fue rechazada."}</p>`;
-        }
-      } catch (e) {
-        evalBox.innerHTML = `<p class="text-red-500">Error de red en la petición de evaluación.</p>`;
-      }
-    }
-
-    async function iniciarExamenGlobal() {
-      subpuntoActivo = { nombre: "EXAMEN GLOBAL TAI", teoria: "Todos los módulos 1 al 6" };
-      document.getElementById("theoryTitle").innerText = "MODO EXAMEN GLOBAL";
-      document.getElementById("theoryContent").innerText = "Preguntas aleatorias de todos los módulos. Máxima exigencia.";
-      pedirNuevoEjercicio();
-    }
-
-  </script>
-</body>
-</html>
+          { 
+            id: "1.1", 
+            nombre: "1.1. Anatomía del Prompt", 
+            comando: "whoami / id / echo $USER",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Permite identificar al usuario actual con el que estamos operando en el sistema y comprobar nuestros privilegios de seguridad.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>who am i</code> (¿Quién soy yo?) y <code>identifier</code> (Identificador).</p>
+                <p><strong><i class="fa-solid fa-sliders text-teal-600 mr-1"></i> Opciones habituales:</strong> <code>id -u</code> (muestra el UID numérico), <code>id -g</code> (muestra el GID principal).</p>
+                <div class="p-3 bg-teal-50/80 rounded-xl border border-teal-100 text-teal-900 text-[11px]">
+                  <strong>💡 Truco TAI:</strong> Recuerda que en el examen el superusuario ROOT siempre tiene UID 0, los usuarios de sistema o servicios van del 1 al 999, y los usuarios normales empiezan a partir del 1000. ¡Pregunta clásica de test!
+                </div>
+              </div>
+            `
+          },
+          { 
+            id: "1.2", 
+            nombre: "1.2. Estándar FHS", 
+            comando: "ls -la /etc /var /tmp",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> El estándar FHS (Filesystem Hierarchy Standard) define la ubicación exacta de los ficheros en Linux. <code>/etc</code> almacena configuraciones estáticas, <code>/var</code> variables y logs, y <code>/tmp</code> archivos temporales.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>etc</code> (Et cetera / Y los demás ficheros de configuración), <code>var</code> (Variable data), <code>tmp</code> (Temporary).</p>
+                <p><strong><i class="fa-solid fa-sliders text-teal-600 mr-1"></i> Opciones clave:</strong> <code>ls -l</code> (formato largo con permisos), <code>-a</code> (incluye ocultos), <code>-h</code> (tamaños legibles).</p>
+              </div>
+            `
+          },
+          { 
+            id: "1.3", 
+            nombre: "1.3. Navegación y Gestión", 
+            comando: "mkdir -p /tmp/tai/practica && cp -av",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Comandos fundamentales para movernos por directorios (<code>cd</code>, <code>pwd</code>), crear estructuras (<code>mkdir</code>), copiar (<code>cp</code>), mover/renombrar (<code>mv</code>) y borrar (<code>rm</code>).</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>pwd</code> (Print Working Directory), <code>mkdir</code> (Make Directory), <code>cp</code> (Copy), <code>mv</code> (Move), <code>rm</code> (Remove).</p>
+                <p><strong><i class="fa-solid fa-sliders text-teal-600 mr-1"></i> Opciones clave:</strong> <code>mkdir -p</code> (crea padres si no existen), <code>cp -a</code> (preserva permisos y atributos, vital para respaldos), <code>rm -rf</code> (borrado recursivo y forzoso sin preguntar).</p>
+              </div>
+            `
+          },
+          { 
+            id: "1.4", 
+            nombre: "1.4. Visualización y Filtros", 
+            comando: "cat /etc/passwd | grep root",
+            teoria: `
+              <div class="space-y-2">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Inspeccionar el contenido de ficheros de texto plano en consola sin abrir editores pesados.</p>
+                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>cat</code> (Concatenate / Concatena y muestra), <code>head</code> (Cabeza/primeras líneas), <code>tail</code> (Cola/últimas líneas), <code>grep</code> (Global Regular Expression Print).</p>
+                <p><strong><i class="fa-solid
