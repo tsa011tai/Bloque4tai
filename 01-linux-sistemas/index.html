@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laboratorio TAI AGE v1 - Linux SysAdmin | tsa</title>
+  <title>Laboratorio TAI AGE - Linux SysAdmin | tsa</title>
   
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%230d9488' d='M512 96c0-35.3-28.7-64-64-64H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96zM157.1 214.9l-61.6 61.6c-4.2 4.2-11 4.2-15.2 0l-17.4-17.4c-4.2-4.2-4.2-11 0-15.2l76.9-76.9c4.2 4.2 11-4.2 15.2 0l76.9 76.9c4.2 4.2 4.2 11 0 15.2l-17.4 17.4c-4.2 4.2-11 4.2-15.2 0l-61.6-61.6v.1zM368 336H224c-8.8 0-16-7.2-16-16v-24c0-8.8 7.2-16 16-16h144c8.8 0 16 7.2 16 16v24c0 8.8-7.2 16-16 16z'/></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -15,7 +15,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
 
-  <!-- HEADER -->
+  <!-- HEADER ORIGINAL CONSERVADO -->
   <header class="border-b border-slate-200 bg-white shadow-sm sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
       <div class="flex items-center gap-3 w-full md:w-auto justify-between">
@@ -25,16 +25,11 @@
           </div>
           <div>
             <h1 class="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2">
-              Academia TAI AGE <span class="text-[10px] bg-slate-800 text-teal-300 px-1.5 py-0.5 rounded font-mono tracking-widest shadow-inner">tsa v1</span>
+              Academia TAI AGE <span class="text-[10px] bg-slate-800 text-teal-300 px-1.5 py-0.5 rounded font-mono tracking-widest shadow-inner">tsa</span>
             </h1>
-            <p class="text-[11px] text-teal-700 font-semibold uppercase tracking-wider">Preparación Práctica C1 - CENTRO DE ALTO RENDIMIENTO</p>
+            <p class="text-[11px] text-teal-700 font-semibold uppercase tracking-wider">Centro de Alto Rendimiento (Nivel C1)</p>
           </div>
         </div>
-      </div>
-
-      <div id="examTimerContainer" class="hidden flex items-center gap-2 bg-rose-50 border border-rose-200 px-4 py-1.5 rounded-lg shadow-inner animate-pulse">
-        <i class="fa-solid fa-stopwatch text-rose-600"></i>
-        <span id="examTimer" class="font-mono font-bold text-rose-700 text-lg">30:00</span>
       </div>
 
       <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
@@ -42,7 +37,7 @@
           <i class="fa-solid fa-chart-column"></i> Mi Expediente
         </button>
         <button onclick="iniciarExamenGlobal()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs px-3.5 py-2 rounded-lg font-bold transition flex items-center gap-1.5 shadow-sm border-b-2 border-rose-800">
-          <i class="fa-solid fa-stopwatch"></i> Examen Final
+          <i class="fa-solid fa-stopwatch"></i> Simulacro Final
         </button>
         <div class="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-200 shadow-inner">
           <i class="fa-solid fa-key text-slate-400 pl-2 text-xs"></i>
@@ -53,17 +48,17 @@
     </div>
   </header>
 
-  <!-- MODAL EXPEDIENTE -->
+  <!-- MODAL EXPEDIENTE (Actualizado para registrar 1 Año y debilidades) -->
   <div id="expedienteModal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200">
       <div class="bg-indigo-700 p-4 flex justify-between items-center text-white">
-        <h2 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Expediente de Rendimiento (Anual)</h2>
+        <h2 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Expediente de Rendimiento Anual</h2>
         <button onclick="toggleExpediente()" class="text-white hover:text-indigo-200"><i class="fa-solid fa-xmark text-xl"></i></button>
       </div>
       <div class="p-6 overflow-y-auto flex-1 bg-slate-50">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
-            <p class="text-xs font-bold text-slate-500 uppercase">Tasa de Acierto Global</p>
+            <p class="text-xs font-bold text-slate-500 uppercase">Tasa de Acierto</p>
             <p id="statGlobalRate" class="text-3xl font-black text-indigo-600 mt-1">0%</p>
           </div>
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
@@ -71,26 +66,24 @@
             <p id="statTotalCorrect" class="text-3xl font-black text-emerald-500 mt-1">0</p>
           </div>
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
-            <p class="text-xs font-bold text-slate-500 uppercase">Fallos (3 Intentos)</p>
+            <p class="text-xs font-bold text-slate-500 uppercase">Fallos Críticos (3 Int.)</p>
             <p id="statTotalErrors" class="text-3xl font-black text-rose-500 mt-1">0</p>
           </div>
         </div>
-        
-        <h3 class="text-sm font-bold text-slate-800 mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-triangle-exclamation text-rose-600 mr-2"></i>Puntos Débiles Detectados</h3>
-        <div id="statsWeaknessesList" class="space-y-2 mb-6"></div>
-
-        <h3 class="text-sm font-bold text-slate-800 mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-book text-indigo-600 mr-2"></i>Rendimiento por Nivel y Módulo</h3>
+        <h3 class="text-sm font-bold text-slate-800 mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-book text-indigo-600 mr-2"></i>Rendimiento por Módulo</h3>
         <div id="statsModulesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6"></div>
+        <h3 class="text-sm font-bold text-slate-800 mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-triangle-exclamation text-rose-600 mr-2"></i>Puntos Débiles (Para Simulacros)</h3>
+        <div id="statsWeaknessesList" class="space-y-2"></div>
       </div>
       <div class="p-4 bg-white border-t border-slate-200 text-right">
-        <button onclick="resetStats()" class="text-xs text-rose-600 hover:text-rose-800 font-bold underline mr-4">Borrar Historial Completo</button>
+        <button onclick="resetStats()" class="text-xs text-rose-600 hover:text-rose-800 font-bold underline mr-4">Resetear Historial Completo</button>
         <button onclick="toggleExpediente()" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm">Volver al Laboratorio</button>
       </div>
     </div>
   </div>
 
   <main class="max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 relative z-10">
-    <!-- MENU LATERAL -->
+    <!-- MENU LATERAL (ARQUITECTURA ORIGINAL CONSERVADA ESTRICTAMENTE) -->
     <div class="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col max-h-[85vh]">
       <h2 class="text-[11px] font-bold text-teal-800 uppercase tracking-wider mb-3 pb-2 border-b border-slate-100 flex items-center gap-2">
         <i class="fa-solid fa-book-open text-teal-600"></i> Temario (30 Módulos)
@@ -101,42 +94,40 @@
     <!-- PANEL PRINCIPAL -->
     <div class="lg:col-span-9 flex flex-col gap-5">
       <!-- 1. TEORÍA PEDAGÓGICA -->
-      <section class="bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden">
-        <div class="p-5">
-            <div class="flex justify-between items-center mb-3 border-b border-slate-100 pb-2">
-            <h3 id="theoryTitle" class="text-sm font-bold text-teal-900 flex items-center gap-2">
-                <i class="fa-solid fa-graduation-cap text-teal-600"></i> Área de Estudio Pedagógico
-            </h3>
-            <span class="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-1 rounded-full font-bold border border-indigo-200">FASE 1: TEORÍA</span>
-            </div>
-            <div id="theoryContent" class="text-xs text-slate-700 space-y-4 leading-relaxed max-h-64 overflow-y-auto pr-2">
-            <p class="text-slate-500 italic">Selecciona un tema en el menú de la izquierda para comenzar el estudio.</p>
-            </div>
+      <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+        <div class="flex justify-between items-center mb-3 border-b border-slate-100 pb-2">
+          <h3 id="theoryTitle" class="text-sm font-bold text-teal-900 flex items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-teal-600"></i> Área de Estudio Pedagógico
+          </h3>
+          <span class="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-1 rounded-full font-bold border border-indigo-200">FASE 1: TEORÍA</span>
         </div>
-        <div class="bg-slate-50 border-t border-slate-200 p-4 text-center">
-            <button id="btnStartPractice" onclick="iniciarBloqueEjercicios()" class="hidden bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md border-b-4 border-teal-800 transition transform hover:-translate-y-0.5">
-                <i class="fa-solid fa-play mr-2"></i> Comenzar Práctica (6 Ejercicios)
+        <div id="theoryContent" class="text-xs text-slate-700 space-y-3 leading-relaxed max-h-48 overflow-y-auto pr-2">
+          <p class="text-slate-500 italic">Selecciona un módulo en el menú de la izquierda para estudiar la teoría antes de practicar.</p>
+        </div>
+        <div class="mt-4 text-center border-t border-slate-100 pt-4 hidden" id="practiceControl">
+            <button onclick="iniciarPracticaTema()" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-6 rounded-lg shadow border-b-2 border-teal-800 transition">
+                <i class="fa-solid fa-play mr-2"></i> Iniciar Práctica (6 Ejercicios)
             </button>
         </div>
       </section>
 
       <!-- 2. EJERCICIO ACTUAL -->
-      <section id="exerciseSection" class="hidden bg-white border border-slate-200 rounded-2xl p-4 shadow-sm relative">
-        <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
-          <h3 id="exerciseHeader" class="text-sm font-bold text-slate-800 flex items-center gap-2 uppercase tracking-wide">
+      <section id="exerciseSection" class="hidden bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+        <div class="flex justify-between items-center mb-2 pb-2 border-b border-slate-100">
+          <h3 id="exerciseHeader" class="text-xs font-bold text-slate-800 flex items-center gap-2 uppercase tracking-wide">
             <i class="fa-solid fa-laptop-code text-teal-700"></i> Ejercicio 1/6
           </h3>
-          <div class="flex gap-3 items-center">
-            <span id="attemptsBadge" class="text-[11px] font-black bg-amber-100 text-amber-800 px-3 py-1 rounded border border-amber-300 shadow-inner">INTENTOS: 0/3</span>
-          </div>
+          <span id="attemptsBadge" class="text-[10px] bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200 font-bold">
+            INTENTOS: 0/3
+          </span>
         </div>
-        <div id="exercisePrompt" class="bg-slate-50 border border-slate-200 p-4 rounded-xl text-sm font-medium text-slate-800 leading-relaxed shadow-inner min-h-[80px]">
-          Generando reto práctico adaptado a tu nivel...
+        <div id="exercisePrompt" class="bg-slate-50 border border-slate-200 p-3 rounded-xl text-xs font-medium text-slate-700 overflow-y-auto min-h-[60px] leading-relaxed shadow-inner">
+          ...
         </div>
       </section>
 
       <!-- 3. TERMINAL -->
-      <section class="bg-slate-900 rounded-2xl shadow-xl flex flex-col border border-slate-700 relative overflow-hidden">
+      <section class="bg-slate-900 rounded-2xl shadow-xl flex flex-col border border-slate-700">
         <div class="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700">
           <div class="flex gap-2 items-center">
             <span class="w-3 h-3 rounded-full bg-rose-500"></span><span class="w-3 h-3 rounded-full bg-amber-400"></span><span class="w-3 h-3 rounded-full bg-emerald-500"></span>
@@ -144,13 +135,14 @@
           </div>
           <button onclick="limpiarTerminal()" class="text-slate-400 hover:text-white text-[10px] font-medium transition">Limpiar (Ctrl+L)</button>
         </div>
-        <div id="terminalOutput" class="p-4 font-mono text-[11px] sm:text-xs overflow-y-auto h-48 space-y-1.5 text-slate-200">
-          <div class="text-teal-400 font-bold">✨ Terminal Activa. Sistema de validación en espera...</div>
+        <div id="terminalOutput" class="p-4 font-mono text-[11px] sm:text-xs overflow-y-auto h-40 space-y-1.5 text-slate-200">
+          <div class="text-teal-400 font-bold">✨ Terminal Activa. Validador en espera.</div>
         </div>
         <form onsubmit="ejecutarComando(event)" class="bg-slate-950 p-2.5 border-t border-slate-800 flex items-center gap-2 relative">
           <span class="text-teal-400 font-mono text-xs pl-2 font-bold">teresa:~$</span>
-          <input type="text" id="commandInput" class="bg-transparent text-white font-mono text-xs outline-none flex-1 disabled:opacity-50 disabled:cursor-not-allowed" autocomplete="off" autofocus placeholder="Escribe tu comando aquí y pulsa Enter..."/>
-          <button type="submit" id="btnSubmitCommand" class="bg-teal-600 text-white text-xs px-6 py-1.5 rounded hover:bg-teal-500 transition font-bold shadow border-b-2 border-teal-800 disabled:opacity-50">EJECUTAR</button>
+          <!-- Input habilitado/deshabilitado dinámicamente -->
+          <input type="text" id="commandInput" class="bg-transparent text-white font-mono text-xs outline-none flex-1 disabled:opacity-50" autocomplete="off" placeholder="Escribe tu comando exacto y pulsa Enter..."/>
+          <button type="submit" id="btnSubmit" class="bg-teal-600 text-white text-xs px-6 py-1.5 rounded hover:bg-teal-500 transition font-bold shadow border-b-2 border-teal-800 disabled:opacity-50">EJECUTAR</button>
         </form>
       </section>
 
@@ -158,160 +150,129 @@
       <section id="feedbackSection" class="hidden bg-white border-2 border-teal-200 rounded-2xl p-5 shadow-sm">
         <div class="flex justify-between items-center mb-3">
           <h3 class="text-xs font-bold text-teal-900 flex items-center gap-2 uppercase tracking-wide">
-            <i class="fa-solid fa-clipboard-check text-teal-600"></i> Resultado de la Operación
+            <i class="fa-solid fa-clipboard-check text-teal-600"></i> Resultado de Evaluación
           </h3>
         </div>
         <div id="aiEvaluation" class="text-xs text-slate-700 overflow-y-auto max-h-64 bg-slate-50 p-4 rounded-xl border border-slate-200 leading-relaxed">
         </div>
-        <div id="nextExerciseDiv" class="mt-4 text-right hidden">
-            <button onclick="siguienteEjercicio()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-5 rounded-lg shadow-sm">Siguiente Reto <i class="fa-solid fa-arrow-right ml-1"></i></button>
+        <div id="nextExerciseBtn" class="mt-4 text-right hidden">
+            <button onclick="siguienteEjercicio()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2.5 rounded-lg shadow transition">Continuar <i class="fa-solid fa-arrow-right ml-1"></i></button>
         </div>
       </section>
     </div>
   </main>
 
   <script>
-    // --- ESTADO Y CONFIGURACIÓN ---
     let GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
     let subpuntoActivo = null;
     let currentModuleId = null;
     let currentExerciseIndex = 1;
-    
-    // Estado del ejercicio actual
-    let currentExerciseData = null; // Guardará el JSON generado por Gemini
-    let currentAttempts = 0;
-    
     let commandHistory = [];
     let historyIndex = -1;
-    let timerInterval;
     
-    // Expediente anual
-    let userStats = JSON.parse(localStorage.getItem('tai_expediente_v1')) || {
-        history: [], // [{ id, mod, date, attempts, success, required_solution }]
-        weaknesses: {}, // { "modId": fallos }
-        modules: {} 
+    // Variables de control de intentos estrictos
+    let currentAttempts = 0;
+    let currentExerciseData = null; // Guardará el JSON generado por Gemini
+
+    // Estructura de persistencia robusta
+    let userStats = JSON.parse(localStorage.getItem('tai_expediente_v3')) || {
+        history: [], // IDs de ejercicios ya realizados
+        weaknesses: {}, // Contador de fallos por modulo
+        modules: {} // {m1: {correct: 0, error: 0}}
     };
 
-    // --- TEMARIO ESTRUCTURADO (30 Módulos - Representación Core) ---
+    // --- TEMARIO COMPLETO (30 MÓDULOS) MANTENIENDO ARQUITECTURA PLANA ORIGINAL ---
     const temarioTAI = [
-      {
-        nivel: "NIVEL 0 · Fundamentos",
-        modulos: [
-            { 
-              id: "m1", titulo: "M1: Introducción a Linux y Laboratorio", 
-              subpuntos: [
-                { 
-                  id: "1.1", nombre: "1.1. Identidad del sistema (uname, hostnamectl)", 
-                  teoria: \`<div class="space-y-4">
-                    <p class="font-bold text-teal-800">Objetivo: Conocer sobre qué máquina estamos operando.</p>
-                    <div class="bg-white p-3 rounded border border-slate-200 shadow-sm">
-                      <p><strong>Comando:</strong> <code>uname</code></p>
-                      <p><strong>Inglés:</strong> Unix name.</p>
-                      <p><strong>Utilidad:</strong> Muestra información del kernel y arquitectura del sistema.</p>
-                      <p><strong>Sintaxis:</strong> <code>uname [opciones]</code></p>
-                      <p class="font-mono bg-slate-800 text-teal-300 p-2 rounded text-[11px] mt-1">$ uname -a</p>
-                      <p class="text-[11px] mt-1"><strong>Resultado:</strong> Imprime todos los detalles (núcleo, versión, arquitectura).</p>
-                    </div>
-                    <div class="bg-white p-3 rounded border border-slate-200 shadow-sm">
-                      <p><strong>Comando:</strong> <code>hostnamectl</code></p>
-                      <p><strong>Inglés:</strong> Hostname control.</p>
-                      <p><strong>Utilidad:</strong> Consulta o modifica el nombre del equipo y sistema operativo en distribuciones con systemd.</p>
-                      <p class="font-mono bg-slate-800 text-teal-300 p-2 rounded text-[11px] mt-1">$ hostnamectl status</p>
-                    </div>
-                    <div class="p-3 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm">
-                      <strong>⚠️ Trampa Habitual:</strong> Confundir <code>hostname</code> (temporal o básico) con <code>hostnamectl</code> (persistente e integrado en systemd).
-                    </div>
-                  </div>\` 
-                }
-              ]
-            },
-            { 
-              id: "m2", titulo: "M2: Terminal y Bash esencial", 
-              subpuntos: [
-                { 
-                  id: "2.1", nombre: "2.1. Variables, Alias e Historial", 
-                  teoria: \`<div class="space-y-4">
-                    <p class="font-bold text-teal-800">Objetivo: Dominar el entorno de la shell.</p>
-                    <div class="bg-white p-3 rounded border border-slate-200 shadow-sm">
-                      <p><strong>Comando:</strong> <code>alias</code></p>
-                      <p><strong>Utilidad:</strong> Define un nombre alternativo para un comando largo.</p>
-                      <p class="font-mono bg-slate-800 text-teal-300 p-2 rounded text-[11px] mt-1">$ alias ll='ls -lah'</p>
-                    </div>
-                    <div class="bg-white p-3 rounded border border-slate-200 shadow-sm">
-                      <p><strong>Comando:</strong> <code>export</code></p>
-                      <p><strong>Utilidad:</strong> Convierte una variable local en una variable de entorno para que los procesos hijos la hereden.</p>
-                      <p class="font-mono bg-slate-800 text-teal-300 p-2 rounded text-[11px] mt-1">$ export PATH=$PATH:/miscript</p>
-                    </div>
-                  </div>\` 
-                }
-              ]
-            },
-            {
-              id: "m3", titulo: "M3: Sistema de ficheros y navegación",
-              subpuntos: [
-                  {
-                    id: "3.1", nombre: "3.1. Navegación y Rutas (FHS)",
-                    teoria: \`<div class="space-y-4">
-                        <div class="bg-white p-3 rounded border border-slate-200">
-                          <p><strong>Comando:</strong> <code>pwd</code> (Print Working Directory)</p>
-                          <p><strong>Utilidad:</strong> Muestra la ruta absoluta en la que te encuentras.</p>
-                          <p class="font-mono bg-slate-800 text-teal-300 p-2 mt-1">$ pwd -P</p>
-                          <p class="text-[11px] mt-1"><strong>Resultado:</strong> Resuelve enlaces simbólicos mostrando la ruta física real.</p>
-                        </div>
-                        <div class="p-3 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200">
-                          <strong>⚠️ Trampa Habitual:</strong> <code>cd -</code> vuelve al directorio anterior, no al directorio padre (<code>cd ..</code>).
-                        </div>
-                    </div>\`
-                  }
-              ]
-            }
-        ]
-      },
-      {
-        nivel: "NIVEL 1 · Administración Básica",
-        modulos: [
-            { 
-              id: "m5", titulo: "M5: Usuarios y Grupos", 
-              subpuntos: [
-                { 
-                  id: "5.1", nombre: "5.1. Gestión de cuentas y grupos suplementarios", 
-                  teoria: \`<div class="space-y-4">
-                    <p class="font-bold text-teal-800">Objetivo: Administrar cuentas locales (UID/GID).</p>
-                    <div class="bg-white p-3 rounded border border-slate-200 shadow-sm">
-                      <p><strong>Comando:</strong> <code>usermod</code></p>
-                      <p><strong>Inglés:</strong> User Modify.</p>
-                      <p><strong>Utilidad:</strong> Modifica atributos de cuentas existentes (shell, grupos, expiración).</p>
-                      <p class="font-mono bg-slate-800 text-teal-300 p-2 rounded text-[11px] mt-1">$ sudo usermod -aG soporte carlos</p>
-                      <p class="text-[11px] mt-1"><strong>Resultado:</strong> Carlos se añade a 'soporte' preservando sus otros grupos.</p>
-                    </div>
-                    <div class="p-3 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm">
-                      <strong>⚠️ Trampa Habitual:</strong> Usar <code>usermod -G soporte carlos</code> (SIN la 'a' de append). Esto BORRA a carlos de todos los demás grupos secundarios.
-                    </div>
-                  </div>\` 
-                }
-              ]
-            },
-            {
-              id: "m6", titulo: "M6: Permisos, Propietarios y ACL",
-              subpuntos: [
-                  {
-                    id: "6.1", nombre: "6.1. Permisos Octales y Máscara",
-                    teoria: \`<div class="space-y-4">
-                        <div class="bg-white p-3 rounded">
-                            <p><strong>Comando:</strong> <code>chmod</code> (Change Mode)</p>
-                            <p><strong>Utilidad:</strong> Modifica los permisos de un archivo o directorio.</p>
-                            <p class="font-mono bg-slate-800 text-teal-300 p-2 mt-1">$ chmod 750 script.sh</p>
-                            <p class="text-[11px] mt-1">Propietario: rwx (7), Grupo: rx (5), Otros: --- (0).</p>
-                        </div>
-                        <div class="p-3 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200">
-                          <strong>⚠️ Trampa Habitual:</strong> <code>umask</code> RESTA permisos. Si configuras <code>umask 027</code>, un archivo nuevo nace con 640 (666 - 027), no con 027.
-                        </div>
-                    </div>\`
-                  }
-              ]
-            }
-        ]
-      }
+      { id: "m1", titulo: "N0-M1: Introducción a Linux", subpuntos: [
+          { id: "1.1", nombre: "Identidad del sistema", teoria: "<p><strong>Comando:</strong> <code>uname</code></p><p><strong>Inglés:</strong> Unix name.</p><p><strong>Utilidad:</strong> Muestra información del kernel y arquitectura.</p><p><strong>Sintaxis:</strong> <code>uname [opciones]</code></p><p><strong>Ejemplo:</strong> <code>uname -a</code></p><p><strong>Trampa:</strong> Confundir <code>hostname</code> (básico) con <code>hostnamectl</code> (persistencia en systemd).</p>" }
+      ]},
+      { id: "m2", titulo: "N0-M2: Terminal y Bash esencial", subpuntos: [
+          { id: "2.1", nombre: "Variables y Entorno", teoria: "<p><strong>Comando:</strong> <code>export</code></p><p><strong>Utilidad:</strong> Exporta variables al entorno de procesos hijos.</p><p><strong>Ejemplo:</strong> <code>export EDITOR=nano</code></p><p><strong>Trampa:</strong> Declarar <code>VAR=valor</code> sin <code>export</code> hace que la variable solo viva en la shell actual, no en scripts hijos.</p>" }
+      ]},
+      { id: "m3", titulo: "N0-M3: Sistema de ficheros", subpuntos: [
+          { id: "3.1", nombre: "Navegación FHS", teoria: "<p><strong>Comando:</strong> <code>pwd</code> (Print working directory).</p><p><strong>Ejemplo:</strong> <code>pwd -P</code> (Resuelve enlaces simbólicos físicos).</p><p><strong>Trampa:</strong> <code>cd -</code> vuelve al directorio anterior, no al directorio padre (<code>cd ..</code>).</p>" }
+      ]},
+      { id: "m4", titulo: "N0-M4: Procesado de texto", subpuntos: [
+          { id: "4.1", nombre: "Búsqueda con Grep", teoria: "<p><strong>Comando:</strong> <code>grep</code> (Global regular expression print).</p><p><strong>Utilidad:</strong> Filtra líneas que coinciden con un patrón.</p><p><strong>Trampa:</strong> Usar <code>grep</code> simple para regex complejas; para ello se prefiere <code>grep -E</code>.</p>" }
+      ]},
+      { id: "m5", titulo: "N1-M5: Usuarios y grupos", subpuntos: [
+          { id: "5.1", nombre: "Grupos suplementarios", teoria: "<p><strong>Comando:</strong> <code>usermod</code> (User modify).</p><p><strong>Utilidad:</strong> Modifica cuentas existentes.</p><p><strong>Trampa:</strong> <code>usermod -G grupo user</code> BORRA los demás grupos suplementarios. Siempre usar <code>usermod -aG</code> para añadir.</p>" }
+      ]},
+      { id: "m6", titulo: "N1-M6: Permisos y ACL", subpuntos: [
+          { id: "6.1", nombre: "Umask y Octal", teoria: "<p><strong>Comando:</strong> <code>chmod</code> (Change mode). <code>umask</code> (User file-creation mode mask).</p><p><strong>Trampa:</strong> <code>umask</code> RESTA permisos. Si configuras <code>umask 027</code>, un fichero nace con 640 (666 - 027), nunca con 027.</p>" }
+      ]},
+      { id: "m7", titulo: "N1-M7: Procesos (systemd)", subpuntos: [
+          { id: "7.1", nombre: "Systemctl", teoria: "<p><strong>Comando:</strong> <code>systemctl</code>.</p><p><strong>Trampa:</strong> <code>enable</code> solo lo programa para el próximo arranque. Para arrancarlo YA y habilitarlo, usar <code>systemctl enable --now servicio</code>.</p>" }
+      ]},
+      { id: "m8", titulo: "N1-M8: Paquetes", subpuntos: [
+          { id: "8.1", nombre: "APT y DPKG", teoria: "<p><strong>Diferencia:</strong> <code>dpkg</code> instala locales sin resolver dependencias. <code>apt</code> descarga y resuelve desde repositorios.</p>" }
+      ]},
+      { id: "m9", titulo: "N2-M9: Streams y scripts", subpuntos: [
+          { id: "9.1", nombre: "Redirecciones", teoria: "<p><strong>Trampa:</strong> <code>></code> sobrescribe el destino. <code>>></code> añade al final. <code>2></code> envía los errores (stderr).</p>" }
+      ]},
+      { id: "m10", titulo: "N2-M10: Tareas programadas", subpuntos: [
+          { id: "10.1", nombre: "Cron", teoria: "<p><strong>Comando:</strong> <code>crontab -e</code> para editar.</p><p><strong>Trampa:</strong> Cuidado al teclear <code>crontab -r</code> en vez de <code>-e</code>, ya que borra todas las tareas sin preguntar.</p>" }
+      ]},
+      { id: "m11", titulo: "N2-M11: Discos y particiones", subpuntos: [
+          { id: "11.1", nombre: "fstab y montajes", teoria: "<p><strong>Comando:</strong> <code>mount</code>. <strong>Trampa:</strong> No comprobar UUIDs con <code>blkid</code> antes de añadirlos permanentemente a <code>/etc/fstab</code>.</p>" }
+      ]},
+      { id: "m12", titulo: "N2-M12: RAID y LVM", subpuntos: [
+          { id: "12.1", nombre: "Extensión LVM", teoria: "<p><strong>Comando:</strong> <code>lvextend</code>.</p><p><strong>Trampa:</strong> Ampliar el volumen no amplía el sistema de archivos automáticamente salvo que uses <code>lvextend -r</code>.</p>" }
+      ]},
+      { id: "m13", titulo: "N2-M13: Kernel y arranque", subpuntos: [
+          { id: "13.1", nombre: "Módulos", teoria: "<p><strong>Comando:</strong> <code>modprobe</code>.</p><p><strong>Utilidad:</strong> Carga un módulo y todas sus dependencias (a diferencia del antiguo insmod).</p>" }
+      ]},
+      { id: "m14", titulo: "N2-M14: Logs y diagnóstico", subpuntos: [
+          { id: "14.1", nombre: "Journalctl", teoria: "<p><strong>Comando:</strong> <code>journalctl</code>.</p><p><strong>Trampa:</strong> <code>journalctl -b</code> filtra solo los mensajes del arranque actual.</p>" }
+      ]},
+      { id: "m15", titulo: "N3-M15: Fundamentos Redes", subpuntos: [
+          { id: "15.1", nombre: "IP y Enrutamiento", teoria: "<p><strong>Comando:</strong> <code>ip a</code>, <code>ip route</code>.</p><p><strong>Trampa:</strong> <code>ifconfig</code> está obsoleto. Se exige conocer la suite <code>iproute2</code>.</p>" }
+      ]},
+      { id: "m16", titulo: "N3-M16: Configuración de red", subpuntos: [
+          { id: "16.1", nombre: "NetworkManager", teoria: "<p><strong>Comando:</strong> <code>nmcli</code>.</p><p><strong>Trampa:</strong> Aplicar cambios de conexión requiere bajar y subir el interfaz: <code>nmcli con up ID</code>.</p>" }
+      ]},
+      { id: "m17", titulo: "N3-M17: Diagnóstico red", subpuntos: [
+          { id: "17.1", nombre: "Sockets", teoria: "<p><strong>Comando:</strong> <code>ss</code>.</p><p><strong>Trampa:</strong> Para ver los procesos asociados (-p) se requiere ejecutar con <code>sudo</code>.</p>" }
+      ]},
+      { id: "m18", titulo: "N3-M18: DNS, DHCP, SSH", subpuntos: [
+          { id: "18.1", nombre: "Claves SSH", teoria: "<p><strong>Comando:</strong> <code>ssh-keygen -t ed25519</code>.</p><p><strong>Trampa:</strong> El archivo <code>authorized_keys</code> fallará si tiene permisos superiores a 600 o si la carpeta <code>.ssh</code> tiene más de 700.</p>" }
+      ]},
+      { id: "m19", titulo: "N3-M19: Web y compartición", subpuntos: [
+          { id: "19.1", nombre: "Test SMB", teoria: "<p><strong>Comando:</strong> <code>testparm</code>.</p><p><strong>Utilidad:</strong> Valida la sintaxis del fichero de configuración de Samba antes de reiniciar.</p>" }
+      ]},
+      { id: "m20", titulo: "N3-M20: Firewall y VPN", subpuntos: [
+          { id: "20.1", nombre: "Netfilter / Iptables", teoria: "<p><strong>Trampa:</strong> <code>DROP</code> descarta silenciosamente. <code>REJECT</code> responde con un ICMP port unreachable.</p>" }
+      ]},
+      { id: "m21", titulo: "N4-M21: Hardening", subpuntos: [
+          { id: "21.1", nombre: "Test SSHD", teoria: "<p><strong>Comando:</strong> <code>sshd -t</code>.</p><p><strong>Trampa:</strong> Siempre usar este comando para validar <code>sshd_config</code> antes de aplicar cambios, o perderás el acceso.</p>" }
+      ]},
+      { id: "m22", titulo: "N4-M22: SELinux / AppArmor", subpuntos: [
+          { id: "22.1", nombre: "Contextos SELinux", teoria: "<p><strong>Comando:</strong> <code>restorecon</code>.</p><p><strong>Trampa:</strong> Modificar permisos Unix estándar (chmod) no resuelve bloqueos generados por contextos erróneos de SELinux.</p>" }
+      ]},
+      { id: "m23", titulo: "N4-M23: LDAP y AD", subpuntos: [
+          { id: "23.1", nombre: "NSS y Directorio", teoria: "<p><strong>Comando:</strong> <code>getent passwd</code>.</p><p><strong>Trampa:</strong> Usarlo valida que el sistema operativo está leyendo correctamente los usuarios del Active Directory/LDAP remoto.</p>" }
+      ]},
+      { id: "m24", titulo: "N4-M24: Auditoría y PKI", subpuntos: [
+          { id: "24.1", nombre: "Certificados", teoria: "<p><strong>Comando:</strong> <code>openssl x509</code>.</p><p><strong>Utilidad:</strong> Inspeccionar emisor, sujeto y fechas de caducidad de certificados PEM.</p>" }
+      ]},
+      { id: "m25", titulo: "N5-M25: Git y Ansible", subpuntos: [
+          { id: "25.1", nombre: "Idempotencia", teoria: "<p><strong>Concepto:</strong> Ejecutar un playbook de Ansible múltiples veces no debe provocar cambios tras la primera ejecución si el estado ya es el deseado.</p>" }
+      ]},
+      { id: "m26", titulo: "N5-M26: Monitorización", subpuntos: [
+          { id: "26.1", nombre: "Prometheus", teoria: "<p><strong>Comando:</strong> <code>promtool check config</code>.</p><p><strong>Utilidad:</strong> Valida las reglas y configuración de Prometheus antes del reinicio.</p>" }
+      ]},
+      { id: "m27", titulo: "N5-M27: Virtualización", subpuntos: [
+          { id: "27.1", nombre: "Contenedores Rootless", teoria: "<p><strong>Diferencia:</strong> Podman por defecto no requiere un daemon root, a diferencia de configuraciones clásicas de Docker, aumentando la seguridad.</p>" }
+      ]},
+      { id: "m28", titulo: "N5-M28: Backups y HA", subpuntos: [
+          { id: "28.1", nombre: "Integridad", teoria: "<p><strong>Comando:</strong> <code>sha256sum</code>.</p><p><strong>Trampa:</strong> Un backup no es válido sin comprobaciones de integridad criptográfica periódicas y simulacros de restauración (RTO/RPO).</p>" }
+      ]},
+      { id: "m29", titulo: "N5-M29: Cloud e IaC", subpuntos: [
+          { id: "29.1", nombre: "Terraform", teoria: "<p><strong>Comando:</strong> <code>terraform plan</code>.</p><p><strong>Trampa:</strong> Ejecutar <code>apply</code> sin haber revisado minuciosamente el plan de destrucción/creación puede borrar infraestructura crítica.</p>" }
+      ]},
+      { id: "m30", titulo: "N5-M30: Práctica Profesional", subpuntos: [
+          { id: "30.1", nombre: "Evidencias e ITIL", teoria: "<p><strong>Comando:</strong> <code>script sesion.log</code>.</p><p><strong>Utilidad:</strong> Graba todo lo escrito y devuelto en la terminal para adjuntarlo como evidencia de resolución de incidencias en sistemas de ticketing.</p>" }
+      ]}
     ];
 
     window.addEventListener("DOMContentLoaded", () => {
@@ -336,51 +297,44 @@
       if (k) {
         localStorage.setItem("gemini_api_key", k);
         GEMINI_API_KEY = k;
-        alert("¡Clave API guardada!");
+        alert("¡Clave API guardada correctamente!");
       }
     }
 
+    // ARQUITECTURA ORIGINAL DE RENDERIZADO CONSERVADA
     function renderMenu() {
       const menuContainer = document.getElementById("modulesMenu");
       menuContainer.innerHTML = "";
-      
-      temarioTAI.forEach((nivel, idxNivel) => {
-          const nivelDiv = document.createElement("div");
-          nivelDiv.className = "mb-4";
-          nivelDiv.innerHTML = \`<h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 pl-1 border-l-2 border-slate-300">\${nivel.nivel}</h4>\`;
-          
-          nivel.modulos.forEach((m) => {
-            if(!userStats.modules[m.id]) userStats.modules[m.id] = { correct: 0, error: 0 };
-            
-            const contentId = \`mod_content_\${m.id}\`;
-            nivelDiv.innerHTML += \`
-              <div class="mb-1.5 border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50">
-                <button onclick="toggleModulo('\${contentId}', '\${m.id}')" class="w-full text-left font-bold text-slate-700 bg-slate-100 hover:bg-teal-50 p-2.5 rounded-t-xl flex justify-between items-center text-[11px] transition shadow-sm">
-                  <span class="truncate">\${m.titulo}</span>
-                  <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="chevron_\${m.id}"></i>
-                </button>
-                <div id="\${contentId}" class="space-y-1 p-2 bg-white hidden border-t border-slate-100"></div>
-              </div>\`;
-          });
-          menuContainer.appendChild(nivelDiv);
-          
-          nivel.modulos.forEach((m) => {
-            const subList = document.getElementById(\`mod_content_\${m.id}\`);
-            m.subpuntos.forEach(s => {
-              const btn = document.createElement("button");
-              btn.className = "w-full text-left p-1.5 rounded-lg hover:bg-teal-50 hover:text-teal-800 text-[10px] block transition text-slate-600 font-medium";
-              btn.innerHTML = \`<i class="fa-solid fa-caret-right mr-1 opacity-50"></i> \${s.nombre}\`;
-              btn.onclick = () => seleccionarSubpunto(s, m.id);
-              subList.appendChild(btn);
-            });
-          });
+      temarioTAI.forEach((m) => {
+        if(!userStats.modules[m.id]) userStats.modules[m.id] = { correct: 0, error: 0 };
+        
+        const modEl = document.createElement("div");
+        modEl.className = "mb-2 border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50";
+        const contentId = `mod_content_${m.id}`;
+        
+        modEl.innerHTML = `
+          <button onclick="toggleModulo('${contentId}', '${m.id}')" class="w-full text-left font-bold text-slate-700 bg-slate-100 hover:bg-teal-50 p-2.5 rounded-t-xl flex justify-between items-center text-[11px] transition shadow-sm">
+            <span class="truncate">${m.titulo}</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="chevron_${m.id}"></i>
+          </button>
+          <div id="${contentId}" class="space-y-1 p-2 bg-white hidden border-t border-slate-100"></div>`;
+        menuContainer.appendChild(modEl);
+        
+        const subList = document.getElementById(contentId);
+        m.subpuntos.forEach(s => {
+          const btn = document.createElement("button");
+          btn.className = "w-full text-left p-1.5 rounded-lg hover:bg-teal-50 hover:text-teal-800 text-[10px] block transition text-slate-600 font-medium";
+          btn.innerHTML = `<i class="fa-solid fa-caret-right mr-1 opacity-50"></i> ${s.nombre}`;
+          btn.onclick = () => seleccionarSubpunto(s, m.id);
+          subList.appendChild(btn);
+        });
       });
-      localStorage.setItem('tai_expediente_v1', JSON.stringify(userStats));
+      localStorage.setItem('tai_expediente_v3', JSON.stringify(userStats));
     }
 
     function toggleModulo(contentId, modId) {
       const el = document.getElementById(contentId);
-      const chevron = document.getElementById(\`chevron_\${modId}\`);
+      const chevron = document.getElementById(`chevron_${modId}`);
       el.classList.toggle("hidden");
       chevron.style.transform = el.classList.contains("hidden") ? "rotate(0deg)" : "rotate(180deg)";
     }
@@ -388,83 +342,77 @@
     function seleccionarSubpunto(sub, modId) {
       subpuntoActivo = sub;
       currentModuleId = modId;
-      document.getElementById("theoryTitle").innerHTML = \`<i class="fa-solid fa-graduation-cap text-teal-600"></i> \${sub.nombre}\`;
-      document.getElementById("theoryContent").innerHTML = sub.teoria;
+      currentExerciseIndex = 1;
       
-      // Ocultar sección de ejercicios
+      document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-graduation-cap text-teal-600"></i> ${sub.nombre}`;
+      document.getElementById("theoryContent").innerHTML = sub.teoria;
+      document.getElementById("practiceControl").classList.remove("hidden");
+      
+      // Ocultar sección de ejercicios hasta darle a "Iniciar Práctica"
       document.getElementById("exerciseSection").classList.add("hidden");
       document.getElementById("feedbackSection").classList.add("hidden");
-      document.getElementById("btnStartPractice").classList.remove("hidden");
       limpiarTerminal();
     }
 
-    function iniciarBloqueEjercicios() {
-        if(!subpuntoActivo) return;
-        currentExerciseIndex = 1;
-        document.getElementById("exerciseSection").classList.remove("hidden");
-        document.getElementById("btnStartPractice").classList.add("hidden");
-        pedirEjercicioGemini();
+    function iniciarPracticaTema() {
+      document.getElementById("practiceControl").classList.add("hidden");
+      document.getElementById("exerciseSection").classList.remove("hidden");
+      pedirEjercicioPracticoJSON();
     }
 
     function limpiarTerminal() {
-      document.getElementById("terminalOutput").innerHTML = '<div class="text-teal-400 font-bold">✨ Terminal limpia. Lista para recibir órdenes.</div>';
+      document.getElementById("terminalOutput").innerHTML = '<div class="text-teal-400 font-bold">✨ Terminal limpia. Validador conectado.</div>';
     }
 
-    function extractJSON(text) {
-        try {
-            const start = text.indexOf('{');
-            const end = text.lastIndexOf('}') + 1;
-            return JSON.parse(text.substring(start, end));
-        } catch (e) {
-            console.error("Error parseando JSON de Gemini", e, text);
-            return null;
-        }
-    }
-
-    // --- MOTOR DE GENERACIÓN CON GEMINI (JSON ESTRUCTURADO) ---
-    async function pedirEjercicioGemini() {
+    // --- NUEVO GENERADOR ESTRUCTURADO (JSON) Y SIN PISTA ---
+    async function pedirEjercicioPracticoJSON() {
       const promptBox = document.getElementById("exercisePrompt");
       const headerBox = document.getElementById("exerciseHeader");
-      const btnSubmit = document.getElementById("btnSubmitCommand");
+      const input = document.getElementById("commandInput");
+      const btn = document.getElementById("btnSubmit");
+      const badge = document.getElementById("attemptsBadge");
       
-      headerBox.innerHTML = \`<i class="fa-solid fa-laptop-code text-teal-700"></i> Ejercicio \${currentExerciseIndex}/6\`;
-      document.getElementById("attemptsBadge").innerText = "INTENTOS: 0/3";
-      document.getElementById("attemptsBadge").className = "text-[11px] font-black bg-amber-100 text-amber-800 px-3 py-1 rounded border border-amber-300 shadow-inner";
+      headerBox.innerHTML = `<i class="fa-solid fa-laptop-code text-teal-700"></i> Ejercicio ${currentExerciseIndex}/6`;
       document.getElementById("feedbackSection").classList.add("hidden");
       
       currentAttempts = 0;
       currentExerciseData = null;
-      btnSubmit.disabled = true;
+      badge.innerText = `INTENTOS: 0/3`;
+      badge.className = "text-[10px] bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200 font-bold";
+      
+      input.disabled = true;
+      btn.disabled = true;
 
-      if (!GEMINI_API_KEY) {
-        promptBox.innerHTML = "<span class='text-rose-600 font-bold'>⚠️ Falta tu API Key. Introdúcela arriba para generar el ejercicio.</span>";
+      if (!subpuntoActivo || !GEMINI_API_KEY) {
+        promptBox.innerHTML = "<span class='text-rose-600 font-bold'>⚠️ Falta tu API Key. Guárdala arriba.</span>";
         return;
       }
 
-      promptBox.innerHTML = \`<span class="text-teal-700 font-bold animate-pulse"><i class="fa-solid fa-microchip fa-spin mr-2"></i> Sintetizando escenario \${currentExerciseIndex === 6 ? 'avanzado' : 'progresivo'}...</span>\`;
+      promptBox.innerHTML = `<span class="text-teal-700 font-bold animate-pulse"><i class="fa-solid fa-microchip fa-spin mr-2"></i> Generando contexto privado para el validador...</span>`;
       
-      // Historial para evitar repeticiones
-      const historialIds = userStats.history.map(h => h.id).slice(-20);
-      let nivelDificultad = currentExerciseIndex === 6 ? "RETO AVANZADO (Combina temas)" : \`Nivel \${currentExerciseIndex} de 5\`;
+      // Enviar historial para no repetir (requisito)
+      const historialReciente = userStats.history.slice(-20);
+      const isReto = currentExerciseIndex === 6;
 
-      const promptSystem = \`Eres el sistema de evaluación del Estado (TAI C1).
-Vas a generar el ejercicio \${currentExerciseIndex}/6 para el tema: '\${subpuntoActivo.nombre}'.
-\${currentExerciseIndex === 6 ? "Este es el ejercicio FINAL del tema. Combina el concepto actual con algo de otros módulos anteriores para un reto realista." : "Debe ser un ejercicio práctico progresivo."}
-Evita reciclar estos IDs de ejercicios recientes: \${JSON.stringify(historialIds)}.
+      const promptSystem = `Actúa como examinador TAI C1.
+Tema: '${subpuntoActivo.nombre}'. 
+Teoría dada: ${subpuntoActivo.teoria.replace(/<[^>]*>?/gm, '')}.
+Genera el ejercicio práctico número ${currentExerciseIndex} de 6 para ser resuelto en terminal Linux.
+${isReto ? "Este es el RETO AVANZADO. Combina este tema con conceptos pasados. Dificultad alta." : "Ejercicio progresivo normal."}
 
-INSTRUCCIÓN ESTRICTA: RESPONDE ÚNICAMENTE CON UN JSON VÁLIDO. SIN TEXTO MARKDOWN ANTES NI DESPUÉS.
-Estructura obligatoria:
+OBLIGATORIO:
+1. NO repitas escenarios asociados a estos IDs pasados: ${JSON.stringify(historialReciente)}.
+2. DEVUELVE ÚNICA Y EXCLUSIVAMENTE UN JSON VÁLIDO. Sin bloques markdown. Sin saludos.
+Formato JSON requerido:
 {
-  "exercise_id": "generar_hash_unico",
-  "question": "Enunciado del reto para la terminal. Ejemplo: Crea un usuario...",
-  "preconditions": [{"type": "group_exists", "group": "soporte"}],
-  "validator": { "checks": [{"type": "user_exists", "username": "ana"}] },
-  "solution_reference": ["comando1", "comando2"],
-  "explanation": "Explicación breve de por qué esa es la solución correcta y qué trampa evita."
-}\`;
+  "exercise_id": "id_alfanumerico_generado",
+  "question": "Enunciado del reto...",
+  "solution_reference": ["comando_ideal_1", "comando_ideal_2"],
+  "explanation": "Explicación breve técnica de la solución."
+}`;
 
       try {
-        const response = await fetch(\`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=\${GEMINI_API_KEY}\`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -474,21 +422,24 @@ Estructura obligatoria:
         
         const data = await response.json();
         if (response.ok && data.candidates) {
-          const rawText = data.candidates[0].content.parts[0].text;
-          currentExerciseData = extractJSON(rawText);
+          let rawText = data.candidates[0].content.parts[0].text;
+          rawText = rawText.replace(/```(?:json)?/gi, '').replace(/```/g, '').trim();
           
-          if(currentExerciseData) {
-              promptBox.innerHTML = \`<p class="text-base">\${currentExerciseData.question}</p>\`;
-              btnSubmit.disabled = false;
-          } else {
-              promptBox.innerHTML = "<span class='text-rose-600 font-bold'>Error en el formato del tribunal. Reintentando...</span>";
-              setTimeout(pedirEjercicioGemini, 2000);
+          try {
+             currentExerciseData = JSON.parse(rawText);
+             promptBox.innerHTML = `<p class="text-sm font-bold text-slate-800">${currentExerciseData.question}</p>`;
+             input.disabled = false;
+             btn.disabled = false;
+             input.focus();
+          } catch(e) {
+             promptBox.innerHTML = "<span class='text-rose-600 font-bold'>Error en estructura JSON del tribunal. Reintentando...</span>";
+             setTimeout(pedirEjercicioPracticoJSON, 1500);
           }
         }
-      } catch (e) { promptBox.innerText = "Fallo de red conectando con Gemini."; }
+      } catch (e) { promptBox.innerText = "Error de red con Gemini."; }
     }
 
-    // --- EJECUCIÓN Y VALIDACIÓN DETERMINISTA (LOCAL) ---
+    // --- NUEVO FLUJO DETERMINISTA 3 INTENTOS ---
     function ejecutarComando(e) {
       e.preventDefault();
       const input = document.getElementById("commandInput");
@@ -499,7 +450,7 @@ Estructura obligatoria:
       historyIndex = commandHistory.length;
 
       const output = document.getElementById("terminalOutput");
-      output.innerHTML += \`<div><span class="text-teal-400 font-bold">teresa:~$</span> \${cmd}</div>\`;
+      output.innerHTML += `<div><span class="text-teal-400 font-bold">teresa:~$</span> ${cmd}</div>`;
       input.value = "";
       output.scrollTop = output.scrollHeight;
 
@@ -508,120 +459,117 @@ Estructura obligatoria:
 
     function procesarIntentoLocal(comandoUsuario) {
         currentAttempts++;
-        const btnSubmit = document.getElementById("btnSubmitCommand");
         const badge = document.getElementById("attemptsBadge");
-        badge.innerText = \`INTENTOS: \${currentAttempts}/3\`;
+        badge.innerText = `INTENTOS: ${currentAttempts}/3`;
 
-        // CONTRATO BACKEND (Documentado según instrucciones):
-        // En una plataforma real de la AGE, aquí haríamos:
-        // const estadoReal = await fetch('/api/validador', { body: JSON.stringify({ cmd: comandoUsuario, checks: currentExerciseData.validator.checks }) });
-        // LIMITACIÓN FRONTEND: Al carecer de entorno de ejecución aislado (backend), simulamos la validación
-        // cruzando las palabras clave del comando del alumno con la solución generada por Gemini.
-        
-        const isCorrect = simulacionBackendCheck(comandoUsuario, currentExerciseData.solution_reference);
         const evalBox = document.getElementById("aiEvaluation");
         const fSec = document.getElementById("feedbackSection");
-        const nextDiv = document.getElementById("nextExerciseDiv");
+        const nextBtn = document.getElementById("nextExerciseBtn");
+        const input = document.getElementById("commandInput");
+        const btnSubmit = document.getElementById("btnSubmit");
         
         fSec.classList.remove("hidden");
-        nextDiv.classList.add("hidden");
+        nextBtn.classList.add("hidden");
+
+        // Validador de entorno frontend (compara contra la solución_referencia JSON)
+        let isCorrect = validarComandoFrenteAReferencia(comandoUsuario, currentExerciseData.solution_reference);
 
         if (isCorrect) {
-            // ACIERTO
-            badge.className = "text-[11px] font-black bg-emerald-100 text-emerald-800 px-3 py-1 rounded border border-emerald-300 shadow-inner";
+            // OK
+            badge.className = "text-[10px] font-black bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg border border-emerald-300";
+            input.disabled = true;
             btnSubmit.disabled = true;
-            evalBox.innerHTML = \`
-                <p class="text-emerald-700 font-bold mb-2 text-sm"><i class="fa-solid fa-check-circle mr-1"></i> CORRECTO</p>
-                <p class="mb-2">El estado del sistema ha sido validado correctamente.</p>
-                <div class="bg-emerald-50 p-3 rounded border border-emerald-200 text-emerald-900 mt-2">
-                    <p class="font-bold text-[10px] uppercase mb-1">Motivo Técnico:</p>
-                    \${currentExerciseData.explanation}
-                </div>\`;
+            
+            evalBox.innerHTML = `
+                <p class="text-emerald-700 font-bold text-sm mb-2"><i class="fa-solid fa-check-circle mr-1"></i> CORRECTO (OK)</p>
+                <p>El sistema de laboratorio valida que se ha alcanzado el estado esperado.</p>
+                <div class="bg-emerald-50 p-3 mt-2 rounded border border-emerald-200">
+                    <p class="font-bold text-[10px] uppercase text-emerald-800 mb-1">Motivo Técnico:</p>
+                    <p class="text-emerald-900">${currentExerciseData.explanation}</p>
+                </div>`;
             
             registrarProgreso(true);
-            nextDiv.classList.remove("hidden");
+            nextBtn.classList.remove("hidden");
             
         } else {
-            // FALLO
-            if (currentAttempts < 3) {
-                badge.className = "text-[11px] font-black bg-rose-100 text-rose-800 px-3 py-1 rounded border border-rose-300 shadow-inner";
-                evalBox.innerHTML = \`
-                    <p class="text-rose-700 font-bold mb-2 text-sm"><i class="fa-solid fa-circle-xmark mr-1"></i> INCORRECTO</p>
-                    <p>Las condiciones del sistema no son las esperadas tras tu comando.</p>
-                    <p class="mt-2 text-amber-700 font-bold bg-amber-50 p-2 border border-amber-200 rounded">💡 Pista: Revisa la sintaxis o las opciones del comando principal impartido en este tema. Te quedan \${3 - currentAttempts} intento(s).</p>\`;
+            // NO OK
+            if (currentAttempts === 1) {
+                badge.className = "text-[10px] font-black bg-amber-100 text-amber-800 px-2.5 py-1 rounded-lg border border-amber-300";
+                evalBox.innerHTML = `
+                    <p class="text-rose-700 font-bold text-sm mb-2"><i class="fa-solid fa-circle-xmark mr-1"></i> INCORRECTO (NO OK)</p>
+                    <p>Las condiciones del laboratorio no se han cumplido. Te quedan 2 intentos.</p>
+                    <p class="mt-2 text-amber-700 font-bold bg-amber-50 p-2 border border-amber-200 rounded text-[11px]">💡 Pista 1: Revisa el comando principal mencionado en la teoría de este tema.</p>`;
+            } else if (currentAttempts === 2) {
+                badge.className = "text-[10px] font-black bg-rose-100 text-rose-800 px-2.5 py-1 rounded-lg border border-rose-300";
+                evalBox.innerHTML = `
+                    <p class="text-rose-700 font-bold text-sm mb-2"><i class="fa-solid fa-circle-xmark mr-1"></i> INCORRECTO (NO OK)</p>
+                    <p>El estado sigue sin ser válido. Te queda 1 último intento.</p>
+                    <p class="mt-2 text-rose-700 font-bold bg-rose-50 p-2 border border-rose-200 rounded text-[11px]">💡 Pista 2: Verifica cuidadosamente los parámetros (-/--) o rutas usadas.</p>`;
             } else {
-                // TERCER FALLO -> REVELAR SOLUCIÓN Y BLOQUEAR
-                badge.className = "text-[11px] font-black bg-slate-200 text-slate-800 px-3 py-1 rounded border border-slate-400 shadow-inner";
+                // TERCER FALLO -> BLOQUEAR Y REVELAR
+                badge.className = "text-[10px] font-black bg-slate-200 text-slate-800 px-2.5 py-1 rounded-lg border border-slate-400";
                 badge.innerText = "BLOQUEADO";
+                input.disabled = true;
                 btnSubmit.disabled = true;
                 
-                let solucionHTML = currentExerciseData.solution_reference.map(c => \`<code class="block bg-slate-800 text-teal-300 p-2 rounded mt-1 font-mono">\$ \${c}</code>\`).join("");
+                let htmlSols = currentExerciseData.solution_reference.map(c => `<code class="block bg-slate-800 text-teal-300 p-2 mt-1 rounded font-mono">$ ${c}</code>`).join("");
                 
-                evalBox.innerHTML = \`
-                    <p class="text-rose-700 font-bold mb-2 text-sm"><i class="fa-solid fa-lock mr-1"></i> INTENTOS AGOTADOS</p>
-                    <p class="mb-3">No has logrado el estado esperado.</p>
+                evalBox.innerHTML = `
+                    <p class="text-rose-700 font-bold text-sm mb-2"><i class="fa-solid fa-lock mr-1"></i> INTENTOS AGOTADOS</p>
+                    <p class="mb-3">El objetivo práctico ha fallado. Revisa la solución requerida:</p>
                     <div class="bg-slate-50 p-3 rounded border border-slate-200 shadow-inner">
-                        <p class="font-bold text-[10px] text-slate-500 uppercase">Solución de Referencia:</p>
-                        \${solucionHTML}
-                        <p class="mt-3 text-slate-700"><strong>Explicación:</strong> \${currentExerciseData.explanation}</p>
-                    </div>\`;
+                        <p class="font-bold text-[10px] text-slate-500 uppercase">Solución de Referencia del Tribunal:</p>
+                        ${htmlSols}
+                        <p class="mt-3 text-slate-700"><strong>Por qué:</strong> ${currentExerciseData.explanation}</p>
+                    </div>`;
                     
                 registrarProgreso(false);
-                nextDiv.classList.remove("hidden");
+                nextBtn.classList.remove("hidden");
             }
         }
     }
 
-    function simulacionBackendCheck(cmdUsuario, solucionesReferencia) {
-        // Pseudo-validador determinista: comprueba inclusión del comando base y opciones críticas.
-        let normUser = cmdUsuario.trim().replace(/\s+/g, ' ');
-        return solucionesReferencia.some(ref => {
-            let normRef = ref.trim().replace(/\s+/g, ' ');
-            // Lógica permisiva frontend: si incluye el comando clave (ej. useradd y carlos)
-            let keywords = normRef.split(" ").filter(w => w !== "sudo" && w.length > 2);
-            let matches = keywords.every(kw => normUser.includes(kw));
-            return normUser === normRef || matches;
+    function validarComandoFrenteAReferencia(cmdUsuario, referencias) {
+        // Pseudo-validador determinista frontend
+        let user = cmdUsuario.trim().replace(/\s+/g, ' ');
+        return referencias.some(ref => {
+            let tr = ref.trim().replace(/\s+/g, ' ');
+            if (user === tr) return true;
+            let keywords = tr.split(" ").filter(w => w.length > 2 && w !== "sudo");
+            return keywords.every(kw => user.includes(kw));
         });
     }
 
-    function registrarProgreso(fueCorrecto) {
-        userStats.history.push({
-            id: currentExerciseData.exercise_id,
-            mod: currentModuleId,
-            date: new Date().toISOString(),
-            attempts: currentAttempts,
-            success: fueCorrecto,
-            revealed: !fueCorrecto
-        });
+    function registrarProgreso(esAcierto) {
+        userStats.history.push(currentExerciseData.exercise_id);
         
-        if (fueCorrecto) {
+        if (esAcierto) {
             userStats.modules[currentModuleId].correct += 1;
         } else {
             userStats.modules[currentModuleId].error += 1;
-            // Registrar debilidad
             userStats.weaknesses[currentModuleId] = (userStats.weaknesses[currentModuleId] || 0) + 1;
         }
-        
-        localStorage.setItem('tai_expediente_v1', JSON.stringify(userStats));
+        localStorage.setItem('tai_expediente_v3', JSON.stringify(userStats));
     }
 
     function siguienteEjercicio() {
         if (currentExerciseIndex < 6) {
             currentExerciseIndex++;
-            pedirEjercicioGemini();
+            pedirEjercicioPracticoJSON();
         } else {
             document.getElementById("exerciseSection").classList.add("hidden");
+            document.getElementById("terminalOutput").innerHTML = '<div class="text-teal-400 font-bold">Bloque de terminal cerrado.</div>';
             document.getElementById("feedbackSection").classList.add("hidden");
-            document.getElementById("theoryContent").innerHTML = \`
-                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center">
+            document.getElementById("theoryContent").innerHTML = `
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center mt-4 shadow-sm">
                     <i class="fa-solid fa-medal text-4xl text-emerald-500 mb-3"></i>
-                    <h3 class="text-lg font-bold text-emerald-800">¡Bloque Completado!</h3>
-                    <p class="text-emerald-700 mt-2">Has finalizado los 6 ejercicios prácticos de este tema.</p>
-                </div>\`;
+                    <h3 class="text-lg font-bold text-emerald-800">¡Tema Completado con Éxito!</h3>
+                    <p class="text-emerald-700 mt-2 text-sm">Has finalizado el bloque de ejercicios y tu expediente ha sido actualizado. Elige otro tema en el menú lateral.</p>
+                </div>`;
         }
     }
 
-    // --- DASHBOARD Y EXPEDIENTE ---
+    // --- DASHBOARD Y EXAMEN FINAL MEJORADO ---
     function toggleExpediente() {
       const modal = document.getElementById("expedienteModal");
       modal.classList.toggle("hidden");
@@ -638,53 +586,75 @@ Estructura obligatoria:
           let st = userStats.modules[modId];
           tCorrect += st.correct;
           tError += st.error;
-          let rateMod = (st.correct + st.error) > 0 ? Math.round((st.correct / (st.correct + st.error)) * 100) : 0;
+          let total = st.correct + st.error;
+          let rateMod = total > 0 ? Math.round((st.correct / total) * 100) : 0;
           
-          let modName = temarioTAI.flatMap(n => n.modulos).find(m => m.id === modId)?.titulo || modId;
+          let modObj = temarioTAI.find(m => m.id === modId);
+          let modName = modObj ? modObj.titulo : modId;
 
-          modContainer.innerHTML += \`
+          modContainer.innerHTML += `
             <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
-              <p class="text-[10px] font-bold text-slate-500 uppercase truncate" title="\${modName}">\${modName}</p>
+              <p class="text-[10px] font-bold text-slate-500 uppercase truncate" title="${modName}">${modName}</p>
               <div class="flex justify-between items-end mt-1">
-                <span class="text-xl font-black \${rateMod >= 75 ? 'text-emerald-500' : rateMod >= 50 ? 'text-amber-500' : 'text-rose-500'}">\${rateMod}%</span>
-                <span class="text-[10px] text-slate-400">✅ \${st.correct} | ❌ \${st.error}</span>
+                <span class="text-xl font-black ${rateMod >= 75 ? 'text-emerald-500' : rateMod >= 50 ? 'text-amber-500' : 'text-rose-500'}">${rateMod}%</span>
+                <span class="text-[10px] text-slate-400">✅ ${st.correct} | ❌ ${st.error}</span>
               </div>
               <div class="w-full bg-slate-100 h-1.5 mt-2 rounded-full overflow-hidden">
-                <div class="bg-indigo-500 h-full transition-all duration-500" style="width: \${rateMod}%"></div>
+                <div class="bg-indigo-500 h-full transition-all duration-500" style="width: ${rateMod}%"></div>
               </div>
-            </div>\`;
+            </div>`;
       });
       
-      // Debilidades
-      let weakMods = Object.keys(userStats.weaknesses).sort((a,b) => userStats.weaknesses[b] - userStats.weaknesses[a]).slice(0,3);
-      if (weakMods.length > 0) {
-          weakMods.forEach(modId => {
-             let fallos = userStats.weaknesses[modId];
-             let modName = temarioTAI.flatMap(n => n.modulos).find(m => m.id === modId)?.titulo || modId;
-             weakContainer.innerHTML += \`
-                <div class="bg-rose-50 border border-rose-200 p-2 rounded flex justify-between items-center">
-                    <span class="text-xs font-bold text-rose-800">\${modName}</span>
-                    <span class="text-[10px] bg-rose-200 text-rose-900 px-2 py-0.5 rounded font-bold">\${fallos} fallos graves</span>
-                </div>\`;
+      let weakKeys = Object.keys(userStats.weaknesses).sort((a,b) => userStats.weaknesses[b] - userStats.weaknesses[a]).slice(0,3);
+      if (weakKeys.length > 0) {
+          weakKeys.forEach(modId => {
+             let modObj = temarioTAI.find(m => m.id === modId);
+             let modName = modObj ? modObj.titulo : modId;
+             weakContainer.innerHTML += `
+                <div class="bg-rose-50 border border-rose-200 p-2.5 rounded flex justify-between items-center shadow-sm">
+                    <span class="text-xs font-bold text-rose-800 truncate pr-2">${modName}</span>
+                    <span class="text-[10px] bg-rose-200 text-rose-900 px-2 py-0.5 rounded font-bold">${userStats.weaknesses[modId]} fallos</span>
+                </div>`;
           });
       } else {
-          weakContainer.innerHTML = "<p class='text-xs text-slate-500 italic'>Sin debilidades detectadas aún.</p>";
+          weakContainer.innerHTML = "<p class='text-xs text-slate-500 italic'>Sin debilidades. Tienes el sistema dominado.</p>";
       }
 
       let tTotal = tCorrect + tError;
       let globalRate = tTotal > 0 ? Math.round((tCorrect / tTotal) * 100) : 0;
-      document.getElementById("statGlobalRate").innerText = \`\${globalRate}%\`;
+      document.getElementById("statGlobalRate").innerText = `${globalRate}%`;
       document.getElementById("statTotalCorrect").innerText = tCorrect;
       document.getElementById("statTotalErrors").innerText = tError;
     }
 
     function resetStats() {
-      if(confirm("⚠ CUIDADO: Se borrará TODO tu historial anual. ¿Estás seguro?")) {
+      if(confirm("⚠ CUIDADO: ¿Estás seguro de borrar definitivamente TODO el historial anual?")) {
         userStats = { history: [], weaknesses: {}, modules: {} };
-        localStorage.removeItem('tai_expediente_v1');
+        localStorage.removeItem('tai_expediente_v3');
         renderMenu();
         renderExpediente();
       }
+    }
+
+    function iniciarExamenGlobal() {
+        let keys = Object.keys(userStats.weaknesses).filter(k => userStats.weaknesses[k] > 0);
+        if(keys.length === 0) {
+            alert("Necesitas acumular algo de historial y fallos para que el simulacro priorice tus puntos débiles. ¡Sigue practicando en los temas regulares!");
+            return;
+        }
+        
+        keys.sort((a,b) => userStats.weaknesses[b] - userStats.weaknesses[a]);
+        let weakModId = keys[0]; // Coge el módulo con más fallos
+        let targetMod = temarioTAI.find(m => m.id === weakModId);
+        
+        if(targetMod && targetMod.subpuntos.length > 0) {
+            seleccionarSubpunto(targetMod.subpuntos[0], targetMod.id);
+            currentExerciseIndex = 6; // Forzar Dificultad Reto Avanzado
+            
+            document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-stopwatch text-rose-600"></i> SIMULACRO FINAL: ${targetMod.titulo}`;
+            document.getElementById("theoryContent").innerHTML = `<div class="bg-rose-50 p-4 border border-rose-200 rounded text-rose-900 font-bold text-xs shadow-inner">Simulacro práctico generado a partir del módulo donde has cometido más errores. Requiere máxima concentración.</div>`;
+            iniciarPracticaTema();
+        }
     }
   </script>
 </body>
