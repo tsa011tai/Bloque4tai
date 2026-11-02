@@ -440,7 +440,7 @@
           let rawText = cleanRegEx(data.candidates[0].content.parts[0].text);
           let isCorrect = rawText.toUpperCase().startsWith("[CORRECTO]");
           
-          let htmlContent = rawText.replace(/[CORRECTO]/i, '').replace(/[ERROR]/i, '').trim();
+          let htmlContent = rawText.replace(/\[CORRECTO\]/i, '').replace(/\[ERROR\]/i, '').trim();
           evalBox.innerHTML = `<div class="prose text-xs text-slate-700 leading-relaxed">${htmlContent}</div>`;
           
           badge.classList.remove("hidden", "bg-emerald-500", "bg-rose-500");
@@ -493,3 +493,77 @@
       temarioTAI.forEach(m => {
         let st = userStats[m.id];
         if(!st) return;
+        tCorrect += st.correct;
+        tError += st.error;
+        let totalMod = st.correct + st.error;
+        let rateMod = totalMod > 0 ? Math.round((st.correct / totalMod) * 100) : 0;
+
+        modContainer.innerHTML += `
+          <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
+            <p class="text-[10px] font-bold text-slate-500 uppercase truncate" title="${m.titulo}">${m.titulo}</p>
+            <div class="flex justify-between items-end mt-1">
+              <span class="text-xl font-black ${rateMod >= 75 ? 'text-emerald-500' : rateMod >= 50 ? 'text-amber-500' : 'text-rose-500'}">${rateMod}%</span>
+              <span class="text-[10px] text-slate-400">✅ ${st.correct} | ❌ ${st.error}</span>
+            </div>
+            <div class="w-full bg-slate-100 h-1.5 mt-2 rounded-full overflow-hidden">
+              <div class="bg-indigo-500 h-full transition-all duration-500" style="width: ${rateMod}%"></div>
+            </div>
+          </div>`;
+
+        if(st.logs && st.logs.length > 0) {
+          let errorHTML = `<div class="mb-4"><p class="text-xs font-bold text-slate-700 mb-2 border-b border-slate-100 pb-1">${m.titulo}</p>`;
+          st.logs.forEach(log => {
+            errorHTML += `
+              <div class="bg-rose-50 p-2.5 rounded-lg border border-rose-100 mb-2 shadow-sm">
+                <p class="font-mono text-xs text-rose-800 font-bold bg-white p-1 rounded inline-block mb-1 border border-rose-200">$ ${log.cmd}</p>
+                <div class="text-[10px] text-slate-600 line-clamp-2">${log.feedback}</div>
+              </div>`;
+          });
+          errorHTML += `</div>`;
+          errContainer.innerHTML += errorHTML;
+        }
+      });
+
+      let tTotal = tCorrect + tError;
+      let globalRate = tTotal > 0 ? Math.round((tCorrect / tTotal) * 100) : 0;
+      document.getElementById("statGlobalRate").innerText = `${globalRate}%`;
+      document.getElementById("statTotalCorrect").innerText = tCorrect;
+      document.getElementById("statTotalErrors").innerText = tError;
+
+      if(tError === 0 && tTotal > 0) errContainer.innerHTML = `<div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-center"><i class="fa-solid fa-medal text-emerald-600 text-2xl mb-2"></i><p class="text-xs text-emerald-700 font-bold">¡Expediente inmaculado! Sigue así para asegurar el C1.</p></div>`;
+      else if(tTotal === 0) errContainer.innerHTML = `<p class="text-xs text-slate-500 italic text-center py-4">Aún no hay fallos registrados. ¡Ve al terminal a practicar!</p>`;
+    }
+
+    function resetStats() {
+      if(confirm("⚠ CUIDADO: ¿Borrar definitivamente todo tu progreso y empezar el temario de cero?")) {
+        userStats = {};
+        localStorage.removeItem('tai_expediente');
+        renderMenu();
+        renderExpediente();
+      }
+    }
+
+    function iniciarExamenGlobal() {
+      subpuntoActivo = { nombre: "SIMULACRO GLOBAL C1", teoria: "Repaso integral y agresivo de los 10 módulos. Detección de trampas cruzadas." };
+      currentModuleId = "m1"; 
+      document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-stopwatch text-rose-600"></i> SIMULACRO OFICIAL ACTIVO`;
+      document.getElementById("theoryContent").innerHTML = `<div class="p-4 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 text-xs font-bold shadow-inner">¡Reloj en marcha! 30 minutos sin descanso. Tus fallos aquí penalizan tu expediente. Demuestra lo que sabes.</div>`;
+      
+      const timerUI = document.getElementById("examTimerContainer");
+      timerUI.classList.remove("hidden");
+      
+      clearInterval(timerInterval);
+      let time = 1800;
+      timerInterval = setInterval(() => {
+        time--;
+        const m = Math.floor(time/60).toString().padStart(2,'0');
+        const s = (time%60).toString().padStart(2,'0');
+        document.getElementById("examTimer").innerText = `${m}:${s}`;
+        if(time <= 0) { clearInterval(timerInterval); alert("¡TIEMPO AGOTADO! El tribunal ha recogido los exámenes."); timerUI.classList.add("hidden"); }
+      }, 1000);
+      
+      pedirNuevoEjercicio();
+    }
+  </script>
+</body>
+</html>
