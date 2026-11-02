@@ -130,4 +130,468 @@
       <section class="bg-slate-900 rounded-2xl shadow-xl flex flex-col border border-slate-700">
         <div class="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700">
           <div class="flex gap-2 items-center">
-            <span class="w-3 h
+            <span class="w-3 h-3 rounded-full bg-rose-500"></span><span class="w-3 h-3 rounded-full bg-amber-400"></span><span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+            <span class="text-[11px] font-mono text-slate-400 ml-2">bash - teresa@ordenador:~</span>
+          </div>
+          <button onclick="verRespuestaSolucion()" id="btnVerRespuesta" class="hidden bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-bold px-3 py-1 rounded transition shadow">Ver Respuesta Explicada</button>
+        </div>
+        <div id="terminalOutput" class="p-4 font-mono text-[11px] sm:text-xs overflow-y-auto h-40 space-y-1.5 text-slate-200">
+          <div class="text-teal-400 font-bold">✨ Terminal lista. Lee el enunciado, practica en tu entorno y pulsa "Ver Respuesta Explicada" cuando desees autoevaluarte.</div>
+        </div>
+        <form onsubmit="simularComandoTerminal(event)" class="bg-slate-950 p-2.5 border-t border-slate-800 flex items-center gap-2 relative">
+          <span class="text-teal-400 font-mono text-xs pl-2 font-bold">teresa:~$</span>
+          <input type="text" id="commandInput" class="bg-transparent text-white font-mono text-xs outline-none flex-1" autocomplete="off" placeholder="Escribe tu comando de práctica..."/>
+          <button type="submit" class="bg-teal-600 text-white text-xs px-6 py-1.5 rounded hover:bg-teal-500 transition font-bold shadow border-b-2 border-teal-800">PROBAR</button>
+        </form>
+      </section>
+
+      <!-- 4. CORRECCIÓN Y VALORACIÓN MANUAL -->
+      <section id="feedbackSection" class="hidden bg-white border-2 border-teal-200 rounded-2xl p-5 shadow-sm">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-xs font-bold text-teal-900 flex items-center gap-2 uppercase tracking-wide">
+            <i class="fa-solid fa-clipboard-check text-teal-600"></i> Solución Explicada del Tribunal
+          </h3>
+        </div>
+        <div id="aiEvaluation" class="text-xs text-slate-700 overflow-y-auto max-h-64 bg-slate-50 p-4 rounded-xl border border-slate-200 leading-relaxed space-y-3">
+        </div>
+        
+        <!-- Botones de valoración manual solicitados -->
+        <div id="manualValuationControls" class="mt-4 pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
+          <span class="text-xs font-bold text-slate-700">¿Cómo valoras tu resultado en este ejercicio?</span>
+          <div class="flex gap-2">
+            <button onclick="registrarValoracionManual(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow transition flex items-center gap-1.5">
+              <i class="fa-solid fa-check"></i> Lo he resuelto correctamente
+            </button>
+            <button onclick="registrarValoracionManual(false)" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow transition flex items-center gap-1.5">
+              <i class="fa-solid fa-xmark"></i> No lo he resuelto
+            </button>
+          </div>
+        </div>
+
+        <div id="nextExerciseBtn" class="mt-4 text-right hidden">
+            <button onclick="siguienteEjercicio()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2.5 rounded-lg shadow transition">Continuar <i class="fa-solid fa-arrow-right ml-1"></i></button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    let GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
+    let subpuntoActivo = null;
+    let currentModuleId = null;
+    let currentExerciseIndex = 1;
+    let commandHistory = [];
+    let historyIndex = -1;
+    let currentExerciseData = null;
+
+    let userStats = JSON.parse(localStorage.getItem('tai_expediente_v4')) || {
+        history: [],
+        weaknesses: {},
+        modules: {}
+    };
+
+    // --- TEMARIO COMPLETO (30 MÓDULOS RESTAURADOS) ---
+    const temarioTAI = [
+      { id: "m1", titulo: "N0-M1: Introducción a Linux", subpuntos: [
+          { id: "1.1", nombre: "Identidad del sistema", teoria: "<p><strong>Comando:</strong> <code>uname</code></p><p><strong>Utilidad:</strong> Muestra información del kernel y arquitectura.</p><p><strong>Ejemplo:</strong> <code>uname -a</code></p>" }
+      ]},
+      { id: "m2", titulo: "N0-M2: Terminal y Bash esencial", subpuntos: [
+          { id: "2.1", nombre: "Variables y Entorno", teoria: "<p><strong>Comando:</strong> <code>export</code></p><p><strong>Utilidad:</strong> Exporta variables al entorno de procesos hijos.</p>" }
+      ]},
+      { id: "m3", titulo: "N0-M3: Sistema de ficheros", subpuntos: [
+          { id: "3.1", nombre: "Navegación FHS", teoria: "<p><strong>Comando:</strong> <code>pwd</code>, <code>cd</code>, <code>ls</code>.</p>" }
+      ]},
+      { id: "m4", titulo: "N0-M4: Procesado de texto", subpuntos: [
+          { id: "4.1", nombre: "Búsqueda con Grep", teoria: "<p><strong>Comando:</strong> <code>grep</code>.</p>" }
+      ]},
+      { id: "m5", titulo: "N1-M5: Usuarios y grupos", subpuntos: [
+          { id: "5.1", nombre: "Grupos suplementarios", teoria: "<p><strong>Comando:</strong> <code>usermod</code>.</p>" }
+      ]},
+      { id: "m6", titulo: "N1-M6: Permisos y ACL", subpuntos: [
+          { id: "6.1", nombre: "Umask y Octal", teoria: "<p><strong>Comando:</strong> <code>chmod</code>, <code>umask</code>.</p>" }
+      ]},
+      { id: "m7", titulo: "N1-M7: Procesos (systemd)", subpuntos: [
+          { id: "7.1", nombre: "Systemctl", teoria: "<p><strong>Comando:</strong> <code>systemctl</code>.</p>" }
+      ]},
+      { id: "m8", titulo: "N1-M8: Paquetes", subpuntos: [
+          { id: "8.1", nombre: "APT y DPKG", teoria: "<p>Gestión de paquetes.</p>" }
+      ]},
+      { id: "m9", titulo: "N2-M9: Streams y scripts", subpuntos: [
+          { id: "9.1", nombre: "Redirecciones", teoria: "<p>Uso de <code>></code> y <code>2></code>.</p>" }
+      ]},
+      { id: "m10", titulo: "N2-M10: Tareas programadas", subpuntos: [
+          { id: "10.1", nombre: "Cron", teoria: "<p>Automatización con <code>crontab</code>.</p>" }
+      ]},
+      { id: "m11", titulo: "N2-M11: Discos y particiones", subpuntos: [
+          { id: "11.1", nombre: "fstab y montajes", teoria: "<p>Gestión de puntos de montaje.</p>" }
+      ]},
+      { id: "m12", titulo: "N2-M12: RAID y LVM", subpuntos: [
+          { id: "12.1", nombre: "Extensión LVM", teoria: "<p>Administración de volúmenes.</p>" }
+      ]},
+      { id: "m13", titulo: "N2-M13: Kernel y arranque", subpuntos: [
+          { id: "13.1", nombre: "Módulos", teoria: "<p>Uso de <code>modprobe</code>.</p>" }
+      ]},
+      { id: "m14", titulo: "N2-M14: Logs y diagnóstico", subpuntos: [
+          { id: "14.1", nombre: "Journalctl", teoria: "<p>Consulta de logs con <code>journalctl</code>.</p>" }
+      ]},
+      { id: "m15", titulo: "N3-M15: Fundamentos Redes", subpuntos: [
+          { id: "15.1", nombre: "IP y Enrutamiento", teoria: "<p>Suite <code>iproute2</code>.</p>" }
+      ]},
+      { id: "m16", titulo: "N3-M16: Configuración de red", subpuntos: [
+          { id: "16.1", nombre: "NetworkManager", teoria: "<p>Uso de <code>nmcli</code>.</p>" }
+      ]},
+      { id: "m17", titulo: "N3-M17: Diagnóstico red", subpuntos: [
+          { id: "17.1", nombre: "Sockets", teoria: "<p>Inspección con <code>ss</code>.</p>" }
+      ]},
+      { id: "m18", titulo: "N3-M18: DNS, DHCP, SSH", subpuntos: [
+          { id: "18.1", nombre: "Claves SSH", teoria: "<p>Generación con <code>ssh-keygen</code>.</p>" }
+      ]},
+      { id: "m19", titulo: "N3-M19: Web y compartición", subpuntos: [
+          { id: "19.1", nombre: "Test SMB", teoria: "<p>Uso de <code>testparm</code>.</p>" }
+      ]},
+      { id: "m20", titulo: "N3-M20: Firewall y VPN", subpuntos: [
+          { id: "20.1", nombre: "Iptables", teoria: "<p>Reglas de cortafuegos.</p>" }
+      ]},
+      { id: "m21", titulo: "N4-M21: Hardening", subpuntos: [
+          { id: "21.1", nombre: "Test SSHD", teoria: "<p>Validación con <code>sshd -t</code>.</p>" }
+      ]},
+      { id: "m22", titulo: "N4-M22: SELinux / AppArmor", subpuntos: [
+          { id: "22.1", nombre: "Contextos SELinux", teoria: "<p>Uso de <code>restorecon</code>.</p>" }
+      ]},
+      { id: "m23", titulo: "N4-M23: LDAP y AD", subpuntos: [
+          { id: "23.1", nombre: "NSS y Directorio", teoria: "<p>Uso de <code>getent</code>.</p>" }
+      ]},
+      { id: "m24", titulo: "N4-M24: Auditoría y PKI", subpuntos: [
+          { id: "24.1", nombre: "Certificados", teoria: "<p>Inspección con <code>openssl</code>.</p>" }
+      ]},
+      { id: "m25", titulo: "N5-M25: Git y Ansible", subpuntos: [
+          { id: "25.1", nombre: "Idempotencia", teoria: "<p>Playbooks y automatización.</p>" }
+      ]},
+      { id: "m26", titulo: "N5-M26: Monitorización", subpuntos: [
+          { id: "26.1", nombre: "Prometheus", teoria: "<p>Validación con <code>promtool</code>.</p>" }
+      ]},
+      { id: "m27", titulo: "N5-M27: Virtualización", subpuntos: [
+          { id: "27.1", nombre: "Contenedores Rootless", teoria: "<p>Uso de Podman.</p>" }
+      ]},
+      { id: "m28", titulo: "N5-M28: Backups y HA", subpuntos: [
+          { id: "28.1", nombre: "Integridad", teoria: "<p>Comprobación con <code>sha256sum</code>.</p>" }
+      ]},
+      { id: "m29", titulo: "N5-M29: Cloud e IaC", subpuntos: [
+          { id: "29.1", nombre: "Terraform", teoria: "<p>Uso de <code>terraform plan</code>.</p>" }
+      ]},
+      { id: "m30", titulo: "N5-M30: Práctica Profesional", subpuntos: [
+          { id: "30.1", nombre: "Evidencias e ITIL", teoria: "<p>Uso de <code>script sesion.log</code>.</p>" }
+      ]}
+    ];
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (GEMINI_API_KEY) document.getElementById("apiKeyInput").value = GEMINI_API_KEY;
+      renderMenu();
+      
+      const input = document.getElementById("commandInput");
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (historyIndex > 0) { historyIndex--; input.value = commandHistory[historyIndex]; }
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (historyIndex < commandHistory.length - 1) { historyIndex++; input.value = commandHistory[historyIndex]; }
+          else { historyIndex = commandHistory.length; input.value = ""; }
+        }
+      });
+    });
+
+    function guardarKey() {
+      const k = document.getElementById("apiKeyInput").value.trim();
+      if (k) {
+        localStorage.setItem("gemini_api_key", k);
+        GEMINI_API_KEY = k;
+        alert("¡Clave API guardada correctamente!");
+      }
+    }
+
+    function renderMenu() {
+      const menuContainer = document.getElementById("modulesMenu");
+      menuContainer.innerHTML = "";
+      temarioTAI.forEach((m) => {
+        if(!userStats.modules[m.id]) userStats.modules[m.id] = { correct: 0, error: 0 };
+        
+        const modEl = document.createElement("div");
+        modEl.className = "mb-2 border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50";
+        const contentId = `mod_content_${m.id}`;
+        
+        modEl.innerHTML = `
+          <button onclick="toggleModulo('${contentId}', '${m.id}')" class="w-full text-left font-bold text-slate-700 bg-slate-100 hover:bg-teal-50 p-2.5 rounded-t-xl flex justify-between items-center text-[11px] transition shadow-sm">
+            <span class="truncate">${m.titulo}</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="chevron_${m.id}"></i>
+          </button>
+          <div id="${contentId}" class="space-y-1 p-2 bg-white hidden border-t border-slate-100"></div>`;
+        menuContainer.appendChild(modEl);
+        
+        const subList = document.getElementById(contentId);
+        m.subpuntos.forEach(s => {
+          const btn = document.createElement("button");
+          btn.className = "w-full text-left p-1.5 rounded-lg hover:bg-teal-50 hover:text-teal-800 text-[10px] block transition text-slate-600 font-medium";
+          btn.innerHTML = `<i class="fa-solid fa-caret-right mr-1 opacity-50"></i> ${s.nombre}`;
+          btn.onclick = () => seleccionarSubpunto(s, m.id);
+          subList.appendChild(btn);
+        });
+      });
+      localStorage.setItem('tai_expediente_v4', JSON.stringify(userStats));
+    }
+
+    function toggleModulo(contentId, modId) {
+      const el = document.getElementById(contentId);
+      const chevron = document.getElementById(`chevron_${modId}`);
+      el.classList.toggle("hidden");
+      chevron.style.transform = el.classList.contains("hidden") ? "rotate(0deg)" : "rotate(180deg)";
+    }
+
+    function seleccionarSubpunto(sub, modId) {
+      subpuntoActivo = sub;
+      currentModuleId = modId;
+      currentExerciseIndex = 1;
+      
+      document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-graduation-cap text-teal-600"></i> ${sub.nombre}`;
+      document.getElementById("theoryContent").innerHTML = sub.teoria;
+      document.getElementById("practiceControl").classList.remove("hidden");
+      
+      document.getElementById("exerciseSection").classList.add("hidden");
+      document.getElementById("feedbackSection").classList.add("hidden");
+      document.getElementById("btnVerRespuesta").classList.add("hidden");
+      limpiarTerminal();
+    }
+
+    function iniciarPracticaTema() {
+      document.getElementById("practiceControl").classList.add("hidden");
+      document.getElementById("exerciseSection").classList.remove("hidden");
+      pedirEjercicioPracticoJSON();
+    }
+
+    function limpiarTerminal() {
+      document.getElementById("terminalOutput").innerHTML = '<div class="text-teal-400 font-bold">✨ Terminal lista. Lee el enunciado y practica.</div>';
+    }
+
+    async function pedirEjercicioPracticoJSON() {
+      const promptBox = document.getElementById("exercisePrompt");
+      const headerBox = document.getElementById("exerciseHeader");
+      const btnVer = document.getElementById("btnVerRespuesta");
+      
+      headerBox.innerHTML = `<i class="fa-solid fa-laptop-code text-teal-700"></i> Ejercicio ${currentExerciseIndex}/6`;
+      document.getElementById("feedbackSection").classList.add("hidden");
+      currentExerciseData = null;
+      btnVer.classList.add("hidden");
+
+      if (!subpuntoActivo || !GEMINI_API_KEY) {
+        promptBox.innerHTML = "<span class='text-rose-600 font-bold'>⚠️ Falta tu API Key. Guárdala arriba.</span>";
+        return;
+      }
+
+      promptBox.innerHTML = `<span class="text-teal-700 font-bold animate-pulse"><i class="fa-solid fa-microchip fa-spin mr-2"></i> Generando ejercicio práctico...</span>`;
+      
+      const historialReciente = userStats.history.slice(-20);
+      const isReto = currentExerciseIndex === 6;
+
+      const promptSystem = `Actúa como tutor TAI C1.
+Tema: '${subpuntoActivo.nombre}'. 
+Teoría dada: ${subpuntoActivo.teoria.replace(/<[^>]*>?/gm, '')}.
+Genera el ejercicio práctico número ${currentExerciseIndex} de 6 para ser resuelto en terminal Linux.
+${isReto ? "Este es el RETO AVANZADO. Dificultad alta." : "Ejercicio progresivo normal."}
+
+OBLIGATORIO:
+1. NO repitas escenarios asociados a estos IDs pasados: ${JSON.stringify(historialReciente)}.
+2. DEVUELVE ÚNICA Y EXCLUSIVAMENTE UN JSON VÁLIDO. Sin bloques markdown. Sin saludos.
+Formato JSON requerido:
+{
+  "exercise_id": "id_alfanumerico",
+  "question": "Enunciado del ejercicio...",
+  "solution_commands": ["comando sugerido 1", "comando sugerido 2"],
+  "explanation": "Explicación técnica de la solución."
+}`;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: promptSystem }] }] })
+        });
+        
+        const data = await response.json();
+        if (response.ok && data.candidates) {
+          let rawText = data.candidates[0].content.parts[0].text;
+          rawText = rawText.replace(/```(?:json)?/gi, '').replace(/```/g, '').trim();
+          
+          try {
+             currentExerciseData = JSON.parse(rawText);
+             promptBox.innerHTML = `<p class="text-sm font-bold text-slate-800">${currentExerciseData.question}</p>`;
+             btnVer.classList.remove("hidden");
+          } catch(e) {
+             promptBox.innerHTML = "<span class='text-rose-600 font-bold'>Error en estructura JSON. Reintentando...</span>";
+             setTimeout(pedirEjercicioPracticoJSON, 1500);
+          }
+        }
+      } catch (e) { promptBox.innerText = "Error de red con Gemini."; }
+    }
+
+    function simularComandoTerminal(e) {
+      e.preventDefault();
+      const input = document.getElementById("commandInput");
+      const cmd = input.value.trim();
+      if (!cmd) return;
+
+      commandHistory.push(cmd);
+      historyIndex = commandHistory.length;
+
+      const output = document.getElementById("terminalOutput");
+      output.innerHTML += `<div><span class="text-teal-400 font-bold">teresa:~$</span> ${cmd}</div>`;
+      input.value = "";
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function verRespuestaSolucion() {
+      if(!currentExerciseData) return;
+      const fSec = document.getElementById("feedbackSection");
+      const evalBox = document.getElementById("aiEvaluation");
+      fSec.classList.remove("hidden");
+      document.getElementById("btnVerRespuesta").classList.add("hidden");
+      document.getElementById("manualValuationControls").classList.remove("hidden");
+      document.getElementById("nextExerciseBtn").classList.add("hidden");
+
+      let htmlSols = currentExerciseData.solution_commands.map(c => `<code class="block bg-slate-800 text-teal-300 p-2 mt-1 rounded font-mono">$ ${c}</code>`).join("");
+
+      evalBox.innerHTML = `
+        <p class="font-bold text-slate-900 text-sm">Comandos Sugeridos:</p>
+        ${htmlSols}
+        <div class="mt-3 bg-amber-50 p-3 rounded border border-amber-200">
+            <p class="font-bold text-[10px] uppercase text-amber-800 mb-1">Explicación Técnica:</p>
+            <p class="text-amber-900">${currentExerciseData.explanation}</p>
+        </div>`;
+      fSec.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function registrarValoracionManual(esAcierto) {
+      document.getElementById("manualValuationControls").classList.add("hidden");
+      userStats.history.push(currentExerciseData.exercise_id);
+      
+      if (esAcierto) {
+          userStats.modules[currentModuleId].correct += 1;
+      } else {
+          userStats.modules[currentModuleId].error += 1;
+          userStats.weaknesses[currentModuleId] = (userStats.weaknesses[currentModuleId] || 0) + 1;
+      }
+      localStorage.setItem('tai_expediente_v4', JSON.stringify(userStats));
+
+      const evalBox = document.getElementById("aiEvaluation");
+      evalBox.innerHTML += esAcierto 
+        ? `<div class="mt-3 text-emerald-700 font-bold"><i class="fa-solid fa-check mr-1"></i> Marcado como resuelto correctamente.</div>`
+        : `<div class="mt-3 text-rose-700 font-bold"><i class="fa-solid fa-xmark mr-1"></i> Marcado para repasar en simulacros.</div>`;
+
+      document.getElementById("nextExerciseBtn").classList.remove("hidden");
+    }
+
+    function siguienteEjercicio() {
+        if (currentExerciseIndex < 6) {
+            currentExerciseIndex++;
+            limpiarTerminal();
+            pedirEjercicioPracticoJSON();
+        } else {
+            document.getElementById("exerciseSection").classList.add("hidden");
+            document.getElementById("feedbackSection").classList.add("hidden");
+            document.getElementById("theoryContent").innerHTML = `
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center mt-4 shadow-sm">
+                    <i class="fa-solid fa-medal text-4xl text-emerald-500 mb-3"></i>
+                    <h3 class="text-lg font-bold text-emerald-800">¡Módulo Completado con Éxito!</h3>
+                    <p class="text-emerald-700 mt-2 text-sm">Has finalizado el bloque de ejercicios y tu autoevaluación ha sido guardada. Elige otro tema en el menú lateral.</p>
+                </div>`;
+        }
+    }
+
+    function toggleExpediente() {
+      const modal = document.getElementById("expedienteModal");
+      modal.classList.toggle("hidden");
+      if(!modal.classList.contains("hidden")) renderExpediente();
+    }
+
+    function renderExpediente() {
+      let tCorrect = 0; let tError = 0;
+      const modContainer = document.getElementById("statsModulesContainer");
+      const weakContainer = document.getElementById("statsWeaknessesList");
+      modContainer.innerHTML = ""; weakContainer.innerHTML = "";
+
+      Object.keys(userStats.modules).forEach(modId => {
+          let st = userStats.modules[modId];
+          tCorrect += st.correct;
+          tError += st.error;
+          let total = st.correct + st.error;
+          let rateMod = total > 0 ? Math.round((st.correct / total) * 100) : 0;
+          
+          let modObj = temarioTAI.find(m => m.id === modId);
+          let modName = modObj ? modObj.titulo : modId;
+
+          modContainer.innerHTML += `
+            <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
+              <p class="text-[10px] font-bold text-slate-500 uppercase truncate" title="${modName}">${modName}</p>
+              <div class="flex justify-between items-end mt-1">
+                <span class="text-xl font-black ${rateMod >= 75 ? 'text-emerald-500' : rateMod >= 50 ? 'text-amber-500' : 'text-rose-500'}">${rateMod}%</span>
+                <span class="text-[10px] text-slate-400">✅ ${st.correct} | ❌ ${st.error}</span>
+              </div>
+              <div class="w-full bg-slate-100 h-1.5 mt-2 rounded-full overflow-hidden">
+                <div class="bg-indigo-500 h-full transition-all duration-500" style="width: ${rateMod}%"></div>
+              </div>
+            </div>`;
+      });
+      
+      let weakKeys = Object.keys(userStats.weaknesses).sort((a,b) => userStats.weaknesses[b] - userStats.weaknesses[a]).slice(0,3);
+      if (weakKeys.length > 0) {
+          weakKeys.forEach(modId => {
+             let modObj = temarioTAI.find(m => m.id === modId);
+             let modName = modObj ? modObj.titulo : modId;
+             weakContainer.innerHTML += `
+                <div class="bg-rose-50 border border-rose-200 p-2.5 rounded flex justify-between items-center shadow-sm">
+                    <span class="text-xs font-bold text-rose-800 truncate pr-2">${modName}</span>
+                    <span class="text-[10px] bg-rose-200 text-rose-900 px-2 py-0.5 rounded font-bold">${userStats.weaknesses[modId]} fallos</span>
+                </div>`;
+          });
+      } else {
+          weakContainer.innerHTML = "<p class='text-xs text-slate-500 italic'>Sin debilidades registradas.</p>";
+      }
+
+      let tTotal = tCorrect + tError;
+      let globalRate = tTotal > 0 ? Math.round((tCorrect / tTotal) * 100) : 0;
+      document.getElementById("statGlobalRate").innerText = `${globalRate}%`;
+      document.getElementById("statTotalCorrect").innerText = tCorrect;
+      document.getElementById("statTotalErrors").innerText = tError;
+    }
+
+    function resetStats() {
+      if(confirm("⚠ CUIDADO: ¿Estás seguro de borrar todo el historial?")) {
+        userStats = { history: [], weaknesses: {}, modules: {} };
+        localStorage.removeItem('tai_expediente_v4');
+        renderMenu();
+        renderExpediente();
+      }
+    }
+
+    function iniciarExamenGlobal() {
+        let keys = Object.keys(userStats.weaknesses).filter(k => userStats.weaknesses[k] > 0);
+        if(keys.length === 0) {
+            alert("Necesitas acumular historial y autoevaluaciones con errores para que el simulacro priorice tus puntos débiles.");
+            return;
+        }
+        
+        keys.sort((a,b) => userStats.weaknesses[b] - userStats.weaknesses[a]);
+        let weakModId = keys[0];
+        let targetMod = temarioTAI.find(m => m.id === weakModId);
+        
+        if(targetMod && targetMod.subpuntos.length > 0) {
+            seleccionarSubpunto(targetMod.subpuntos[0], targetMod.id);
+            currentExerciseIndex = 6;
+            
+            document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-stopwatch text-rose-600"></i> SIMULACRO FINAL: ${targetMod.titulo}`;
+            document.getElementById("theoryContent").innerHTML = `<div class="bg-rose-50 p-4 border border-rose-200 rounded text-rose-900 font-bold text-xs shadow-inner">Simulacro práctico basado en tus áreas de mejora.</div>`;
+            iniciarPracticaTema();
+        }
+    }
+  </script>
+</body>
+</html>
