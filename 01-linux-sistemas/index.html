@@ -5,325 +5,250 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Laboratorio TAI AGE - Linux SysAdmin | tsa</title>
   
-  <!-- Favicon de Terminal (SVG dinámico) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%230d9488' d='M512 96c0-35.3-28.7-64-64-64H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96zM157.1 214.9l-61.6 61.6c-4.2 4.2-11 4.2-15.2 0l-17.4-17.4c-4.2-4.2-4.2-11 0-15.2l76.9-76.9c4.2-4.2 11-4.2 15.2 0l76.9 76.9c4.2 4.2 4.2 11 0 15.2l-17.4 17.4c-4.2 4.2-11 4.2-15.2 0l-61.6-61.6v.1zM368 336H224c-8.8 0-16-7.2-16-16v-24c0-8.8 7.2-16 16-16h144c8.8 0 16 7.2 16 16v24c0 8.8-7.2 16-16 16z'/></svg>">
-  
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts: Montserrat -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Montserrat', 'sans-serif'] },
-          colors: {
-            aquamarine: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a' }
-          }
-        }
-      }
-    }
+    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Montserrat', 'sans-serif'] } } } }
   </script>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
 
-  <!-- Header Institucional / Académico -->
+  <!-- HEADER -->
   <header class="border-b border-slate-200 bg-white shadow-sm sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
-      
-      <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+      <div class="flex items-center gap-3 w-full md:w-auto justify-between">
         <div class="flex items-center gap-3">
-          <div class="p-2.5 bg-teal-600 text-white rounded-xl shadow-md">
+          <div class="p-2.5 bg-teal-800 text-white rounded-xl shadow-md border-b-4 border-teal-900">
             <i class="fa-solid fa-terminal text-xl"></i>
           </div>
           <div>
-            <h1 class="text-lg md:text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-              Academia TAI AGE 
-              <span class="text-[10px] bg-slate-800 text-teal-300 px-1.5 py-0.5 rounded font-mono tracking-widest shadow-inner">tsa</span>
+            <h1 class="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2">
+              Academia TAI AGE <span class="text-[10px] bg-slate-800 text-teal-300 px-1.5 py-0.5 rounded font-mono tracking-widest shadow-inner">tsa</span>
             </h1>
-            <p class="text-[11px] text-teal-700 font-semibold uppercase tracking-wider">Laboratorio de Linux SysAdmin - Nivel Alto</p>
+            <p class="text-[11px] text-teal-700 font-semibold uppercase tracking-wider">Centro de Alto Rendimiento (Nivel C1)</p>
           </div>
         </div>
-        <!-- Botón menú móvil -->
-        <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-600 hover:text-teal-700 focus:outline-none">
-          <i class="fa-solid fa-bars text-xl" id="mobileMenuIcon"></i>
-        </button>
       </div>
 
-      <!-- Configuración Token API & Examen Global -->
+      <!-- TIMER (Oculto por defecto) -->
+      <div id="examTimerContainer" class="hidden flex items-center gap-2 bg-rose-50 border border-rose-200 px-4 py-1.5 rounded-lg shadow-inner animate-pulse">
+        <i class="fa-solid fa-stopwatch text-rose-600"></i>
+        <span id="examTimer" class="font-mono font-bold text-rose-700 text-lg">30:00</span>
+      </div>
+
       <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
-        <button onclick="iniciarExamenGlobal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-3.5 py-2 rounded-lg font-semibold transition flex items-center gap-1.5 shadow-sm">
-          <i class="fa-solid fa-graduation-cap"></i> Modo Simulacro Global
+        <!-- BOTÓN EXPEDIENTE -->
+        <button onclick="toggleExpediente()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3.5 py-2 rounded-lg font-bold transition flex items-center gap-1.5 shadow-sm border-b-2 border-indigo-800">
+          <i class="fa-solid fa-chart-column"></i> Mi Expediente TAI
         </button>
+        
+        <button onclick="iniciarExamenGlobal()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs px-3.5 py-2 rounded-lg font-bold transition flex items-center gap-1.5 shadow-sm border-b-2 border-rose-800">
+          <i class="fa-solid fa-stopwatch"></i> Simulacro
+        </button>
+        
         <div class="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-200 shadow-inner">
           <i class="fa-solid fa-key text-slate-400 pl-2 text-xs"></i>
-          <input type="password" id="apiKeyInput" placeholder="Pega tu API Key de Gemini..." class="text-xs p-1 bg-transparent outline-none w-36 md:w-48 text-slate-700 font-medium" />
-          <button onclick="guardarKey()" class="bg-teal-600 hover:bg-teal-700 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow-sm">Guardar</button>
+          <input type="password" id="apiKeyInput" placeholder="API Key Gemini..." class="text-xs p-1 bg-transparent outline-none w-28 md:w-36 text-slate-700 font-medium" />
+          <button onclick="guardarKey()" class="bg-teal-700 hover:bg-teal-800 text-white text-[10px] px-3 py-1.5 rounded-lg font-bold transition">Guardar</button>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Prompt Banner Informativo -->
-  <section class="max-w-7xl mx-auto w-full px-4 pt-3">
-    <div class="bg-white border border-slate-200 rounded-xl p-3 flex flex-wrap justify-between items-center text-xs shadow-sm">
-      <div class="font-mono bg-slate-900 text-white px-3 py-1.5 rounded-lg shadow-inner">
-        <span class="text-emerald-400 font-bold">teresa</span><span class="text-slate-400">@</span><span class="text-cyan-400 font-bold">ordenador</span><span class="text-slate-300">:</span><span class="text-amber-400 font-bold">~</span><span class="text-slate-200 font-bold">$</span>
-      </div>
-      <div class="flex gap-4 text-slate-600 font-medium mt-2 sm:mt-0">
-        <span><i class="fa-solid fa-folder text-teal-600 mr-1"></i> Directorio: <strong id="currentDirText" class="text-slate-800">/home/teresa</strong></span>
-        <span><i class="fa-solid fa-bullseye text-teal-600 mr-1"></i> Objetivo: <strong class="text-slate-800">C1 / Nota Máxima</strong></span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Cuerpo Principal (Grid asimétrico adaptativo) -->
-  <main class="max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1">
-    
-    <!-- Navegación Lateral (3 columnas) -->
-    <div id="sidebarMenu" class="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col max-h-[750px] hidden md:flex transition-all">
-      <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
-        <h2 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-book-open text-teal-600"></i> Temario Oficial TAI
+  <!-- MODAL EXPEDIENTE DE RENDIMIENTO -->
+  <div id="expedienteModal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200">
+      <div class="bg-indigo-700 p-4 flex justify-between items-center text-white">
+        <h2 class="text-lg font-bold flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie"></i> Expediente de Rendimiento TAI
         </h2>
+        <button onclick="toggleExpediente()" class="text-white hover:text-indigo-200"><i class="fa-solid fa-xmark text-xl"></i></button>
       </div>
-      <div class="overflow-y-auto flex-1 space-y-2 pr-1 text-xs" id="modulesMenu">
-        <!-- Generado dinámicamente -->
+      <div class="p-6 overflow-y-auto flex-1 bg-slate-50">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+            <p class="text-xs font-bold text-slate-500 uppercase">Tasa de Acierto</p>
+            <p id="statGlobalRate" class="text-3xl font-black text-indigo-600 mt-1">0%</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+            <p class="text-xs font-bold text-slate-500 uppercase">Comandos Correctos</p>
+            <p id="statTotalCorrect" class="text-3xl font-black text-emerald-500 mt-1">0</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+            <p class="text-xs font-bold text-slate-500 uppercase">Errores Críticos</p>
+            <p id="statTotalErrors" class="text-3xl font-black text-rose-500 mt-1">0</p>
+          </div>
+        </div>
+        
+        <h3 class="text-sm font-bold text-slate-800 mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-book text-indigo-600 mr-2"></i>Rendimiento por Módulo</h3>
+        <div id="statsModulesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <!-- Dinámico -->
+        </div>
+
+        <h3 class="text-sm font-bold text-slate-800 mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-triangle-exclamation text-rose-600 mr-2"></i>Repaso de Comandos Fallidos</h3>
+        <div id="statsErrorsList" class="space-y-3">
+          <!-- Dinámico -->
+        </div>
+      </div>
+      <div class="p-4 bg-white border-t border-slate-200 text-right">
+        <button onclick="resetStats()" class="text-xs text-rose-600 hover:text-rose-800 font-bold underline mr-4">Resetear Expediente</button>
+        <button onclick="toggleExpediente()" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm">Volver al Laboratorio</button>
       </div>
     </div>
+  </div>
 
-    <!-- Panel Derecho Organizado (9 columnas) -->
+  <main class="max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 relative z-10">
+    
+    <!-- MENU LATERAL (10 MÓDULOS) -->
+    <div class="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col max-h-[85vh]">
+      <h2 class="text-[11px] font-bold text-teal-800 uppercase tracking-wider mb-3 pb-2 border-b border-slate-100 flex items-center gap-2">
+        <i class="fa-solid fa-book-open text-teal-600"></i> Temario (M1-M10)
+      </h2>
+      <div class="overflow-y-auto flex-1 space-y-2 pr-1" id="modulesMenu"></div>
+    </div>
+
+    <!-- PANEL PRINCIPAL (ORDEN PEDAGÓGICO ESTRICTO) -->
     <div class="lg:col-span-9 flex flex-col gap-5">
       
-      <!-- 1º SECCIÓN DE TEORÍA ENRIQUECIDA -->
+      <!-- 1. TEORÍA -->
       <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-        <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
+        <div class="flex justify-between items-center mb-3 border-b border-slate-100 pb-2">
           <h3 id="theoryTitle" class="text-sm font-bold text-teal-900 flex items-center gap-2">
-            <i class="fa-solid fa-graduation-cap text-teal-600 text-base"></i> 
-            <span>Selecciona un tema a la izquierda para cargar el módulo</span>
+            <i class="fa-solid fa-graduation-cap text-teal-600"></i> Área de Estudio
           </h3>
-          <span class="text-[10px] bg-teal-50 text-teal-700 px-2.5 py-1 rounded-full font-semibold border border-teal-200">Guía Nemotécnica TAI</span>
+          <span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-1 rounded-full font-bold border border-rose-200">⚠️ Foco Anti-Trampas</span>
         </div>
-        
         <div id="theoryContent" class="text-xs text-slate-700 space-y-3 leading-relaxed">
-          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-slate-500 italic">
-            El objetivo de este laboratorio no es solo que sepas usar los comandos, sino que aprendas a detectar modificadores trampa, rutas engañosas y comportamientos ocultos de Linux.
-          </div>
+          <p class="text-slate-500 italic">Selecciona un módulo. El sistema registrará tus aciertos y fallos para tu Expediente TAI.</p>
         </div>
       </section>
 
-      <!-- 2º EL EJERCICIO DE GEMINI (5 Minirretos + 1 Global) -->
-      <section class="bg-white border-2 border-amber-200 rounded-2xl p-5 shadow-sm flex flex-col">
+      <!-- 2. BATERÍA IA -->
+      <section class="bg-white border-2 border-amber-200 rounded-2xl p-5 shadow-sm">
         <div class="flex justify-between items-center mb-3">
           <h3 class="text-xs font-bold text-amber-900 flex items-center gap-2 uppercase tracking-wide">
-            <i class="fa-solid fa-chalkboard-user text-amber-600 text-sm"></i> Tu Preparador: Batería de Ejercicios
+            <i class="fa-solid fa-chalkboard-user text-amber-600"></i> Batería de Ejercicios del Tribunal
           </h3>
-          <button onclick="pedirNuevoEjercicio()" class="text-xs bg-amber-50 text-amber-700 px-3 py-1.5 rounded-xl border border-amber-200 hover:bg-amber-100 font-semibold transition flex items-center gap-1.5 shadow-sm">
-            <i class="fa-solid fa-forward-step"></i> Generar Batería Nueva
+          <button onclick="pedirNuevoEjercicio()" class="text-xs bg-amber-50 text-amber-700 px-3 py-1.5 rounded-xl border border-amber-200 hover:bg-amber-100 font-bold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-rotate"></i> Generar Batería
           </button>
         </div>
-        
-        <div id="exercisePrompt" class="bg-amber-50/60 p-4 rounded-xl text-xs font-medium text-slate-800 mb-2 border-l-4 border-amber-500 leading-relaxed overflow-y-auto max-h-60">
-          Selecciona un tema. Te plantearé 5 ejercicios rápidos y 1 reto global. ¡Lee bien, piensa en las trampas y escríbelos en la terminal de abajo de uno en uno!
+        <div id="exercisePrompt" class="bg-amber-50/80 p-4 rounded-xl text-xs font-medium text-slate-800 border-l-4 border-amber-500 overflow-y-auto max-h-60 leading-relaxed">
+          Esperando selección de módulo...
         </div>
       </section>
 
-      <!-- 3º LA CONSOLA TERMINAL INTERACTIVA -->
-      <section class="bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-800 flex flex-col">
-        <div class="bg-slate-800/80 backdrop-blur px-4 py-2.5 flex items-center justify-between border-b border-slate-700/60">
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-rose-500 inline-block shadow-sm"></span>
-            <span class="w-3 h-3 rounded-full bg-amber-400 inline-block shadow-sm"></span>
-            <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block shadow-sm"></span>
-            <span class="text-xs font-mono text-slate-400 ml-2 font-medium">bash - teresa@ordenador:~</span>
+      <!-- 3. TERMINAL -->
+      <section class="bg-slate-900 rounded-2xl shadow-xl flex flex-col border border-slate-700">
+        <div class="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700">
+          <div class="flex gap-2 items-center">
+            <span class="w-3 h-3 rounded-full bg-rose-500"></span><span class="w-3 h-3 rounded-full bg-amber-400"></span><span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+            <span class="text-[11px] font-mono text-slate-400 ml-2">bash - teresa@ordenador:~</span>
           </div>
-          <button onclick="limpiarTerminal()" class="text-slate-400 hover:text-white text-[10px] font-medium px-2 py-1 rounded hover:bg-slate-700 transition">Limpiar Consola</button>
+          <button onclick="limpiarTerminal()" class="text-slate-400 hover:text-white text-[10px] font-medium transition">Limpiar (Ctrl+L)</button>
         </div>
         
-        <div id="terminalOutput" class="p-4 font-mono text-xs overflow-y-auto h-48 space-y-1.5 text-slate-200">
-          <div class="text-teal-400 font-medium">✨ Terminal virtual lista. Resuelve aquí los retos de la batería superior.</div>
+        <div id="terminalOutput" class="p-4 font-mono text-[11px] sm:text-xs overflow-y-auto h-48 space-y-1.5 text-slate-200">
+          <div class="text-teal-400 font-bold">✨ Terminal Activa. Registrando métricas en Expediente...</div>
         </div>
 
-        <form onsubmit="ejecutarComando(event)" class="bg-slate-950 p-2.5 border-t border-slate-800 flex items-center gap-2">
-          <span class="text-teal-400 font-mono text-xs pl-2 font-bold">teresa@ordenador:~$</span>
-          <input type="text" id="commandInput" class="bg-transparent text-white font-mono text-xs outline-none flex-1 placeholder:text-slate-600" placeholder="Escribe tu solución aquí y pulsa Intro..." autocomplete="off"/>
-          <button type="submit" class="bg-teal-600 text-white text-xs px-4 py-1.5 rounded-lg hover:bg-teal-700 transition font-medium shadow-sm">Ejecutar</button>
+        <form onsubmit="ejecutarComando(event)" class="bg-slate-950 p-2.5 border-t border-slate-800 flex items-center gap-2 relative">
+          <span class="text-teal-400 font-mono text-xs pl-2 font-bold">teresa:~$</span>
+          <input type="text" id="commandInput" class="bg-transparent text-white font-mono text-xs outline-none flex-1" autocomplete="off" autofocus placeholder="Escribe tu comando y pulsa Enter..."/>
+          <button type="button" onclick="pedirPista()" title="Pista sin penalizar" class="bg-amber-500 text-white text-[10px] px-2 py-1.5 rounded hover:bg-amber-600 transition shadow font-bold">SOS</button>
+          <button type="submit" class="bg-teal-600 text-white text-xs px-4 py-1.5 rounded hover:bg-teal-500 transition font-bold shadow border-b-2 border-teal-800">Enter</button>
         </form>
       </section>
 
-      <!-- 4º EVALUACIÓN DE LA IA -->
-      <section class="bg-white border-2 border-teal-200 rounded-2xl p-5 shadow-sm flex flex-col">
-        <h3 class="text-xs font-bold text-teal-900 flex items-center gap-2 uppercase tracking-wide mb-3">
-          <i class="fa-solid fa-clipboard-check text-teal-600 text-sm"></i> Corrección y Feedback
-        </h3>
-        
-        <div id="aiEvaluation" class="text-xs text-slate-700 overflow-y-auto max-h-64 bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 leading-relaxed">
-          <p class="italic text-slate-400">Una vez lances un comando en la terminal, te indicaré si has caído en alguna trampa de sintaxis o si tienes nivel para sacar el máximo en esa pregunta.</p>
+      <!-- 4. CORRECCIÓN Y ANALÍTICA -->
+      <section class="bg-white border-2 border-teal-200 rounded-2xl p-5 shadow-sm">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-xs font-bold text-teal-900 flex items-center gap-2 uppercase tracking-wide">
+            <i class="fa-solid fa-check-double text-teal-600"></i> Evaluación y Feedback (Gemini 3.1)
+          </h3>
+          <span id="evalBadge" class="hidden text-[10px] px-2 py-1 rounded-full font-bold text-white uppercase tracking-wider"></span>
+        </div>
+        <div id="aiEvaluation" class="text-xs text-slate-700 overflow-y-auto max-h-64 bg-slate-50 p-4 rounded-xl border border-slate-200 leading-relaxed">
+          <p class="italic text-slate-400">La corrección detallada con la puntuación de tu comando aparecerá aquí al momento.</p>
         </div>
       </section>
-
-      <!-- ESTADO DEL SISTEMA VIRTUAL -->
-      <section class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-        <div class="flex justify-between items-center mb-2 cursor-pointer" onclick="toggleSystemState()">
-          <h4 class="text-xs font-bold text-slate-700 flex items-center gap-2">
-            <i class="fa-solid fa-server text-teal-600"></i> Estado del Sistema Virtual
-          </h4>
-          <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform" id="systemStateChevron"></i>
-        </div>
-        <pre id="systemStateContent" class="font-mono text-[11px] text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200 overflow-x-auto shadow-inner max-h-32 hidden">/ (root)
-├── etc/ (passwd, shadow, group, fstab, crontab, security/)
-├── home/teresa/ (directorio de trabajo habitual)
-├── var/log/ (syslog, auth.log, journal/)
-└── mnt/ /media/ /sdb1 (puntos de montaje LVM y particiones)</pre>
-      </section>
-
+      
     </div>
   </main>
 
   <script>
+    // --- ESTADO GLOBALES ---
     let GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
     let subpuntoActivo = null;
+    let currentModuleId = null;
     let ejercicioActualText = "";
+    let commandHistory = [];
+    let historyIndex = -1;
+    let timerInterval;
 
-    // Temario Avanzado con Trampas de Examen
+    // --- MOTOR DE ANALÍTICA (EL EXPEDIENTE) ---
+    let userStats = JSON.parse(localStorage.getItem('tai_expediente')) || {};
+
+    // --- 10 MÓDULOS COMPLETOS CON TRAMPAS TAI ---
     const temarioTAI = [
-      {
-        id: "m1",
-        titulo: "MÓDULO 1: Fundamentos y FHS",
-        subpuntos: [
-          { 
-            id: "1.2", 
-            nombre: "1.2. Rutas FHS", 
-            comando: "ls -la /etc /var /tmp",
-            teoria: `
-              <div class="space-y-3">
-                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> FHS:</strong> <code>/etc</code> (configuraciones globales), <code>/var</code> (variables, logs, colas de impresión), <code>/tmp</code> (temporales que se borran al reiniciar).</p>
-                <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 text-[11px]">
-                  <strong>⚠️ Trampas de Examen TAI:</strong> Confundir rutas absolutas (empiezan por <code>/</code>) con relativas (<code>../etc</code>). Cuidado con la pregunta sobre dónde guarda un usuario sus configuraciones personales: ¡NO es en <code>/etc</code>, es en ficheros ocultos dentro de su propio <code>~</code> (home)!
-                </div>
-              </div>
-            `
-          },
-          { 
-            id: "1.3", 
-            nombre: "1.3. Gestión de Ficheros", 
-            comando: "mkdir -p /tmp/tai && rm -rf /tmp/tai",
-            teoria: `
-              <div class="space-y-3">
-                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> Comandos:</strong> <code>mkdir -p</code>, <code>cp -a</code> (archiva: copia todo recursivamente y mantiene permisos/dueño), <code>rm -rf</code> (recursivo y forzado).</p>
-                <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 text-[11px]">
-                  <strong>⚠️ Trampas de Examen TAI:</strong> Te pondrán la diferencia entre <code>cp -r</code> y <code>cp -a</code>. <code>-a</code> es fundamental para copias de seguridad porque no cambia la fecha de modificación original. En <code>rm</code>, recuerda que <code>-f</code> (force) ignora ficheros inexistentes y nunca pregunta confirmación.
-                </div>
-              </div>
-            `
-          },
-          { 
-            id: "1.4", 
-            nombre: "1.4. Visualización (cat, grep)", 
-            comando: "cat /etc/passwd | grep -i root",
-            teoria: `
-              <div class="space-y-3">
-                <p><strong><i class="fa-solid fa-sliders text-teal-600 mr-1"></i> Opciones clave:</strong> <code>cat -n</code> (numera líneas), <code>grep -i</code> (ignora mayúsculas), <code>grep -v</code> (invierte la búsqueda, muestra lo que NO coincide).</p>
-                <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 text-[11px]">
-                  <strong>⚠️ Trampas de Examen TAI:</strong> Confundir <code>grep -v</code> con <code>grep -c</code> (cuenta líneas coincidentes). Otra trampa: <code>tail -f</code> lee las nuevas líneas que se escriben al final del fichero en tiempo real, pero <code>tail -n 10</code> solo escupe las últimas 10 y se cierra.
-                </div>
-              </div>
-            `
-          }
-        ]
-      },
-      {
-        id: "m2",
-        titulo: "MÓDULO 2: Usuarios y Grupos",
-        subpuntos: [
-          { 
-            id: "2.1", 
-            nombre: "2.1. /etc/passwd y shadow", 
-            comando: "cat /etc/passwd | cut -d: -f1,3",
-            teoria: `
-              <div class="space-y-3">
-                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> Concepto:</strong> <code>/etc/passwd</code> (7 campos: usuario:x:UID:GID:comentario:home:shell). Las contraseñas están en <code>/etc/shadow</code>.</p>
-                <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 text-[11px]">
-                  <strong>⚠️ Trampas de Examen TAI:</strong> Te preguntarán quién tiene permisos sobre <code>/etc/shadow</code>. La respuesta es solo root (permisos 600 o 400). Si la 'x' de passwd se borra, el sistema busca la contraseña en passwd y compromete la seguridad.
-                </div>
-              </div>
-            `
-          },
-          { 
-            id: "2.2", 
-            nombre: "2.2. Gestión (useradd, usermod)", 
-            comando: "usermod -aG sudo teresa",
-            teoria: `
-              <div class="space-y-3">
-                <p><strong><i class="fa-solid fa-sliders text-teal-600 mr-1"></i> Opciones:</strong> <code>-m</code> (crea el home), <code>-s</code> (define shell), <code>-G</code> (grupos suplementarios).</p>
-                <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 text-[11px]">
-                  <strong>⚠️ Trampas de Examen TAI:</strong> ¡Pregunta de oro! Si quieres añadir a un usuario a un grupo nuevo conservando los que ya tiene, DEBES usar <code>-aG</code>. Si usas solo <code>usermod -G nuevo_grupo usuario</code>, ¡borrarás al usuario de todos sus grupos anteriores!
-                </div>
-              </div>
-            `
-          }
-        ]
-      },
-      {
-        id: "m3",
-        titulo: "MÓDULO 3: Permisos y Atributos",
-        subpuntos: [
-          { 
-            id: "3.1", 
-            nombre: "3.1. Umask y Cálculo Octal", 
-            comando: "chmod 755 fichero && umask 022",
-            teoria: `
-              <div class="space-y-3">
-                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> Lógica:</strong> Lectura(4), Escritura(2), Ejecución(1).</p>
-                <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 text-[11px]">
-                  <strong>⚠️ Trampas de Examen TAI:</strong> Te darán un umask de <code>027</code> y te pedirán los permisos resultantes de un directorio creado. No restes sin más: la máscara quita bits. Directorio base es 777. 777 - 027 = 750 (rwxr-x---). Para ficheros el base es 666. 666 - 027 = 640 (rw-r-----). ¡Los ficheros regulares nunca nacen con permiso de ejecución!
-                </div>
-              </div>
-            `
-          },
-          { 
-            id: "3.2", 
-            nombre: "3.2. Permisos Especiales", 
-            comando: "chmod 4755 /usr/bin/passwd",
-            teoria: `
-              <div class="space-y-3">
-                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> Especiales:</strong> SUID (4), SGID (2), Sticky Bit (1).</p>
-                <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 text-[11px]">
-                  <strong>⚠️ Trampas de Examen TAI:</strong> El Sticky Bit (<code>chmod +t</code>) se aplica normalmente en <code>/tmp</code>. Si ves en el examen un permiso tipo <code>drwxrwxrwt</code>, la 't' final indica que CUALQUIERA puede escribir ahí, pero SOLO el dueño del fichero o el root pueden borrar el archivo.
-                </div>
-              </div>
-            `
-          }
-        ]
-      },
-      {
-        id: "m4",
-        titulo: "MÓDULO 4: Redirecciones y Procesos",
-        subpuntos: [
-          { 
-            id: "4.1", 
-            nombre: "4.1. Redirecciones (> y pipes)", 
-            comando: "ls -l > salida.txt 2>&1",
-            teoria: `
-              <div class="space-y-3">
-                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> Descriptores:</strong> STDIN(0), STDOUT(1), STDERR(2).</p>
-                <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 text-[11px]">
-                  <strong>⚠️ Trampas de Examen TAI:</strong> El orden importa muchísimo. <code>comando > archivo 2>&1</code> envía tanto errores como salidas normales a archivo. Si pones <code>comando 2>&1 > archivo</code>, los errores irán a la pantalla (porque el 2 apuntará al viejo STDOUT de la pantalla) y solo la salida normal irá al archivo.
-                </div>
-              </div>
-            `
-          }
-        ]
-      }
+      { id: "m1", titulo: "M1: Fundamentos y FHS", subpuntos: [
+          { id: "1.1", nombre: "1.1. Rutas y Navegación", comando: "cd - && pwd -P", teoria: `<p><strong>Comandos:</strong> <code>pwd -P</code> resuelve enlaces simbólicos. <code>cd -</code> vuelve al directorio anterior.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> <code>pwd -L</code> es el por defecto. Si entras a un enlace simbólico te mostrará el enlace, no la ruta física. Ojo en los test.</div>` },
+          { id: "1.2", nombre: "1.2. Gestión Ficheros", comando: "cp -a origen/ destino/", teoria: `<p><strong>Comandos:</strong> <code>cp -a</code> (archive) copia todo reteniendo dueños y fechas.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> <code>rmdir</code> SOLO borra directorios vacíos. Para borrar uno lleno, siempre <code>rm -rf</code> (el -f evita confirmaciones).</div>` },
+          { id: "1.3", nombre: "1.3. Búsqueda y Filtros", comando: "grep -E '^root' /etc/passwd", teoria: `<p><strong>Comandos:</strong> <code>grep -E</code> (expresión extendida), <code>grep -v</code> (invierte selección).</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> <code>^</code> indica principio de línea y <code>$</code> el final. Si te piden encontrar líneas vacías, la respuesta es <code>grep '^$'</code>.</div>` }
+      ]},
+      { id: "m2", titulo: "M2: Usuarios y Grupos", subpuntos: [
+          { id: "2.1", nombre: "2.1. Gestión de Cuentas", comando: "usermod -aG sudo teresa", teoria: `<p><strong>Comandos:</strong> <code>-aG</code> añade al usuario a un grupo secundario sin borrar el resto.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa Crítica:</strong> Olvidar la 'a' (append) en <code>usermod -G grupo</code> borra al usuario de todos sus grupos anteriores de golpe. Fallo clásico.</div>` },
+          { id: "2.2", nombre: "2.2. Ficheros de Seguridad", comando: "passwd -l usuario", teoria: `<p><strong>Comandos:</strong> <code>passwd -l</code> bloquea la cuenta, <code>-u</code> la desbloquea.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Bloquear la cuenta con <code>-l</code> pone un '!' en /etc/shadow. Esto impide login con clave, PERO el usuario ¡aún podría entrar mediante llaves SSH!</div>` }
+      ]},
+      { id: "m3", titulo: "M3: Permisos y SUID", subpuntos: [
+          { id: "3.1", nombre: "3.1. Umask y Octal", comando: "umask 027", teoria: `<p><strong>Cálculo:</strong> Umask se resta de 666 (ficheros) y 777 (directorios).</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Un fichero nunca nace con permisos de ejecución. Si restas 666 - 027, el resultado real es 640 (rw-r-----).</div>` },
+          { id: "3.2", nombre: "3.2. SUID/SGID y Sticky", comando: "chmod u+s /bin/ping", teoria: `<p><strong>Especiales:</strong> SUID(4000), SGID(2000), Sticky(1000).</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Si al hacer <code>ls -l</code> ves una 'S' mayúscula en la posición SUID, significa que el archivo tiene el atributo SUID activado pero NO tiene permiso de ejecución (x). Por tanto, no funcionará.</div>` }
+      ]},
+      { id: "m4", titulo: "M4: Cron y Scripting", subpuntos: [
+          { id: "4.1", nombre: "4.1. Redirecciones Complejas", comando: "script.sh > log 2>&1", teoria: `<p><strong>Redirección:</strong> <code>></code> redirige STDOUT (1), <code>2></code> redirige STDERR (2).</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> El orden lo cambia todo. <code>comando 2>&1 > log</code> enviará la salida normal al log, pero el error irá a la pantalla original. El orden correcto es <code>> log 2>&1</code>.</div>` },
+          { id: "4.2", nombre: "4.2. Tareas Programadas Cron", comando: "crontab -e", teoria: `<p><strong>Sintaxis:</strong> Min Hora DiaMes Mes DiaSemana.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Si configuras <code>0 12 15 * 5</code>, se ejecutará los días 15 de cada mes O (OR) cuando caiga en viernes. Cuidado con <code>crontab -r</code>, borra todo tu cron sin avisar.</div>` }
+      ]},
+      { id: "m5", titulo: "M5: Procesos", subpuntos: [
+          { id: "5.1", nombre: "5.1. Señales Unix", comando: "kill -9 PID", teoria: `<p><strong>Señales:</strong> 15 (TERM, por defecto), 9 (KILL, forzado), 1 (HUP).</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> <code>kill -9</code> no sirve para procesos Zombie (estado Z). Los zombies ya están muertos y solo ocupan entrada en tabla. Hay que matar a su proceso Padre (PPID).</div>` },
+          { id: "5.2", nombre: "5.2. Systemd y Systemctl", comando: "systemctl enable --now servicio", teoria: `<p><strong>Control:</strong> <code>start</code> arranca temporal, <code>enable</code> habilita en el boot.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Te pueden intentar confundir en el test. Para arrancar ahora mismo y habilitarlo en los siguientes reinicios con un solo comando, usa <code>--now</code> junto a enable.</div>` }
+      ]},
+      { id: "m6", titulo: "M6: Redes y Logs", subpuntos: [
+          { id: "6.1", nombre: "6.1. Inspección de Puertos", comando: "ss -tulpn", teoria: `<p><strong>Red:</strong> <code>ss</code> destierra a netstat. <code>ip a</code> muestra interfaces.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Para ver el nombre/PID de un servicio enganchado a un puerto (opción -p), es obligatorio ejecutar el comando con <code>sudo</code>. Si no eres root, esa columna saldrá oculta.</div>` },
+          { id: "6.2", nombre: "6.2. Auditoría con Journalctl", comando: "journalctl -b", teoria: `<p><strong>Logs:</strong> <code>systemd-journald</code> guarda los logs en formato binario.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Pregunta típica de AGE: ¿Cómo ver los logs generados únicamente desde el último reinicio del equipo? Respuesta exacta: <code>journalctl -b</code> (boot).</div>` }
+      ]},
+      { id: "m7", titulo: "M7: Paquetería", subpuntos: [
+          { id: "7.1", nombre: "7.1. Debian (APT y DPKG)", comando: "apt --fix-broken install", teoria: `<p><strong>Gestión:</strong> APT resuelve online, DPKG instala local (offline).</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Si un paquete instalado con <code>dpkg -i</code> da error de dependencias incumplidas, NO se soluciona borrándolo, se soluciona inmediatamente con <code>apt --fix-broken install</code>.</div>` }
+      ]},
+      { id: "m8", titulo: "M8: Discos y Particiones", subpuntos: [
+          { id: "8.1", nombre: "8.1. /etc/fstab", comando: "mount -a", teoria: `<p><strong>Montaje:</strong> Fichero maestro que monta particiones al arrancar el sistema.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> El último número (pass fsck). La partición raíz (/) SIEMPRE debe llevar 1. El resto deben llevar 2 (o 0 si no quieres que fsck las compruebe en el arranque).</div>` }
+      ]},
+      { id: "m9", titulo: "M9: Volúmenes Lógicos (LVM)", subpuntos: [
+          { id: "9.1", nombre: "9.1. Redimensionar LV", comando: "lvextend -r -L+10G /dev/vg/lv", teoria: `<p><strong>Flujo:</strong> PV (Physical) -> VG (Group) -> LV (Logical).</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Tras ampliar un volumen lógico, el sistema de ficheros de dentro no se entera de que tiene más espacio. Hay que redimensionarlo, o bien usar la bandera mágica <code>-r</code> (resizefs) en el mismo comando lvextend.</div>` }
+      ]},
+      { id: "m10", titulo: "M10: Firewall y SSH", subpuntos: [
+          { id: "10.1", nombre: "10.1. Reglas iptables", comando: "iptables -A INPUT -p tcp --dport 22 -j DROP", teoria: `<p><strong>Flujo:</strong> Las reglas se procesan de arriba a abajo. Al primer match, se aplican y paran.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> DROP tira el paquete en silencio. REJECT le avisa al atacante con un ICMP de que está bloqueado. En examen, DROP es la opción segura. Si usas <code>-A</code>, añades la regla al final, ojo con que no haya un DROP global previo.</div>` },
+          { id: "10.2", nombre: "10.2. Claves SSH", comando: "ssh-keygen -t rsa -b 4096", teoria: `<p><strong>Seguridad:</strong> La clave pública (.pub) se manda al servidor; la privada se queda contigo.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Si el archivo <code>~/.ssh/authorized_keys</code> en el servidor tiene permisos muy laxos (ej: 777), SSH rechazará la conexión silenciosamente por seguridad. Debe tener 600.</div>` }
+      ]}
     ];
 
+    // INICIALIZACIÓN Y EVENTOS
     window.addEventListener("DOMContentLoaded", () => {
       if (GEMINI_API_KEY) document.getElementById("apiKeyInput").value = GEMINI_API_KEY;
       renderMenu();
+      
+      const input = document.getElementById("commandInput");
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (historyIndex > 0) { historyIndex--; input.value = commandHistory[historyIndex]; }
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (historyIndex < commandHistory.length - 1) { historyIndex++; input.value = commandHistory[historyIndex]; }
+          else { historyIndex = commandHistory.length; input.value = ""; }
+        }
+      });
     });
 
     function guardarKey() {
@@ -331,37 +256,38 @@
       if (k) {
         localStorage.setItem("gemini_api_key", k);
         GEMINI_API_KEY = k;
-        alert("¡Clave API guardada con éxito en tu navegador!");
+        alert("¡Clave API guardada en el almacenamiento seguro de tu navegador!");
       }
     }
 
     function renderMenu() {
       const menuContainer = document.getElementById("modulesMenu");
       menuContainer.innerHTML = "";
-      
       temarioTAI.forEach((m) => {
+        if(!userStats[m.id]) userStats[m.id] = { correct: 0, error: 0, logs: [] };
+        
         const modEl = document.createElement("div");
         modEl.className = "mb-2 border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50";
         const contentId = `mod_content_${m.id}`;
         
         modEl.innerHTML = `
-          <button onclick="toggleModulo('${contentId}', '${m.id}')" class="w-full text-left font-bold text-slate-700 bg-slate-100 hover:bg-teal-50 p-2.5 rounded-t-xl flex justify-between items-center transition text-xs">
+          <button onclick="toggleModulo('${contentId}', '${m.id}')" class="w-full text-left font-bold text-slate-700 bg-slate-100 hover:bg-teal-50 p-2.5 rounded-t-xl flex justify-between items-center text-[11px] transition shadow-sm">
             <span class="truncate">${m.titulo}</span>
             <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="chevron_${m.id}"></i>
           </button>
-          <div id="${contentId}" class="space-y-1 p-2 bg-white hidden border-t border-slate-100"></div>
-        `;
+          <div id="${contentId}" class="space-y-1 p-2 bg-white hidden border-t border-slate-100"></div>`;
         menuContainer.appendChild(modEl);
         
         const subList = document.getElementById(contentId);
         m.subpuntos.forEach(s => {
           const btn = document.createElement("button");
-          btn.className = "w-full text-left p-1.5 rounded-lg hover:bg-teal-50 hover:text-teal-800 text-[11px] block transition text-slate-600 font-medium";
+          btn.className = "w-full text-left p-1.5 rounded-lg hover:bg-teal-50 hover:text-teal-800 text-[10px] block transition text-slate-600 font-medium";
           btn.innerText = s.nombre;
-          btn.onclick = () => seleccionarSubpunto(s);
+          btn.onclick = () => seleccionarSubpunto(s, m.id);
           subList.appendChild(btn);
         });
       });
+      localStorage.setItem('tai_expediente', JSON.stringify(userStats));
     }
 
     function toggleModulo(contentId, modId) {
@@ -372,93 +298,64 @@
     }
 
     function toggleMobileMenu() {
-      const sidebar = document.getElementById("sidebarMenu");
-      const icon = document.getElementById("mobileMenuIcon");
-      sidebar.classList.toggle("hidden");
-      icon.classList.toggle("fa-bars");
-      icon.classList.toggle("fa-xmark");
+      document.getElementById("sidebarMenu").classList.toggle("hidden");
     }
 
-    function toggleSystemState() {
-      const content = document.getElementById("systemStateContent");
-      const chevron = document.getElementById("systemStateChevron");
-      content.classList.toggle("hidden");
-      chevron.style.transform = content.classList.contains("hidden") ? "rotate(0deg)" : "rotate(180deg)";
-    }
-
-    function seleccionarSubpunto(sub) {
+    function seleccionarSubpunto(sub, modId) {
       subpuntoActivo = sub;
-      
-      document.getElementById("theoryTitle").innerHTML = `
-        <i class="fa-solid fa-graduation-cap text-teal-600 text-base"></i> 
-        <span>${sub.nombre}</span>
-      `;
-      document.getElementById("theoryContent").innerHTML = `
-        <div class="mb-2 p-2.5 bg-slate-900 text-emerald-400 font-mono rounded-xl text-xs flex items-center justify-between shadow-inner">
-          <span>$ ${sub.comando}</span>
-          <span class="text-[10px] text-slate-400 uppercase tracking-wider">Sintaxis TAI</span>
-        </div>
-        ${sub.teoria}
-      `;
-      
+      currentModuleId = modId;
+      document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-graduation-cap text-teal-600"></i> ${sub.nombre}`;
+      document.getElementById("theoryContent").innerHTML = sub.teoria;
       if (window.innerWidth < 768) toggleMobileMenu();
-      
       pedirNuevoEjercicio();
     }
 
     function limpiarTerminal() {
-      document.getElementById("terminalOutput").innerHTML = '<div class="text-teal-400">Terminal limpia. Listo para nuevos comandos.</div>';
+      document.getElementById("terminalOutput").innerHTML = '<div class="text-teal-400 font-bold">✨ Terminal limpia. Lista para tus comandos.</div>';
     }
+
+    // RegEx para limpiar formato sucio que a veces devuelve la IA
+    function cleanRegEx(text) {
+      return text.replace(/```(?:html)?/gi, '').replace(/```/g, '').trim();
+    }
+
+    // --- CONEXIONES API GEMINI 3.1 ---
 
     async function pedirNuevoEjercicio() {
       const promptBox = document.getElementById("exercisePrompt");
-      if (!subpuntoActivo) {
-        promptBox.innerText = "¡Selecciona primero un tema del menú de la izquierda!";
+      if (!subpuntoActivo || !GEMINI_API_KEY) {
+        promptBox.innerText = "Falta seleccionar un módulo o guardar tu API Key arriba a la derecha.";
         return;
       }
+
+      promptBox.innerHTML = `<span class="text-amber-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> El tribunal está generando 5 minirretos trampa para evaluar tu C1...</span>`;
       
-      GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
-      if (!GEMINI_API_KEY) {
-        promptBox.innerText = "⚠️ Introduce y guarda tu clave API de Gemini arriba a la derecha.";
-        return;
-      }
-
-      promptBox.innerHTML = `<span class="text-amber-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Diseñando batería de 5 minirretos trampa y 1 reto global...</span>`;
-      document.getElementById("aiEvaluation").innerHTML = `<p class="italic text-slate-400">Esperando tus comandos en la terminal...</p>`;
-
       try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
-        const response = await fetch(url, {
+        // ACTUALIZADO ESTRICTAMENTE A GEMINI 3.1
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash:generateContent?key=${GEMINI_API_KEY}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `Eres un preparador de oposiciones TAI (Informática AGE) muy amable pero MUY exigente técnicamente. 
-                El objetivo de tu alumna Teresa es SACAR NOTA ALTA, no le vale con aprobar. Tiene que ser capaz de detectar caracteres trampa y errores sutiles.
-                
-                Sobre el tema: '${subpuntoActivo.nombre}' (Teoría: ${subpuntoActivo.teoria}).
-                
-                GENERA ESTRICTAMENTE:
-                - Una breve frase motivadora de 1 línea.
-                - Una lista numerada con 5 minirretos muy directos y breves (1-2 líneas cada uno) que busquen que aplique modificadores complejos o detecte trampas.
-                - Un 6º reto llamado "RETO GLOBAL" (un poco más largo) que integre lo anterior.
-                No des las respuestas. Formato HTML limpio sin Markdown.`
-              }]
-            }]
+            contents: [{ parts: [{ text: `Eres un preparador experto en oposiciones TAI AGE (Nivel C1). Tema elegido: '${subpuntoActivo.nombre}'. Base técnica: ${subpuntoActivo.teoria}.
+            Genera en HTML PURO estricto (sin \`\`\`, sin markdown de bloques):
+            <p><strong>Batería de Ejercicios:</strong> (Frase de exigencia técnica)</p>
+            <ol class="list-decimal pl-4 space-y-2">
+              <li><strong>Minirreto 1:</strong> (Corto, directo y con trampa sutil)</li>
+              <li><strong>Minirreto 2:</strong> (Corto, buscando opciones complejas)</li>
+              <li><strong>Minirreto 3:</strong> (Supuesto práctico AGE)</li>
+              <li><strong>Minirreto 4:</strong> (Supuesto práctico AGE)</li>
+              <li><strong>Minirreto 5:</strong> (Supuesto práctico AGE)</li>
+              <li><strong>RETO GLOBAL (6):</strong> (Encadenar los comandos con pipes o condicionales)</li>
+            </ol>` }] }]
           })
         });
         
         const data = await response.json();
         if (response.ok && data.candidates) {
-          ejercicioActualText = data.candidates[0].content.parts[0].text;
+          ejercicioActualText = cleanRegEx(data.candidates[0].content.parts[0].text);
           promptBox.innerHTML = ejercicioActualText;
-        } else {
-          promptBox.innerText = `Error de API: ${data.error?.message || "Rechazada."}`;
         }
-      } catch (e) {
-        promptBox.innerText = "Error de red al generar la batería de ejercicios.";
-      }
+      } catch (e) { promptBox.innerText = "Fallo de conexión. Comprueba tu red o la cuota de la API."; }
     }
 
     async function ejecutarComando(e) {
@@ -467,8 +364,11 @@
       const cmd = input.value.trim();
       if (!cmd) return;
 
+      commandHistory.push(cmd);
+      historyIndex = commandHistory.length;
+
       const output = document.getElementById("terminalOutput");
-      output.innerHTML += `<div><span class="text-teal-400 font-bold">teresa@ordenador:~$</span> ${cmd}</div>`;
+      output.innerHTML += `<div><span class="text-teal-400 font-bold">teresa:~$</span> ${cmd}</div>`;
       input.value = "";
       output.scrollTop = output.scrollHeight;
 
@@ -476,56 +376,161 @@
     }
 
     async function evaluarComandoConIA(comando) {
-      GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
       const evalBox = document.getElementById("aiEvaluation");
-      
-      if (!GEMINI_API_KEY) return;
+      const badge = document.getElementById("evalBadge");
+      if (!GEMINI_API_KEY || !currentModuleId) return;
 
-      evalBox.innerHTML = `<p class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Analizando sintaxis, trampas y eficacia del comando...</p>`;
+      evalBox.innerHTML = `<p class="text-teal-700 animate-pulse"><i class="fa-solid fa-microchip fa-spin mr-2"></i> Analizando sintaxis, evaluando trampas y calculando puntuación...</p>`;
+      badge.classList.add("hidden");
 
       try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
-        const response = await fetch(url, {
+        // ACTUALIZADO ESTRICTAMENTE A GEMINI 3.1
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash:generateContent?key=${GEMINI_API_KEY}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `Eres el preparador TAI de Teresa. 
-                Ella está resolviendo esta batería de ejercicios: "${ejercicioActualText}".
-                El comando que acaba de ejecutar en su terminal es: "${comando}".
-                
-                COMO EVALUADOR:
-                1. Detecta a cuál de los ejercicios de la batería está respondiendo.
-                2. Indícale claramente si su comando es CORRECTO para un nivel alto de AGE o si ha caído en alguna trampa de sintaxis.
-                3. Explica breve y técnicamente por qué es correcto o incorrecto desglosando los modificadores.
-                4. Dale un pequeño tip nemotécnico o de examen.
-                5. Anímala a hacer el siguiente reto de la lista. Formato HTML limpio sin Markdown.`
-              }]
-            }]
+            contents: [{ parts: [{ text: `Eres el tribunal examinador TAI AGE (C1). 
+            La opositora responde a esta batería: "${ejercicioActualText}".
+            El comando que acaba de teclear es: "${comando}".
+            
+            REGLA ESTRICTA 1: Tu respuesta DEBE empezar con la etiqueta exacta "[CORRECTO]" si el comando es impecable, o por la etiqueta "[ERROR]" si hay un fallo de sintaxis, no responde bien a lo pedido, o ha caído en la trampa.
+            REGLA ESTRICTA 2: Tras la etiqueta, da tu feedback en HTML limpio (usando <p>, <b>, <ul>, sin markdown).
+            Indica a qué minirreto crees que está respondiendo, desgrana técnicamente los modificadores, y corrige su error si lo hay.` }] }]
           })
         });
         
         const data = await response.json();
         if (response.ok && data.candidates) {
-          const text = data.candidates[0].content.parts[0].text;
-          evalBox.innerHTML = `<div class="prose text-xs text-slate-700 leading-relaxed">${text}</div>`;
-        } else {
-          evalBox.innerHTML = `<p class="text-rose-500">Error evaluando: ${data.error?.message}</p>`;
+          let rawText = cleanRegEx(data.candidates[0].content.parts[0].text);
+          let isCorrect = rawText.toUpperCase().startsWith("[CORRECTO]");
+          let isError = rawText.toUpperCase().startsWith("[ERROR]");
+          
+          let htmlContent = rawText.replace(/\[CORRECTO\]/i, '').replace(/\[ERROR\]/i, '').trim();
+          evalBox.innerHTML = `<div class="prose text-xs text-slate-700 leading-relaxed">${htmlContent}</div>`;
+          
+          // --- ANALÍTICA DE RENDIMIENTO EN BASE A LA DECISIÓN DE GEMINI 3.1 ---
+          badge.classList.remove("hidden", "bg-emerald-500", "bg-rose-500");
+          if (isCorrect) {
+            userStats[currentModuleId].correct += 1;
+            badge.innerText = "Acierto Sumado";
+            badge.classList.add("bg-emerald-500");
+          } else {
+            userStats[currentModuleId].error += 1;
+            userStats[currentModuleId].logs.unshift({ cmd: comando, feedback: htmlContent.substring(0, 160) + "..." });
+            if(userStats[currentModuleId].logs.length > 5) userStats[currentModuleId].logs.pop(); 
+            badge.innerText = "Fallo Crítico Registrado";
+            badge.classList.add("bg-rose-500");
+          }
+          localStorage.setItem('tai_expediente', JSON.stringify(userStats));
+
         }
-      } catch (e) {
-        evalBox.innerHTML = `<p class="text-rose-500">Error de red en la evaluación.</p>`;
+      } catch (e) { evalBox.innerHTML = `<p class="text-rose-500">Error conectando con los servidores del tribunal.</p>`; }
+    }
+
+    async function pedirPista() {
+      const evalBox = document.getElementById("aiEvaluation");
+      if (!subpuntoActivo || !GEMINI_API_KEY) return;
+      evalBox.innerHTML = `<p class="text-amber-600 animate-pulse"><i class="fa-solid fa-lightbulb fa-fade mr-2"></i> Solicitando pista al preparador (sin penalizar expediente)...</p>`;
+      try {
+        // ACTUALIZADO ESTRICTAMENTE A GEMINI 3.1
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash:generateContent?key=${GEMINI_API_KEY}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: `Teresa se ha atascado resolviendo estos retos: "${ejercicioActualText}". Ofrécele UNA PISTA muy sutil en HTML para el primer reto que creas más complejo. NO LE DES el comando completo, enséñale la lógica para que ella lo deduzca.` }] }]
+          })
+        });
+        const data = await response.json();
+        if (response.ok && data.candidates) evalBox.innerHTML = cleanRegEx(data.candidates[0].content.parts[0].text);
+      } catch (e) { evalBox.innerHTML = "Error al solicitar pista."; }
+    }
+
+    // --- DASHBOARD EXPEDIENTE ---
+    function toggleExpediente() {
+      const modal = document.getElementById("expedienteModal");
+      modal.classList.toggle("hidden");
+      if(!modal.classList.contains("hidden")) renderExpediente();
+    }
+
+    function renderExpediente() {
+      let tCorrect = 0; let tError = 0;
+      const modContainer = document.getElementById("statsModulesContainer");
+      const errContainer = document.getElementById("statsErrorsList");
+      modContainer.innerHTML = ""; errContainer.innerHTML = "";
+
+      temarioTAI.forEach(m => {
+        let st = userStats[m.id];
+        if(!st) return;
+        tCorrect += st.correct;
+        tError += st.error;
+        let totalMod = st.correct + st.error;
+        let rateMod = totalMod > 0 ? Math.round((st.correct / totalMod) * 100) : 0;
+
+        modContainer.innerHTML += `
+          <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
+            <p class="text-[10px] font-bold text-slate-500 uppercase truncate" title="${m.titulo}">${m.titulo}</p>
+            <div class="flex justify-between items-end mt-1">
+              <span class="text-xl font-black ${rateMod >= 75 ? 'text-emerald-500' : rateMod >= 50 ? 'text-amber-500' : 'text-rose-500'}">${rateMod}%</span>
+              <span class="text-[10px] text-slate-400">✅ ${st.correct} | ❌ ${st.error}</span>
+            </div>
+            <div class="w-full bg-slate-100 h-1.5 mt-2 rounded-full overflow-hidden">
+              <div class="bg-indigo-500 h-full transition-all duration-500" style="width: ${rateMod}%"></div>
+            </div>
+          </div>`;
+
+        if(st.logs && st.logs.length > 0) {
+          let errorHTML = `<div class="mb-4"><p class="text-xs font-bold text-slate-700 mb-2 border-b border-slate-100 pb-1">${m.titulo}</p>`;
+          st.logs.forEach(log => {
+            errorHTML += `
+              <div class="bg-rose-50 p-2.5 rounded-lg border border-rose-100 mb-2 shadow-sm">
+                <p class="font-mono text-xs text-rose-800 font-bold bg-white p-1 rounded inline-block mb-1 border border-rose-200">$ ${log.cmd}</p>
+                <div class="text-[10px] text-slate-600 line-clamp-2">${log.feedback}</div>
+              </div>`;
+          });
+          errorHTML += `</div>`;
+          errContainer.innerHTML += errorHTML;
+        }
+      });
+
+      let tTotal = tCorrect + tError;
+      let globalRate = tTotal > 0 ? Math.round((tCorrect / tTotal) * 100) : 0;
+      document.getElementById("statGlobalRate").innerText = `${globalRate}%`;
+      document.getElementById("statTotalCorrect").innerText = tCorrect;
+      document.getElementById("statTotalErrors").innerText = tError;
+
+      if(tError === 0 && tTotal > 0) errContainer.innerHTML = `<div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-center"><i class="fa-solid fa-medal text-emerald-600 text-2xl mb-2"></i><p class="text-xs text-emerald-700 font-bold">¡Expediente inmaculado! Sigue así para asegurar el C1.</p></div>`;
+      else if(tTotal === 0) errContainer.innerHTML = `<p class="text-xs text-slate-500 italic text-center py-4">Aún no hay fallos registrados. ¡Ve al terminal a practicar!</p>`;
+    }
+
+    function resetStats() {
+      if(confirm("⚠ CUIDADO: ¿Borrar definitivamente todo tu progreso y empezar el temario de cero?")) {
+        userStats = {};
+        localStorage.removeItem('tai_expediente');
+        renderMenu();
+        renderExpediente();
       }
     }
 
+    // --- SIMULACRO OFICIAL ---
     function iniciarExamenGlobal() {
-      subpuntoActivo = { nombre: "SIMULACRO GLOBAL TAI", teoria: "Repaso integral. Dificultad Máxima. Detección de trampas avanzadas." };
-      document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-graduation-cap text-teal-600 text-base"></i> <span>MODO SIMULACRO GLOBAL</span>`;
-      document.getElementById("theoryContent").innerHTML = `
-        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs">
-          <strong>Nivel C1 Máxima Exigencia:</strong> Prepárate para enfrentarte a la mezcla de permisos, gestión de discos y rutas relativas engañosas. 
-        </div>`;
-      if (window.innerWidth < 768) toggleMobileMenu();
+      subpuntoActivo = { nombre: "SIMULACRO GLOBAL C1", teoria: "Repaso integral y agresivo de los 10 módulos. Detección de trampas cruzadas." };
+      currentModuleId = "m1"; 
+      document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-stopwatch text-rose-600"></i> SIMULACRO OFICIAL ACTIVO`;
+      document.getElementById("theoryContent").innerHTML = `<div class="p-4 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 text-xs font-bold shadow-inner">¡Reloj en marcha! 30 minutos sin descanso. Tus fallos aquí penalizan tu expediente. Demuestra lo que sabes.</div>`;
+      
+      const timerUI = document.getElementById("examTimerContainer");
+      timerUI.classList.remove("hidden");
+      
+      clearInterval(timerInterval);
+      let time = 1800; // 30 min
+      timerInterval = setInterval(() => {
+        time--;
+        const m = Math.floor(time/60).toString().padStart(2,'0');
+        const s = (time%60).toString().padStart(2,'0');
+        document.getElementById("examTimer").innerText = `${m}:${s}`;
+        if(time <= 0) { clearInterval(timerInterval); alert("¡TIEMPO AGOTADO! El tribunal ha recogido los exámenes."); timerUI.classList.add("hidden"); }
+      }, 1000);
+      
       pedirNuevoEjercicio();
     }
   </script>
