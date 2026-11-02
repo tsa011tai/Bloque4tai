@@ -185,7 +185,7 @@
     let subpuntoActivo = null;
     let ejercicioActualText = "";
 
-    // Temario completo TAI AGE Módulos 1 al 10 (con LVM, Discos, Cortafuegos, etc.)
+    // Temario completo TAI AGE Módulos 1 al 10 con contenido detallado y etimología
     const temarioTAI = [
       {
         id: "m1",
@@ -194,14 +194,21 @@
           { 
             id: "1.1", 
             nombre: "1.1. Anatomía del Prompt", 
-            comando: "whoami / id / echo $USER",
+            comando: "teresa@ordenador:~$",
             teoria: `
-              <div class="space-y-2">
-                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> ¿Qué es y para qué sirve?</strong> Permite identificar al usuario actual con el que estamos operando en el sistema y comprobar nuestros privilegios de seguridad.</p>
-                <p><strong><i class="fa-solid fa-language text-teal-600 mr-1"></i> Significado en Inglés:</strong> <code>who am i</code> (¿Quién soy yo?) y <code>identifier</code> (Identificador).</p>
-                <p><strong><i class="fa-solid fa-sliders text-teal-600 mr-1"></i> Opciones habituales:</strong> <code>id -u</code> (muestra el UID numérico), <code>id -g</code> (muestra el GID principal).</p>
+              <div class="space-y-3">
+                <p><strong><i class="fa-solid fa-book text-teal-600 mr-1"></i> Desglose del Command Prompt (La línea de comandos):</strong> En la terminal verás la estructura clásica <code>teresa@ordenador:~$</code>:</p>
+                <ul class="list-disc pl-5 space-y-1.5 text-slate-700">
+                  <li><strong>teresa:</strong> Nombre del usuario actual (User).</li>
+                  <li><strong>@:</strong> Símbolo "at" (en / ubicado en).</li>
+                  <li><strong>ordenador:</strong> Nombre de la máquina o host (Hostname).</li>
+                  <li><strong>::</strong> Separador de campos.</li>
+                  <li><strong>~:</strong> Virgulilla o tilde. Representa el directorio personal (Home directory), equivalente a <code>/home/teresa</code>. Si estás en la raíz, verás <code>/</code>.</li>
+                  <li><strong>$:</strong> Prompt de usuario normal (sin privilegios).</li>
+                  <li><strong>#:</strong> Prompt de superusuario / root (máximos privilegios administrativos).</li>
+                </ul>
                 <div class="p-3 bg-teal-50/80 rounded-xl border border-teal-100 text-teal-900 text-[11px]">
-                  <strong>💡 Truco TAI:</strong> Recuerda que en el examen el superusuario ROOT siempre tiene UID 0, los usuarios de sistema o servicios van del 1 al 999, y los usuarios normales empiezan a partir del 1000. ¡Pregunta clásica de test!
+                  <strong>💡 Truco TAI:</strong> En los exámenes tipo test de la AGE es vital distinguir el símbolo final: si ves una almohadilla (#), estás operando con UID 0 (root). ¡Cuidado con lanzar comandos destructivos sin querer!
                 </div>
               </div>
             `
@@ -641,7 +648,7 @@
       promptBox.innerHTML = `<span class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Preparando caso práctico sobre ${subpuntoActivo.nombre}...</span>`;
 
       try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
         
         const response = await fetch(url, {
           method: "POST",
@@ -696,7 +703,7 @@
       evalBox.innerHTML = `<p class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Analizando tu comando con cariño y rigor técnico...</p>`;
 
       try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
         
         const response = await fetch(url, {
           method: "POST",
