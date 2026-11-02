@@ -98,7 +98,7 @@
 
     <!-- PANEL PRINCIPAL -->
     <div class="lg:col-span-9 flex flex-col gap-5">
-      <!-- 1. TEORÍA ENRIQUECIDA -->
+      <!-- 1. TEORÍA -->
       <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
         <div class="flex justify-between items-center mb-3 border-b border-slate-100 pb-2">
           <h3 id="theoryTitle" class="text-sm font-bold text-teal-900 flex items-center gap-2">
@@ -111,18 +111,19 @@
         </div>
       </section>
 
-      <!-- 2. BATERÍA IA -->
-      <section class="bg-white border-2 border-amber-200 rounded-2xl p-5 shadow-sm">
-        <div class="flex justify-between items-center mb-3">
-          <h3 class="text-xs font-bold text-amber-900 flex items-center gap-2 uppercase tracking-wide">
-            <i class="fa-solid fa-chalkboard-user text-amber-600"></i> Tribunal: Batería de Ejercicios
+      <!-- 2. EJERCICIOS 1/5 (MINI VENTANA LARGA DE CHAT) -->
+      <section class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+        <div class="flex justify-between items-center mb-2 pb-2 border-b border-slate-100">
+          <h3 class="text-xs font-bold text-slate-800 flex items-center gap-2 uppercase tracking-wide">
+            <i class="fa-solid fa-comments text-teal-700"></i> Ejercicios 1/5
           </h3>
-          <button onclick="pedirNuevoEjercicio()" class="text-xs bg-amber-50 text-amber-700 px-3 py-1.5 rounded-xl border border-amber-200 hover:bg-amber-100 font-bold transition flex items-center gap-1.5">
-            <i class="fa-solid fa-rotate"></i> Generar Batería
+          <button onclick="pedirNuevoEjercicio()" class="text-[11px] bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200 hover:bg-slate-200 font-semibold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-rotate"></i> Nuevos Retos
           </button>
         </div>
-        <div id="exercisePrompt" class="bg-amber-50/80 p-4 rounded-xl text-xs font-medium text-slate-800 border-l-4 border-amber-500 overflow-y-auto max-h-60 leading-relaxed">
-          Esperando selección de módulo...
+        <!-- Mini ventana larga tipo chat -->
+        <div id="exercisePrompt" class="bg-slate-50 border border-slate-200 p-3 rounded-xl text-xs font-medium text-slate-700 overflow-y-auto max-h-40 leading-relaxed shadow-inner">
+          Selecciona un tema a la izquierda para que Gemini cargue los ejercicios...
         </div>
       </section>
 
@@ -172,7 +173,7 @@
     let timerInterval;
     let userStats = JSON.parse(localStorage.getItem('tai_expediente')) || {};
 
-    // TEMARIO COMPLETO Y PEDAGÓGICO (ETIMOLOGÍA Y TRAMPAS INCLUIDAS)
+    // TEMARIO COMPLETO Y PEDAGÓGICO
     const temarioTAI = [
       { id: "m1", titulo: "M1: Fundamentos y FHS", subpuntos: [
           { id: "1.1", nombre: "1.1. Anatomía del Prompt", comando: "teresa@ordenador:~$", 
@@ -350,6 +351,9 @@
       currentModuleId = modId;
       document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-graduation-cap text-teal-600"></i> ${sub.nombre}`;
       document.getElementById("theoryContent").innerHTML = sub.teoria;
+      if (window.innerWidth < 768) {
+        // En móvil por si acaso
+      }
       pedirNuevoEjercicio();
     }
 
@@ -370,7 +374,7 @@
         return;
       }
 
-      promptBox.innerHTML = `<span class="text-amber-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> El tribunal (Gemini 3.1) está generando tu batería de ejercicios...</span>`;
+      promptBox.innerHTML = `<span class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Generando ejercicios 1/5...</span>`;
       
       try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash:generateContent?key=${GEMINI_API_KEY}`, {
@@ -379,14 +383,13 @@
           body: JSON.stringify({
             contents: [{ parts: [{ text: `Eres un preparador experto en oposiciones TAI AGE (Nivel C1). Tema elegido: '${subpuntoActivo.nombre}'. Base técnica: ${subpuntoActivo.teoria}.
             Genera en HTML PURO estricto (sin \`\`\`, sin markdown de bloques):
-            <p><strong>Batería Oficial C1:</strong> (Frase de ánimo pero de exigencia técnica)</p>
-            <ol class="list-decimal pl-4 space-y-2">
-              <li><strong>Minirreto 1:</strong> (Corto, directo y con trampa sutil)</li>
-              <li><strong>Minirreto 2:</strong> (Corto, buscando opciones complejas)</li>
-              <li><strong>Minirreto 3:</strong> (Supuesto práctico TAI)</li>
-              <li><strong>Minirreto 4:</strong> (Supuesto práctico TAI)</li>
-              <li><strong>Minirreto 5:</strong> (Supuesto práctico TAI)</li>
-              <li><strong>RETO GLOBAL (6):</strong> (Encadenar comandos usando pipes o condicionales)</li>
+            <p><strong>Ejercicios 1/5:</strong> (Frase motivadora y técnica)</p>
+            <ol class="list-decimal pl-4 space-y-1">
+              <li><strong>Reto 1:</strong> (Corto, directo y con trampa sutil)</li>
+              <li><strong>Reto 2:</strong> (Opciones complejas)</li>
+              <li><strong>Reto 3:</strong> (Supuesto práctico TAI)</li>
+              <li><strong>Reto 4:</strong> (Supuesto práctico TAI)</li>
+              <li><strong>Reto 5 (GLOBAL):</strong> (Encadenar comandos usando pipes o condicionales)</li>
             </ol>` }] }]
           })
         });
@@ -435,7 +438,7 @@
             
             REGLA 1: Tu respuesta DEBE empezar con la etiqueta exacta "[CORRECTO]" si el comando es impecable, o "[ERROR]" si hay un fallo de sintaxis o ha caído en la trampa.
             REGLA 2: Tras la etiqueta, da tu feedback en HTML limpio (usando <p>, <b>, <ul>).
-            Indica a qué minirreto responde, desgrana técnicamente los modificadores (traduciéndolos del inglés) y corrige su error si lo hay.` }] }]
+            Indica a qué reto responde, desgrana técnicamente los modificadores y corrige su error si lo hay.` }] }]
           })
         });
         
@@ -474,7 +477,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: `Teresa se ha atascado resolviendo estos retos: "${ejercicioActualText}". Ofrécele UNA PISTA muy sutil en HTML para el primer reto que creas más complejo. NO LE DES el comando completo, enséñale la lógica (la inicial inglesa de la opción, por ejemplo) para que ella lo deduzca.` }] }]
+            contents: [{ parts: [{ text: `Teresa se ha atascado resolviendo estos retos: "${ejercicioActualText}". Ofrécele UNA PISTA muy sutil en HTML para el primer reto. NO LE DES el comando completo, enséñale la lógica para que ella lo deduzca.` }] }]
           })
         });
         const data = await response.json();
