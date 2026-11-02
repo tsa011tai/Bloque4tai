@@ -143,23 +143,8 @@
 
   <script>
     let GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
-
-    window.addEventListener("DOMContentLoaded", () => {
-      if (GEMINI_API_KEY) {
-        document.getElementById("apiKeyInput").value = GEMINI_API_KEY;
-      }
-    });
-
-    function guardarKey() {
-      const k = document.getElementById("apiKeyInput").value.trim();
-      if (k) {
-        localStorage.setItem("gemini_api_key", k);
-        GEMINI_API_KEY = k;
-        alert("¡Clave API guardada en el navegador! Ya no tendrás que volver a introducirla.");
-      } else {
-        alert("Introduce una clave válida antes de guardar.");
-      }
-    }
+    let subpuntoActivo = null;
+    let ejercicioActualText = "";
 
     const temarioTAI = [
       {
@@ -221,8 +206,24 @@
       }
     ];
 
-    let subpuntoActivo = null;
-    let ejercicioActualText = "";
+    // INTEGRACIÓN VITAL: Ejecutar siempre cuando el HTML base esté dibujado.
+    window.addEventListener("DOMContentLoaded", () => {
+      if (GEMINI_API_KEY) {
+        document.getElementById("apiKeyInput").value = GEMINI_API_KEY;
+      }
+      renderMenu();
+    });
+
+    function guardarKey() {
+      const k = document.getElementById("apiKeyInput").value.trim();
+      if (k) {
+        localStorage.setItem("gemini_api_key", k);
+        GEMINI_API_KEY = k;
+        alert("¡Clave API guardada en el navegador! Ya no tendrás que volver a introducirla.");
+      } else {
+        alert("Introduce una clave válida antes de guardar.");
+      }
+    }
 
     function renderMenu() {
       const menuContainer = document.getElementById("modulesMenu");
@@ -271,11 +272,10 @@
         return;
       }
 
-      promptBox.innerHTML = `<span class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin"></i> Conectando con Gemini 3.8 Flash...</span>`;
+      promptBox.innerHTML = `<span class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin"></i> Conectando con Gemini 1.5 Flash...</span>`;
 
       try {
-        // ACTUALIZACIÓN DE MODELO EXIGIDA POR LA API
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         
         const response = await fetch(url, {
           method: "POST",
@@ -326,11 +326,10 @@
         return;
       }
 
-      evalBox.innerHTML = `<p class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin"></i> Evaluando sintaxis con Gemini 3.8 Flash...</p>`;
+      evalBox.innerHTML = `<p class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin"></i> Evaluando sintaxis con Gemini 1.5 Flash...</p>`;
 
       try {
-        // ACTUALIZACIÓN DE MODELO EXIGIDA POR LA API
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         
         const response = await fetch(url, {
           method: "POST",
@@ -364,4 +363,12 @@
     }
 
     async function iniciarExamenGlobal() {
-      subpuntoActivo = { nombre: "EXAMEN GLOBAL TAI
+      subpuntoActivo = { nombre: "EXAMEN GLOBAL TAI", teoria: "Todos los módulos 1 al 6" };
+      document.getElementById("theoryTitle").innerText = "MODO EXAMEN GLOBAL";
+      document.getElementById("theoryContent").innerText = "Preguntas aleatorias de todos los módulos. Máxima exigencia.";
+      pedirNuevoEjercicio();
+    }
+
+  </script>
+</body>
+</html>
