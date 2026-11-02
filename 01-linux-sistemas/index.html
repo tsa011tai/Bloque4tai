@@ -111,7 +111,7 @@
         </div>
       </section>
 
-      <!-- 2. EJERCICIOS 1/5 (UNO A UNO) -->
+      <!-- 2. EJERCICIOS 1/5 (UNO A UNO PRÁCTICOS) -->
       <section class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
         <div class="flex justify-between items-center mb-2 pb-2 border-b border-slate-100">
           <h3 id="exerciseHeader" class="text-xs font-bold text-slate-800 flex items-center gap-2 uppercase tracking-wide">
@@ -136,11 +136,11 @@
           <button onclick="limpiarTerminal()" class="text-slate-400 hover:text-white text-[10px] font-medium transition">Limpiar (Ctrl+L)</button>
         </div>
         <div id="terminalOutput" class="p-4 font-mono text-[11px] sm:text-xs overflow-y-auto h-48 space-y-1.5 text-slate-200">
-          <div class="text-teal-400 font-bold">✨ Terminal Activa. Escribe tu comando para resolver el ejercicio actual...</div>
+          <div class="text-teal-400 font-bold">✨ Terminal Activa. Escribe el comando exacto para resolver el reto actual...</div>
         </div>
         <form onsubmit="ejecutarComando(event)" class="bg-slate-950 p-2.5 border-t border-slate-800 flex items-center gap-2 relative">
           <span class="text-teal-400 font-mono text-xs pl-2 font-bold">teresa:~$</span>
-          <input type="text" id="commandInput" class="bg-transparent text-white font-mono text-xs outline-none flex-1" autocomplete="off" autofocus placeholder="Escribe el comando exacto para resolver el reto y pulsa Enter..."/>
+          <input type="text" id="commandInput" class="bg-transparent text-white font-mono text-xs outline-none flex-1" autocomplete="off" autofocus placeholder="Escribe tu comando aquí y pulsa Enter..."/>
           <button type="button" onclick="pedirPista()" title="Pista sin penalizar" class="bg-amber-500 text-white text-[10px] px-2 py-1.5 rounded hover:bg-amber-600 transition shadow font-bold">SOS</button>
           <button type="submit" class="bg-teal-600 text-white text-xs px-4 py-1.5 rounded hover:bg-teal-500 transition font-bold shadow border-b-2 border-teal-800">Enter</button>
         </form>
@@ -155,7 +155,7 @@
           <span id="evalBadge" class="hidden text-[10px] px-2 py-1 rounded-full font-bold text-white uppercase tracking-wider"></span>
         </div>
         <div id="aiEvaluation" class="text-xs text-slate-700 overflow-y-auto max-h-64 bg-slate-50 p-4 rounded-xl border border-slate-200 leading-relaxed">
-          <p class="italic text-slate-400">Escribe tu comando arriba y pulsa Enter. Si aciertas, avanzarás al siguiente ejercicio.</p>
+          <p class="italic text-slate-400">Escribe el comando en la consola superior y pulsa Enter para comprobar tu respuesta.</p>
         </div>
       </section>
     </div>
@@ -165,7 +165,7 @@
     let GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
     let subpuntoActivo = null;
     let currentModuleId = null;
-    let currentExerciseIndex = 1; // De 1 a 5
+    let currentExerciseIndex = 1;
     let currentExerciseText = "";
     let commandHistory = [];
     let historyIndex = -1;
@@ -175,22 +175,22 @@
     const temarioTAI = [
       { id: "m1", titulo: "M1: Fundamentos y FHS", subpuntos: [
           { id: "1.1", nombre: "1.1. Anatomía del Prompt", comando: "teresa@ordenador:~$", 
-            teoria: `<div class="space-y-3"><p><strong>📚 Explicación:</strong> El 'prompt' es el indicador de la línea de comandos que te dice que el sistema está listo para recibir órdenes. Muestra quién eres y dónde estás.</p><ul class="list-disc pl-5"><li><code>teresa</code>: Nombre del usuario actual (User).</li><li><code>@</code>: Significa "at" (en). "Teresa EN ordenador".</li><li><code>ordenador</code>: Nombre de la máquina (Hostname).</li><li><code>~</code>: Representa el directorio personal (Home directory).</li></ul><p><strong>🇺🇸 Etimología:</strong> Prompt (Aviso / Indicador en pantalla).</p><div class="p-3 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm"><strong>⚠️ Trampa de Examen TAI:</strong> Un <code>$</code> indica usuario sin privilegios. Un <code>#</code> indica Root (UID 0).</div></div>` },
+            teoria: `<div class="space-y-3"><p><strong>📚 Explicación:</strong> El 'prompt' es el indicador de la línea de comandos que te dice que el sistema está listo para recibir órdenes.</p><ul class="list-disc pl-5"><li><code>teresa</code>: Nombre del usuario actual.</li><li><code>@</code>: En.</li><li><code>ordenador</code>: Hostname.</li><li><code>~</code>: Directorio personal.</li></ul><p><strong>🇺🇸 Etimología:</strong> Prompt (Aviso / Indicador).</p><div class="p-3 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm"><strong>⚠️ Trampa TAI:</strong> Un <code>$</code> indica usuario normal y <code>#</code> indica Root.</div></div>` },
           { id: "1.2", nombre: "1.2. Estructura FHS", comando: "ls -la /etc /var /tmp", 
-            teoria: `<div class="space-y-3"><p><strong>📚 Explicación:</strong> Linux organiza todo en un árbol único que nace en la raíz <code>/</code>.</p><p><strong>🇺🇸 Etimología TAI:</strong><br>- <b>FHS</b>: Filesystem Hierarchy Standard.<br>- <code>/etc</code>: Configuraciones globales.<br>- <code>/var</code>: Datos variables y logs.<br>- <code>/tmp</code>: Temporales.</p><div class="p-3 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm"><strong>⚠️ Trampa de Examen TAI:</strong> Las configuraciones personales van en el directorio <code>/home/usuario</code>, nunca en /etc.</div></div>` },
+            teoria: `<div class="space-y-3"><p><strong>📚 Explicación:</strong> Árbol único que nace en la raíz <code>/</code>.</p><p><strong>🇺🇸 Etimología TAI:</strong><br>- <b>FHS</b>: Filesystem Hierarchy Standard.<br>- <code>/etc</code>: Configuraciones.<br>- <code>/var</code>: Logs y variables.<br>- <code>/tmp</code>: Temporales.</p><div class="p-3 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm"><strong>⚠️ Trampa TAI:</strong> Las configuraciones personales van en /home/usuario.</div></div>` },
           { id: "1.3", nombre: "1.3. Navegación Básica", comando: "pwd -P && cd -", 
-            teoria: `<div class="space-y-3"><p><strong>📚 Explicación:</strong> Movernos por el árbol FHS.</p><p><strong>🇺🇸 Etimología TAI:</strong><br>- <code>pwd</code>: Print Working Directory.<br>- <code>cd</code>: Change Directory.</p><div class="p-3 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm"><strong>⚠️ Trampa de Examen TAI:</strong> <code>pwd -P</code> muestra la ruta física real resolviendo enlaces simbólicos.</div></div>` },
+            teoria: `<div class="space-y-3"><p><strong>📚 Explicación:</strong> Movernos por el árbol FHS.</p><p><strong>🇺🇸 Etimología TAI:</strong><br>- <code>pwd</code>: Print Working Directory.<br>- <code>cd</code>: Change Directory.</p><div class="p-3 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm"><strong>⚠️ Trampa TAI:</strong> <code>pwd -P</code> resuelve enlaces simbólicos físicos.</div></div>` },
           { id: "1.4", nombre: "1.4. Gestión Ficheros", comando: "cp -a origen/ destino/", 
-            teoria: `<div class="space-y-3"><p><strong>📚 Explicación:</strong> Copia, movimiento y borrado.</p><p><strong>🇺🇸 Etimología TAI:</strong><br>- <code>cp</code>: Copy.<br>- <code>mv</code>: Move.<br>- <code>rm</code>: Remove.</p><div class="p-3 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm"><strong>⚠️ Trampa de Examen TAI:</strong> <code>cp -a</code> mantiene fechas y dueños originales. <code>rmdir</code> solo borra vacíos.</div></div>` },
+            teoria: `<div class="space-y-3"><p><strong>📚 Explicación:</strong> Copia, movimiento y borrado.</p><p><strong>🇺🇸 Etimología TAI:</strong><br>- <code>cp</code>: Copy.<br>- <code>mv</code>: Move.<br>- <code>rm</code>: Remove.</p><div class="p-3 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm"><strong>⚠️ Trampa TAI:</strong> <code>cp -a</code> mantiene fechas y dueños originales.</div></div>` },
           { id: "1.5", nombre: "1.5. Búsqueda y Filtros", comando: "grep -E '^root' /etc/passwd", 
-            teoria: `<div class="space-y-3"><p><strong>📚 Explicación:</strong> Lectura y filtrado.</p><p><strong>🇺🇸 Etimología TAI:</strong><br>- <code>cat</code>: Concatenate.<br>- <code>grep</code>: Global Regular Expression Print.</p><div class="p-3 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm"><strong>⚠️ Trampa de Examen TAI:</strong> <code>^</code> es inicio de línea y <code>$</code> es fin.</div></div>` }
+            teoria: `<div class="space-y-3"><p><strong>📚 Explicación:</strong> Lectura y filtrado.</p><p><strong>🇺🇸 Etimología TAI:</strong><br>- <code>cat</code>: Concatenate.<br>- <code>grep</code>: Global Regular Expression Print.</p><div class="p-3 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded-lg border border-rose-200 shadow-sm"><strong>⚠️ Trampa TAI:</strong> <code>^</code> inicio de línea y <code>$</code> fin.</div></div>` }
       ]},
       { id: "m2", titulo: "M2: Usuarios y Grupos", subpuntos: [
           { id: "2.1", nombre: "2.1. Gestión de Cuentas", comando: "usermod -aG sudo teresa", teoria: `<p><strong>📚 Explicación:</strong> Cuentas de usuario.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Olvidar la 'a' en usermod borra los grupos anteriores.</div>` },
           { id: "2.2", nombre: "2.2. Seguridad (Shadow)", comando: "passwd -l usuario", teoria: `<p><strong>📚 Explicación:</strong> Fichero shadow.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Bloquear con -l impide contraseña pero a veces deja entrar por SSH.</div>` }
       ]},
       { id: "m3", titulo: "M3: Permisos y Atributos", subpuntos: [
-          { id: "3.1", nombre: "3.1. Umask y Cálculo Octal", comando: "umask 027", teoria: `<p><strong>📚 Explicación:</strong> Máscaras.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Los ficheros parten de 666 y directorios de 777.</div>` },
+          { id: "3.1", nombre: "3.1. Umask y Cálculo Octal", comando: "umask 027", teoria: `<p><strong>📚 Explicación:</strong> Máscaras.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> Ficheros parten de 666 y directorios de 777.</div>` },
           { id: "3.2", nombre: "3.2. SUID, SGID y Sticky Bit", comando: "chmod u+s /bin/ping", teoria: `<p><strong>📚 Explicación:</strong> Permisos especiales.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> S mayúscula indica SUID sin permiso de ejecución.</div>` }
       ]},
       { id: "m4", titulo: "M4: Cron y Scripting", subpuntos: [
@@ -216,7 +216,7 @@
       ]},
       { id: "m10", titulo: "M10: Firewall y SSH", subpuntos: [
           { id: "10.1", nombre: "10.1. Iptables", comando: "iptables -A INPUT -p tcp --dport 22 -j DROP", teoria: `<p><strong>📚 Explicación:</strong> Firewall.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> DROP silencia el paquete; REJECT avisa con ICMP.</div>` },
-          { id: "10.2", nombre: "10.2. Claves SSH", comando: "ssh-keygen -t rsa", teoria: `<p><strong>📚 Explicación:</strong> SSH.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> authorized_keys debe tener permisos 600, si tiene 777 se rechaza por seguridad.</div>` }
+          { id: "10.2", nombre: "10.2. Claves SSH", comando: "ssh-keygen -t rsa", teoria: `<p><strong>📚 Explicación:</strong> SSH.</p><div class="p-2 mt-2 bg-rose-50 text-rose-800 text-[11px] rounded border border-rose-200"><strong>⚠️ Trampa:</strong> authorized_keys debe tener permisos 600.</div>` }
       ]}
     ];
 
@@ -289,13 +289,13 @@
       currentExerciseIndex = 1;
       document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-graduation-cap text-teal-600"></i> ${sub.nombre}`;
       document.getElementById("theoryContent").innerHTML = sub.teoria;
-      pedirEjercicioUnoAUno();
+      pedirEjercicioPractico();
     }
 
     function reiniciarEjercicios() {
       if(!subpuntoActivo) return;
       currentExerciseIndex = 1;
-      pedirEjercicioUnoAUno();
+      pedirEjercicioPractico();
     }
 
     function limpiarTerminal() {
@@ -306,8 +306,8 @@
       return text.replace(/```(?:html)?/gi, '').replace(/```/g, '').trim();
     }
 
-    // --- CARGAR EJERCICIO UNO A UNO ---
-    async function pedirEjercicioUnoAUno() {
+    // --- CARGAR EJERCICIO PRÁCTICO 100% COMANDOS ---
+    async function pedirEjercicioPractico() {
       const promptBox = document.getElementById("exercisePrompt");
       const headerBox = document.getElementById("exerciseHeader");
       headerBox.innerHTML = `<i class="fa-solid fa-comments text-teal-700"></i> Ejercicio ${currentExerciseIndex}/5`;
@@ -317,7 +317,7 @@
         return;
       }
 
-      promptBox.innerHTML = `<span class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Cargando ejercicio ${currentExerciseIndex} de 5 sobre '${subpuntoActivo.nombre}'...</span>`;
+      promptBox.innerHTML = `<span class="text-teal-700 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Preparando el reto práctico ${currentExerciseIndex}/5 sobre '${subpuntoActivo.nombre}'...</span>`;
       
       try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`, {
@@ -328,10 +328,10 @@
             La alumna está estudiando estrictamente este subpunto: '${subpuntoActivo.nombre}'. 
             Teoría de referencia: ${subpuntoActivo.teoria}.
             
-            Tu tarea es plantear UN ÚNICO ejercicio (el número ${currentExerciseIndex} de un total de 5) enfocado EXCLUSIVAMENTE a este subpunto exacto (prohibido poner comandos de otros temas).
-            Pídele que escriba en la terminal el comando exacto o resuelva el caso práctico para memorizar su sintaxis.
-            Responde en HTML PURO estricto (sin markdown de bloques):
-            <p><strong>Reto ${currentExerciseIndex}/5:</strong> (Enunciado claro y directo sobre '${subpuntoActivo.nombre}')</p>` }] }]
+            REGLA ESTRICTA 1: Plantea UN ÚNICO ejercicio práctico (el número ${currentExerciseIndex} de 5) cuya respuesta obligatoria sea ESCRIBIR UN COMANDO DE LINUX EN LA TERMINAL relacionado directamente con este subpunto. Prohibido hacer preguntas teóricas de redactar texto; la alumna debe practicar tecleando el comando exacto para memorizarlo.
+            REGLA ESTRICTA 2: El ejercicio debe ceñirse ESTRICTAMENTE a '${subpuntoActivo.nombre}', sin mezclar comandos de otros módulos o temas avanzados que aún no le tocan.
+            Responde en HTML PURO estricto (sin bloques markdown):
+            <p><strong>Reto ${currentExerciseIndex}/5:</strong> (Enunciado corto planteando una situación donde deba teclear el comando exacto para resolverla).</p>` }] }]
           })
         });
         
@@ -367,7 +367,7 @@
       const badge = document.getElementById("evalBadge");
       if (!GEMINI_API_KEY || !currentModuleId || !subpuntoActivo) return;
 
-      evalBox.innerHTML = `<p class="text-teal-700 animate-pulse"><i class="fa-solid fa-microchip fa-spin mr-2"></i> Evaluando tu respuesta para el ejercicio ${currentExerciseIndex}/5...</p>`;
+      evalBox.innerHTML = `<p class="text-teal-700 animate-pulse"><i class="fa-solid fa-microchip fa-spin mr-2"></i> Evaluando tu comando para el ejercicio ${currentExerciseIndex}/5...</p>`;
       badge.classList.add("hidden");
 
       try {
@@ -376,11 +376,11 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             contents: [{ parts: [{ text: `Eres el tribunal examinador TAI AGE (C1). 
-            La opositora está respondiendo a este ejercicio: "${currentExerciseText}".
-            El comando o respuesta que ha escrito en la terminal es: "${comando}".
+            La opositora debía resolver este reto práctico: "${currentExerciseText}".
+            El comando que ha tecleado en su terminal es: "${comando}".
             
-            REGLA 1: Tu respuesta DEBE empezar con la etiqueta exacta "[CORRECTO]" si el comando es impecable y responde perfectamente, o "[ERROR]" si hay un fallo, sintaxis incorrecta o no es la solución.
-            REGLA 2: Tras la etiqueta, da tu feedback en HTML limpio (<p>, <b>, <ul>), explicando por qué es correcto o en qué ha fallado para que pueda aprender y recordarlo.` }] }]
+            REGLA 1: Tu respuesta DEBE empezar con la etiqueta exacta "[CORRECTO]" si el comando es técnicamente exacto para resolver el reto, o "[ERROR]" si la sintaxis falla o no es el comando adecuado.
+            REGLA 2: Tras la etiqueta, da tu feedback en HTML limpio (<p>, <b>, <ul>), explicando por qué es correcto o corrigiendo el error con etimología para que lo memorice.` }] }]
           })
         });
         
@@ -392,28 +392,27 @@
           let htmlContent = rawText.replace(/\[CORRECTO\]/i, '').replace(/\[ERROR\]/i, '').trim();
           
           if (isCorrect) {
-            evalBox.innerHTML = `<div class="prose text-xs text-slate-700 leading-relaxed"><p class="text-emerald-700 font-bold mb-1">✅ ¡Correcto!</p>${htmlContent}</div>`;
+            evalBox.innerHTML = `<div class="prose text-xs text-slate-700 leading-relaxed"><p class="text-emerald-700 font-bold mb-1">✅ ¡Comando Correcto!</p>${htmlContent}</div>`;
             badge.innerText = "Acierto Sumado";
             badge.className = "text-[10px] px-2 py-1 rounded-full font-bold text-white uppercase tracking-wider bg-emerald-500";
             
             userStats[currentModuleId].correct += 1;
             localStorage.setItem('tai_expediente', JSON.stringify(userStats));
 
-            // Avanzar al siguiente ejercicio uno a uno
             if (currentExerciseIndex < 5) {
               currentExerciseIndex++;
               setTimeout(() => {
-                pedirEjercicioUnoAUno();
-                evalBox.innerHTML += `<p class="text-teal-700 font-bold mt-2">👉 ¡Excelente! Cargando el ejercicio ${currentExerciseIndex} de 5...</p>`;
+                pedirEjercicioPractico();
+                evalBox.innerHTML += `<p class="text-teal-700 font-bold mt-2">👉 ¡Muy bien! Cargando el ejercicio ${currentExerciseIndex} de 5...</p>`;
               }, 1500);
             } else {
               setTimeout(() => {
-                document.getElementById("exercisePrompt").innerHTML = `<div class="p-3 bg-emerald-50 text-emerald-800 rounded-lg font-bold text-center">🎉 ¡Enhorabuena Teresa! Has completado con éxito los 5 ejercicios de este subpunto. Selecciona otro en el menú de la izquierda para seguir avanzando.</div>`;
+                document.getElementById("exercisePrompt").innerHTML = `<div class="p-3 bg-emerald-50 text-emerald-800 rounded-lg font-bold text-center">🎉 ¡Enhorabuena Teresa! Has completado con éxito los 5 ejercicios prácticos de este subpunto. Elige otro tema a la izquierda.</div>`;
               }, 1000);
             }
 
           } else {
-            evalBox.innerHTML = `<div class="prose text-xs text-slate-700 leading-relaxed"><p class="text-rose-700 font-bold mb-1">❌ Incorrecto (Tienes otra oportunidad)</p>${htmlContent}</div>`;
+            evalBox.innerHTML = `<div class="prose text-xs text-slate-700 leading-relaxed"><p class="text-rose-700 font-bold mb-1">❌ Comando Incorrecto (Tienes otra oportunidad para intentarlo)</p>${htmlContent}</div>`;
             badge.innerText = "Fallo Crítico Registrado";
             badge.className = "text-[10px] px-2 py-1 rounded-full font-bold text-white uppercase tracking-wider bg-rose-500";
             
@@ -436,7 +435,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: `Teresa se ha atascado en este ejercicio: "${currentExerciseText}". Ofrécele UNA PISTA muy sutil en HTML sin darle el comando completo para que pueda deducirlo.` }] }]
+            contents: [{ parts: [{ text: `Teresa se ha atascado en este ejercicio práctico: "${currentExerciseText}". Ofrécele UNA PISTA muy sutil en HTML (como la inicial del comando o la opción en inglés) sin darle la respuesta completa.` }] }]
           })
         });
         const data = await response.json();
@@ -529,7 +528,7 @@
         if(time <= 0) { clearInterval(timerInterval); alert("¡TIEMPO AGOTADO!"); timerUI.classList.add("hidden"); }
       }, 1000);
       
-      pedirEjercicioUnoAUno();
+      pedirEjercicioPractico();
     }
   </script>
 </body>
