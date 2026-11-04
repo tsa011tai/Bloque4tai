@@ -20,7 +20,6 @@
     .markdown-body pre { background-color: #0f172a; color: #38bdf8; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1rem; font-family: monospace; font-size: 0.85em; }
     .markdown-body strong { color: #0f172a; font-weight: 700; }
     
-    /* Scrollbar estilizado */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -29,7 +28,6 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
 
-  <!-- HEADER -->
   <header class="border-b border-slate-200 bg-white shadow-sm sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
       <div class="flex items-center gap-3 w-full md:w-auto justify-between">
@@ -59,7 +57,6 @@
     </div>
   </header>
 
-  <!-- MODAL EXPEDIENTE -->
   <div id="expedienteModal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200">
       <div class="bg-indigo-700 p-4 flex justify-between items-center text-white">
@@ -95,7 +92,6 @@
 
   <main class="max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 relative z-10">
     
-    <!-- MENU LATERAL -->
     <div class="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col max-h-[85vh]">
       <h2 class="text-[11px] font-bold text-teal-800 uppercase tracking-wider mb-3 pb-2 border-b border-slate-100 flex items-center gap-2">
         <i class="fa-solid fa-book-open text-teal-600"></i> Temario MD Completo
@@ -103,10 +99,8 @@
       <div class="overflow-y-auto flex-1 space-y-2 pr-1" id="modulesMenu"></div>
     </div>
 
-    <!-- PANEL PRINCIPAL (TEORÍA Y TESTS) -->
     <div class="lg:col-span-9 flex flex-col gap-5 relative pb-20">
       
-      <!-- 1. TEORÍA PEDAGÓGICA -->
       <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
         <div class="flex justify-between items-center mb-3 border-b border-slate-100 pb-2">
           <h3 id="theoryTitle" class="text-sm font-bold text-teal-900 flex items-center gap-2">
@@ -123,7 +117,6 @@
         </div>
       </section>
 
-      <!-- 2. EJERCICIO INTERACTIVO (TEST) -->
       <section id="exerciseSection" class="hidden bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
         <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
           <h3 id="exerciseHeader" class="text-sm font-bold text-indigo-900 flex items-center gap-2 uppercase tracking-wide">
@@ -135,18 +128,15 @@
         </div>
         
         <div id="exercisePrompt" class="text-sm font-semibold text-slate-800 mb-5 leading-relaxed">
-          <!-- Pregunta -->
         </div>
 
         <div id="optionsContainer" class="space-y-3">
-          <!-- Opciones de radio buttons generadas por JS -->
         </div>
 
         <div class="mt-6 flex justify-end border-t border-slate-100 pt-4">
             <button id="btnComprobar" onclick="verificarRespuesta()" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-6 py-2.5 rounded-lg shadow-sm border-b-2 border-teal-800 transition hidden">Comprobar Respuesta</button>
         </div>
 
-        <!-- Feedback de Gemini -->
         <div id="feedbackSection" class="hidden mt-5 bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-inner">
             <div id="feedbackTitle" class="font-bold text-sm mb-2"></div>
             <div id="aiEvaluation" class="text-xs text-slate-700 leading-relaxed markdown-body"></div>
@@ -159,15 +149,12 @@
     </div>
   </main>
 
-  <!-- CHAT FLOTANTE GEMINI -->
   <div id="chatWidget" class="fixed bottom-4 right-4 z-40 flex flex-col items-end">
-    <!-- Botón Toggle -->
     <button onclick="toggleChat()" class="bg-teal-700 hover:bg-teal-800 text-white rounded-full h-14 w-14 flex items-center justify-center shadow-2xl border-2 border-white transition transform hover:scale-105 relative">
         <i class="fa-solid fa-comment-dots text-2xl"></i>
         <span class="absolute top-0 right-0 h-3 w-3 bg-rose-500 rounded-full border-2 border-white"></span>
     </button>
 
-    <!-- Ventana de Chat -->
     <div id="chatWindow" class="hidden w-[90vw] md:w-[400px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col mt-2 overflow-hidden transition-all h-[500px] max-h-[80vh]">
         <div class="bg-teal-800 p-3 flex justify-between items-center text-white">
             <div class="flex items-center gap-2">
@@ -193,7 +180,7 @@
   <script>
     // Configuración Global
     let GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
-    // El usuario pidió "utiliza la 3.1 de la version que es la que mejor me ha funcionado".
+    // Versión actualizada solicitada
     const GEMINI_MODEL = "gemini-3.1-flash-lite:generateContent"; 
 
     let subpuntoActivo = null;
@@ -207,7 +194,6 @@
         modules: {}
     };
 
-    // Parseo básico de Markdown para renderizar
     function parseMD(text) {
         if (!text) return "";
         let html = text
@@ -220,12 +206,10 @@
             .replace(/\n\n/g, '</p><p>')
             .replace(/\n- (.*?)/g, '<li>$1</li>');
         
-        // Wrap orphaned lis in ul
         html = html.replace(/(<li>.*<\/li>)/s, '<ul class="list-disc pl-5 my-2">$1</ul>');
         return `<p>${html}</p>`;
     }
 
-    // Estructura extraída y adaptada del MD proporcionado por el usuario
     const temarioTAI = [
       { id: "m1", titulo: "Vol. I - Módulo 1: Intro a Linux", subpuntos: [
           { id: "1.1", nombre: "Kernel, GNU y Arquitectura", teoria: "Linux es el kernel: gestiona procesos, memoria, dispositivos y sistemas de archivos mediante llamadas al sistema. Los programas operan en espacio de usuario.\n\nUna distribución combina kernel, utilidades, gestor de paquetes y repositorios. Familias: Debian/Ubuntu (.deb, apt), RHEL/Rocky (.rpm, dnf).\n\nArquitectura: x86_64, aarch64. \n**Trampa**: No deduzcas la distro solo por el gestor instalado. Usa `cat /etc/os-release`." },
@@ -286,7 +270,6 @@
       }
     }
 
-    // Renderiza el Menú Lateral
     function renderMenu() {
       const menuContainer = document.getElementById("modulesMenu");
       menuContainer.innerHTML = "";
@@ -324,7 +307,6 @@
       chevron.style.transform = el.classList.contains("hidden") ? "rotate(0deg)" : "rotate(180deg)";
     }
 
-    // Selección de subpunto y muestra de Teoría
     function seleccionarSubpunto(sub, modId) {
       subpuntoActivo = sub;
       currentModuleId = modId;
@@ -337,7 +319,6 @@
       document.getElementById("exerciseSection").classList.add("hidden");
       document.getElementById("feedbackSection").classList.add("hidden");
       
-      // Auto-abrir chat flotante con mensaje de bienvenida a la sección
       const chatWin = document.getElementById("chatWindow");
       if (chatWin.classList.contains("hidden")) {
           toggleChat();
@@ -355,7 +336,6 @@
       pedirEjercicioPracticoJSON();
     }
 
-    // Lógica del API Gemini para generar preguntas Tipo Test
     async function pedirEjercicioPracticoJSON() {
       const promptBox = document.getElementById("exercisePrompt");
       const headerBox = document.getElementById("exerciseHeader");
@@ -426,7 +406,6 @@ Formato JSON estricto:
           try {
              currentExerciseData = JSON.parse(rawText);
              
-             // Renderizar UI
              promptBox.innerHTML = currentExerciseData.question;
              currentExerciseData.options.forEach((opt, idx) => {
                  optsContainer.innerHTML += `
@@ -442,12 +421,11 @@ Formato JSON estricto:
              setTimeout(pedirEjercicioPracticoJSON, 1500);
           }
         } else {
-             promptBox.innerHTML = "<span class='text-rose-600 font-bold'>Error de API: Verifica tu Clave.</span>";
+             promptBox.innerHTML = "<span class='text-rose-600 font-bold'>Error de API: Verifica tu Clave y la disponibilidad del modelo.</span>";
         }
       } catch (e) { promptBox.innerText = "Error de red con Gemini."; }
     }
 
-    // Verificar la respuesta del test
     function verificarRespuesta() {
         const selected = document.querySelector('input[name="quizOption"]:checked');
         if (!selected) return;
@@ -456,11 +434,9 @@ Formato JSON estricto:
         const correctIndex = currentExerciseData.correct_index;
         const isAcierto = (selectedIndex === correctIndex);
 
-        // Deshabilitar inputs
         document.querySelectorAll('input[name="quizOption"]').forEach(el => el.disabled = true);
         document.getElementById("btnComprobar").classList.add("hidden");
 
-        // Colorear labels
         for(let i=0; i<4; i++) {
             let label = document.getElementById(`label-opt-${i}`);
             if (i === correctIndex) {
@@ -472,7 +448,6 @@ Formato JSON estricto:
             }
         }
 
-        // Registrar estadísticas
         userStats.history.push(currentExerciseData.exercise_id);
         if (isAcierto) {
             userStats.modules[currentModuleId].correct += 1;
@@ -482,7 +457,6 @@ Formato JSON estricto:
         }
         localStorage.setItem('tai_expediente_v5', JSON.stringify(userStats));
 
-        // Mostrar Feedback
         const feedbackSec = document.getElementById("feedbackSection");
         const fbTitle = document.getElementById("feedbackTitle");
         const evalBox = document.getElementById("aiEvaluation");
@@ -513,9 +487,6 @@ Formato JSON estricto:
         }
     }
 
-    // ==========================================
-    // CHAT GEMINI
-    // ==========================================
     function toggleChat() {
         const win = document.getElementById("chatWindow");
         win.classList.toggle("hidden");
@@ -534,7 +505,6 @@ Formato JSON estricto:
         
         input.value = "";
         
-        // Render user message
         const chatBox = document.getElementById("chatMessages");
         chatBox.innerHTML += `
             <div class="bg-indigo-600 text-white p-2.5 rounded-lg rounded-tr-none shadow-sm max-w-[85%] self-end ml-auto mt-2">
@@ -543,7 +513,6 @@ Formato JSON estricto:
         `;
         scrollChat();
         
-        // Add loading
         const loadingId = `load_${Date.now()}`;
         chatBox.innerHTML += `
             <div id="${loadingId}" class="bg-white border border-slate-200 p-2.5 rounded-lg rounded-tl-none shadow-sm max-w-[85%] text-slate-400 mt-2">
@@ -552,7 +521,6 @@ Formato JSON estricto:
         `;
         scrollChat();
 
-        // Build contextual prompt
         let theoryContext = subpuntoActivo ? subpuntoActivo.teoria : "El alumno está en el laboratorio general de Linux SysAdmin.";
         let promptSystem = `Eres Gemini, un tutor AI experto en Linux (Nivel C1/SysAdmin).
 El alumno tiene la siguiente duda: "${text}".
@@ -576,7 +544,7 @@ Respóndele de forma amigable, directa, con ejemplos técnicos y advirtiendo de 
                     </div>
                 `;
             } else {
-                chatBox.innerHTML += `<div class="text-rose-500 text-xs font-bold mt-2">Error de conexión API.</div>`;
+                chatBox.innerHTML += `<div class="text-rose-500 text-xs font-bold mt-2">Error de conexión API. Verifica que el modelo lite está soportado en tu región.</div>`;
             }
         } catch (error) {
             document.getElementById(loadingId).remove();
@@ -585,9 +553,6 @@ Respóndele de forma amigable, directa, con ejemplos técnicos y advirtiendo de 
         scrollChat();
     }
 
-    // ==========================================
-    // EXPEDIENTE
-    // ==========================================
     function toggleExpediente() {
       const modal = document.getElementById("expedienteModal");
       modal.classList.toggle("hidden");
