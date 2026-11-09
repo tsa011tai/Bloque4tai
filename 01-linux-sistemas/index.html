@@ -1,532 +1,12 @@
-import json
-
-# Generamos la base de datos de preguntas a partir del nuevo MD (30 módulos).
-# Para no hacer el script excesivamente largo, usaré un extractor programático 
-# basado en la estructura de Nivel y Módulos.
-db_preguntas = [
-    {
-        "id": 1,
-        "level": "Nivel 0",
-        "module": "Módulo 1",
-        "lesson": "Introducción a Linux y laboratorio",
-        "command": "Arquitectura y Familias",
-        "englishMeaning": "Linux Architecture",
-        "question": "¿Cuál es la diferencia fundamental entre el 'kernel' y el 'espacio de usuario' (user space) en Linux?",
-        "options": [
-            "El kernel gestiona los recursos del hardware y las llamadas al sistema, mientras el espacio de usuario ejecuta las aplicaciones normales.",
-            "El espacio de usuario es donde se almacenan los módulos del kernel.",
-            "El kernel es exclusivo de distribuciones Red Hat, mientras Ubuntu usa espacio de usuario.",
-            "Son lo mismo; ambos términos se refieren a las herramientas GNU."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: El tribunal suele intentar confundir herramientas GNU (que corren en espacio de usuario) con funciones del propio Kernel (que maneja CPU, memoria y hardware)."
-    },
-    {
-        "id": 2,
-        "level": "Nivel 0",
-        "module": "Módulo 2",
-        "lesson": "Terminal y Bash esencial",
-        "command": "man, apropos y which",
-        "englishMeaning": "Manual and Path Search",
-        "question": "Si necesitas encontrar qué comando sirve para una tarea concreta pero no sabes cómo se llama, ¿qué orden usarías?",
-        "options": [
-            "apropos (o man -k)",
-            "which",
-            "whereis",
-            "type"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: 'which' y 'whereis' buscan comandos por nombre exacto en el PATH. 'apropos' busca por palabra clave en las descripciones de los manuales."
-    },
-    {
-        "id": 3,
-        "level": "Nivel 0",
-        "module": "Módulo 3",
-        "lesson": "Sistema de ficheros y navegación",
-        "command": "Enlaces duros y simbólicos",
-        "englishMeaning": "Hard and Soft Links",
-        "question": "¿Qué ocurre si eliminas el archivo original al que apunta un enlace duro (hard link)?",
-        "options": [
-            "El archivo sigue existiendo y accesible a través del enlace duro, ya que ambos apuntan al mismo inodo.",
-            "El enlace duro se rompe y queda inaccesible.",
-            "El enlace duro se convierte automáticamente en un enlace simbólico.",
-            "El sistema operativo impide borrar el original si tiene enlaces duros."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: Un enlace simbólico se rompe si borras el origen, pero el enlace duro no, porque es literalmente otra 'etiqueta' apuntando al mismo bloque de datos físicos (inodo)."
-    },
-    {
-        "id": 4,
-        "level": "Nivel 0",
-        "module": "Módulo 4",
-        "lesson": "Procesado de texto y editores",
-        "command": "grep, sed y awk",
-        "englishMeaning": "Global Regular Expression Print",
-        "question": "¿Qué comando es el más adecuado para extraer y procesar columnas específicas separadas por espacios o delimitadores en un archivo de log?",
-        "options": [
-            "awk",
-            "grep",
-            "tac",
-            "wc"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: Aunque 'cut' extrae columnas, 'awk' es el estándar avanzado en los test para extraer campos/columnas y procesarlos lógicamente."
-    },
-    {
-        "id": 5,
-        "level": "Nivel 1",
-        "module": "Módulo 5",
-        "lesson": "Usuarios y grupos",
-        "command": "usermod y /etc/shadow",
-        "englishMeaning": "User Modify",
-        "question": "¿Qué parámetro debes usar con 'usermod' para añadir un usuario a un grupo suplementario sin borrarlo de los demás grupos a los que ya pertenece?",
-        "options": [
-            "usermod -aG grupo usuario",
-            "usermod -G grupo usuario",
-            "usermod -g grupo usuario",
-            "usermod -add grupo usuario"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: Si usas solo '-G' (sin la 'a' de append), sobrescribes toda la lista de grupos suplementarios y lo expulsas de los anteriores."
-    },
-    {
-        "id": 6,
-        "level": "Nivel 1",
-        "module": "Módulo 6",
-        "lesson": "Permisos, propietarios y ACL",
-        "command": "chmod, chown y SUID",
-        "englishMeaning": "Set User ID",
-        "question": "¿Qué efecto tiene el permiso especial SGID (Set Group ID) cuando se aplica sobre un directorio?",
-        "options": [
-            "Los archivos nuevos creados en su interior heredarán el grupo del directorio, no el grupo principal del creador.",
-            "Los archivos se ejecutarán con los privilegios del grupo.",
-            "Impide que los usuarios puedan borrar archivos que no sean suyos.",
-            "Oculta el contenido del directorio a los miembros que no son del grupo."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: El SGID en directorios es fundamental para entornos colaborativos. No confundir con el Sticky Bit (que impide el borrado a no-propietarios)."
-    },
-    {
-        "id": 7,
-        "level": "Nivel 1",
-        "module": "Módulo 7",
-        "lesson": "Procesos y servicios (systemd)",
-        "command": "systemctl y kill",
-        "englishMeaning": "System Control",
-        "question": "¿Qué señal envía por defecto el comando 'kill' si no se especifica ninguna opción?",
-        "options": [
-            "SIGTERM (15)",
-            "SIGKILL (9)",
-            "SIGHUP (1)",
-            "SIGSTOP (19)"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: Muchos piensan que kill 'mata' directamente (SIGKILL 9), pero por defecto envía SIGTERM (15), pidiendo al proceso que termine ordenadamente."
-    },
-    {
-        "id": 8,
-        "level": "Nivel 1",
-        "module": "Módulo 8",
-        "lesson": "Gestión de paquetes",
-        "command": "apt vs dpkg / dnf vs rpm",
-        "englishMeaning": "Debian Package / RPM Package Manager",
-        "question": "¿Cuál de las siguientes afirmaciones sobre la gestión de paquetes es correcta?",
-        "options": [
-            "dpkg opera a bajo nivel y no resuelve dependencias online automáticamente, mientras apt sí lo hace.",
-            "rpm descarga paquetes de los repositorios y dnf solo los instala localmente.",
-            "apt-get ha sido completamente retirado de las distribuciones modernas a favor de dpkg.",
-            "Flatpak requiere compilar el código fuente con ./configure antes de instalarse."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: El tribunal siempre pone dpkg vs apt. dpkg es de bajo nivel offline; apt/apt-get gestionan dependencias descargando de repositorios."
-    },
-    {
-        "id": 9,
-        "level": "Nivel 2",
-        "module": "Módulo 9",
-        "lesson": "Streams, pipes y scripting Bash",
-        "command": "Redirecciones (>, 2>)",
-        "englishMeaning": "Standard Error",
-        "question": "¿Cómo rediriges TANTO la salida estándar (stdout) COMO la salida de error (stderr) a un mismo archivo llamado 'log.txt' en Bash?",
-        "options": [
-            "comando > log.txt 2>&1",
-            "comando 1>&2 > log.txt",
-            "comando >> log.txt 2> log.txt",
-            "comando > log.txt &> log.txt"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: El orden importa. Primero mandas stdout al archivo (> log.txt) y luego rediriges stderr a donde esté yendo stdout (2>&1). Si lo pones al revés, stderr se quedará en pantalla."
-    },
-    {
-        "id": 10,
-        "level": "Nivel 2",
-        "module": "Módulo 10",
-        "lesson": "Tareas programadas",
-        "command": "crontab y systemd.timer",
-        "englishMeaning": "Cron Table",
-        "question": "En el fichero de sistema /etc/crontab, la sintaxis incluye un campo extra que NO está presente cuando usas 'crontab -e'. ¿Cuál es?",
-        "options": [
-            "El nombre del usuario que debe ejecutar la tarea.",
-            "El año de ejecución.",
-            "El path absoluto del binario cron.",
-            "El nivel de prioridad (nice) del proceso."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: El crontab de usuario (crontab -e) asume que la tarea es de ese usuario. El de sistema (/etc/crontab) necesita saber como quién ejecutarla."
-    },
-    {
-        "id": 11,
-        "level": "Nivel 2",
-        "module": "Módulo 11",
-        "lesson": "Discos, particiones y sistemas de ficheros",
-        "command": "fstab y particionado",
-        "englishMeaning": "File System Table",
-        "question": "Si añades la opción 'nofail' a un montaje en /etc/fstab, ¿qué le estás indicando al sistema?",
-        "options": [
-            "Que continúe el proceso de arranque normal incluso si el dispositivo falla o no está conectado.",
-            "Que no monte el dispositivo de forma automática al iniciar el sistema (equivalente a noauto).",
-            "Que monte la unidad en modo de solo lectura para evitar corrupción de datos.",
-            "Que deshabilite la comprobación de errores fsck durante el arranque."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: Sin 'nofail', si un disco secundario no se monta, el servidor se detendrá en el modo de emergencia (rescue mode) y no arrancará la red."
-    },
-    {
-        "id": 12,
-        "level": "Nivel 2",
-        "module": "Módulo 12",
-        "lesson": "RAID, LVM y cifrado",
-        "command": "LVM (lvresize, lvextend)",
-        "englishMeaning": "Logical Volume Manager",
-        "question": "¿Cuál es el orden correcto y seguro para reducir un volumen lógico (LV) formateado en ext4?",
-        "options": [
-            "Desmontar, revisar con fsck, reducir el sistema de ficheros (resize2fs) y finalmente reducir el volumen lógico (lvreduce).",
-            "Reducir el volumen lógico primero (lvreduce) y luego reducir el sistema de ficheros para que se ajuste.",
-            "Reducir el volumen lógico en caliente con lvresize -r sin desmontarlo.",
-            "No se puede. Hay que crear un volumen nuevo y copiar los datos."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: Reducir primero el contenedor (LV) cortará datos y corromperá el sistema de archivos (FS) de forma irreversible. Siempre se encoge primero el FS desde dentro, luego el LV desde fuera."
-    },
-    {
-        "id": 13,
-        "level": "Nivel 2",
-        "module": "Módulo 13",
-        "lesson": "Arranque, kernel y recuperación",
-        "command": "GRUB y Targets",
-        "englishMeaning": "Grand Unified Bootloader",
-        "question": "¿A qué equivale el antiguo concepto de 'runlevel 3' (multiusuario con red pero sin entorno gráfico) en el entorno moderno de systemd?",
-        "options": [
-            "multi-user.target",
-            "graphical.target",
-            "rescue.target",
-            "network.target"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: runlevel 3 = multi-user.target. Runlevel 5 = graphical.target. Runlevel 1 = rescue.target."
-    },
-    {
-        "id": 14,
-        "level": "Nivel 2",
-        "module": "Módulo 14",
-        "lesson": "Logs, rendimiento y diagnóstico",
-        "command": "journalctl y dmesg",
-        "englishMeaning": "Systemd Journal Control",
-        "question": "Si un sistema se acaba de reiniciar por un fallo y quieres ver los logs exclusivos del arranque ANTERIOR usando journalctl, ¿qué parámetro usas?",
-        "options": [
-            "journalctl -b -1",
-            "journalctl --previous",
-            "journalctl -p err",
-            "journalctl -u boot"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: -b indica 'boot' (arranque actual). -b -1 indica el arranque inmediatamente anterior al actual. Para que funcione, el journal debe estar configurado como persistente."
-    },
-    {
-        "id": 15,
-        "level": "Nivel 3",
-        "module": "Módulo 15",
-        "lesson": "Fundamentos de redes",
-        "command": "Modelo OSI y TCP/IP",
-        "englishMeaning": "Open Systems Interconnection",
-        "question": "En el modelo OSI, ¿en qué capa actúan las direcciones IP (lógicas) y los routers?",
-        "options": [
-            "Capa 3 (Red)",
-            "Capa 2 (Enlace de datos)",
-            "Capa 4 (Transporte)",
-            "Capa 7 (Aplicación)"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: Capa 2 = MAC (Switches). Capa 3 = IP (Routers). Capa 4 = Puertos TCP/UDP."
-    },
-    {
-        "id": 16,
-        "level": "Nivel 3",
-        "module": "Módulo 16",
-        "lesson": "Configuración de red en Linux",
-        "command": "iproute2 (ip addr, ip route)",
-        "englishMeaning": "Internet Protocol Route",
-        "question": "¿Cuál es el comando moderno (sustituto de ifconfig) para mostrar las direcciones IP asignadas a las interfaces de red?",
-        "options": [
-            "ip addr show (o ip a)",
-            "ip link show",
-            "ip route show",
-            "nmcli device status"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: 'ip link' muestra el estado de las tarjetas (MAC, UP/DOWN) pero NO las IPs. Para las IPs se usa 'ip addr'."
-    },
-    {
-        "id": 17,
-        "level": "Nivel 3",
-        "module": "Módulo 17",
-        "lesson": "Diagnóstico de red",
-        "command": "ss, netstat y tcpdump",
-        "englishMeaning": "Socket Statistics",
-        "question": "¿Qué comando usarías para ver los sockets (puertos) TCP y UDP que están 'escuchando' (listening) junto con el proceso que los tiene abiertos?",
-        "options": [
-            "ss -tulpn",
-            "netstat -rn",
-            "tcpdump -i eth0",
-            "ip neigh"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: t(TCP), u(UDP), l(listening), p(process), n(numeric - no resolver nombres). Es la navaja suiza del diagnóstico de puertos."
-    },
-    {
-        "id": 18,
-        "level": "Nivel 3",
-        "module": "Módulo 18",
-        "lesson": "Servicios de infraestructura: DNS, DHCP, NTP, SSH",
-        "command": "BIND9 y DHCP",
-        "englishMeaning": "Domain Name System",
-        "question": "En la configuración de una zona DNS directa, ¿para qué sirve un registro tipo 'CNAME'?",
-        "options": [
-            "Para crear un alias que apunte a otro nombre de dominio (registro A o AAAA).",
-            "Para indicar la dirección IP de un servidor de correo (MX).",
-            "Para realizar resolución inversa (de IP a nombre).",
-            "Para definir los servidores de nombres autoritativos (NS) de la zona."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: CNAME no puede apuntar directamente a una IP, debe apuntar a un nombre. El registro inverso es el PTR."
-    },
-    {
-        "id": 19,
-        "level": "Nivel 3",
-        "module": "Módulo 19",
-        "lesson": "Servicios de compartición y web",
-        "command": "Samba y NFS",
-        "englishMeaning": "Network File System",
-        "question": "¿Qué opción del fichero /etc/exports en NFS se usa (y a menudo viene por defecto) para convertir al usuario 'root' del cliente en el usuario anónimo 'nobody' en el servidor por seguridad?",
-        "options": [
-            "root_squash",
-            "no_root_squash",
-            "all_squash",
-            "secure_root"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: 'root_squash' evita que un administrador de una máquina cliente tenga privilegios totales de root sobre el disco del servidor de archivos NFS."
-    },
-    {
-        "id": 20,
-        "level": "Nivel 3",
-        "module": "Módulo 20",
-        "lesson": "Firewall, NAT y VPN",
-        "command": "iptables, nftables y WireGuard",
-        "englishMeaning": "Network Address Translation",
-        "question": "¿En qué tabla de netfilter/iptables se configuran las reglas de enmascaramiento (MASQUERADE) para dar salida a Internet a una red local (NAT)?",
-        "options": [
-            "La tabla 'nat' (cadena POSTROUTING)",
-            "La tabla 'filter' (cadena FORWARD)",
-            "La tabla 'mangle' (cadena PREROUTING)",
-            "La tabla 'raw' (cadena OUTPUT)"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: Aunque el tráfico 'atraviese' el firewall (FORWARD), la traducción de IP origen (SNAT/Masquerade) se hace justo al salir en la tabla NAT, cadena POSTROUTING."
-    },
-    {
-        "id": 21,
-        "level": "Nivel 4",
-        "module": "Módulo 21",
-        "lesson": "Hardening y SSH seguro",
-        "command": "sshd_config y fail2ban",
-        "englishMeaning": "Secure Shell Daemon",
-        "question": "En el fichero sshd_config, ¿qué directiva impide completamente que un atacante inicie sesión usando el usuario 'root', incluso si acierta la contraseña o tiene clave?",
-        "options": [
-            "PermitRootLogin no",
-            "PasswordAuthentication no",
-            "DenyUsers root",
-            "IgnoreRhosts yes"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: 'PasswordAuthentication no' solo bloquea el uso de contraseñas, pero permitiría entrar como root con clave pública. 'PermitRootLogin no' corta el acceso a root de raíz por cualquier método."
-    },
-    {
-        "id": 22,
-        "level": "Nivel 4",
-        "module": "Módulo 22",
-        "lesson": "PAM, SELinux, AppArmor y control de acceso",
-        "command": "SELinux y contextos",
-        "englishMeaning": "Security-Enhanced Linux",
-        "question": "En SELinux, si un fichero tiene el contexto (etiqueta) incorrecto y un servicio web no puede leerlo, ¿qué comando debes usar para restaurar el contexto original según la política por defecto del sistema?",
-        "options": [
-            "restorecon",
-            "chcon",
-            "setenforce",
-            "semanage"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: 'chcon' cambia el contexto temporalmente (se pierde al reiniciar o reetiquetar). 'restorecon' es la forma segura y persistente de aplicar el contexto definido en las políticas."
-    },
-    {
-        "id": 23,
-        "level": "Nivel 4",
-        "module": "Módulo 23",
-        "lesson": "Identidad centralizada: LDAP, Kerberos, AD",
-        "command": "LDAP y SSSD",
-        "englishMeaning": "System Security Services Daemon",
-        "question": "¿Qué función cumple el daemon SSSD en un cliente Linux unido a un directorio activo (AD) o FreeIPA?",
-        "options": [
-            "Actúa como caché local de autenticación y puente entre el sistema (NSS/PAM) y el directorio central remoto.",
-            "Es el servidor que emite los tickets de Kerberos.",
-            "Es una base de datos local que reemplaza a LDAP.",
-            "Es el protocolo cifrado (similar a LDAPS) para asegurar la comunicación."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: SSSD permite que inicies sesión en tu máquina incluso si se cae temporalmente la conexión con el controlador de dominio, gracias a su caché."
-    },
-    {
-        "id": 24,
-        "level": "Nivel 4",
-        "module": "Módulo 24",
-        "lesson": "Auditoría, PKI y cumplimiento",
-        "command": "auditd y openssl",
-        "englishMeaning": "Public Key Infrastructure",
-        "question": "¿Qué herramienta estándar de Linux se utiliza (junto a sus reglas de núcleo) para registrar qué usuario específico modificó un fichero crítico como /etc/passwd?",
-        "options": [
-            "auditd (y auditctl/ausearch)",
-            "journalctl",
-            "rsyslog",
-            "logrotate"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: rsyslog y journalctl guardan logs generales, pero si quieres auditar accesos/modificaciones precisas a nivel de llamadas al sistema (quién tocó qué archivo y a qué hora), necesitas auditd."
-    },
-    {
-        "id": 25,
-        "level": "Nivel 5",
-        "module": "Módulo 25",
-        "lesson": "Git y Ansible",
-        "command": "Ansible Playbooks e Inventarios",
-        "englishMeaning": "Infrastructure as Code",
-        "question": "En Ansible, ¿qué principio de diseño garantiza que ejecutar un playbook varias veces seguidas sobre un servidor no producirá cambios adicionales si el servidor ya está en el estado deseado?",
-        "options": [
-            "Idempotencia",
-            "Orquestación",
-            "Balanceo de carga",
-            "Declaratividad estricta"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: La idempotencia es el concepto clave de Ansible. 'Si ya está hecho, no lo toques; si no está, ponlo como te he pedido'."
-    },
-    {
-        "id": 26,
-        "level": "Nivel 5",
-        "module": "Módulo 26",
-        "lesson": "Monitorización y logs centralizados",
-        "command": "Prometheus y Grafana",
-        "englishMeaning": "Service Level Objective",
-        "question": "¿Qué pieza del ecosistema Prometheus se instala típicamente en los servidores Linux de destino para exportar las métricas de CPU, memoria y disco hacia el servidor central?",
-        "options": [
-            "node_exporter",
-            "alertmanager",
-            "promtail",
-            "zabbix-agent"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: Prometheus usa un modelo 'pull' y raspa (scrapes) las métricas que expone el 'node_exporter' en el puerto 9100 de cada máquina."
-    },
-    {
-        "id": 27,
-        "level": "Nivel 5",
-        "module": "Módulo 27",
-        "lesson": "Virtualización y contenedores",
-        "command": "Docker, Podman y KVM",
-        "englishMeaning": "Kernel Virtual Machine",
-        "question": "¿Cuál es la principal ventaja arquitectónica de Podman frente a Docker en entornos Linux empresariales orientados a la seguridad?",
-        "options": [
-            "Podman no requiere un demonio central en ejecución como root y permite ejecutar contenedores 'rootless' de forma nativa.",
-            "Podman usa KVM para virtualizar el hardware completo, mientras Docker solo usa espacios de nombres.",
-            "Podman está escrito en Python y consume menos RAM.",
-            "Podman es compatible con Docker Compose pero no con Kubernetes."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: El 'daemonless' y 'rootless' de Podman evita el riesgo de que un atacante escape del contenedor y gane acceso root al host a través del demonio central."
-    },
-    {
-        "id": 28,
-        "level": "Nivel 5",
-        "module": "Módulo 28",
-        "lesson": "Backups, recuperación y alta disponibilidad",
-        "command": "Regla 3-2-1 y rsync",
-        "englishMeaning": "High Availability",
-        "question": "¿Qué establece la clásica 'Regla 3-2-1' en estrategias de backup?",
-        "options": [
-            "3 copias de los datos, en 2 soportes de medios distintos, 1 de ellas fuera de las instalaciones (off-site).",
-            "3 servidores de backup, 2 switches de red, 1 conexión a internet.",
-            "3 copias completas, 2 incrementales, 1 diferencial por semana.",
-            "3 años de retención, 2 revisiones anuales, 1 auditoría externa."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: Esta es una regla teórica universal que los tribunales adoran preguntar para validar metodologías de contingencia, no solo comandos técnicos."
-    },
-    {
-        "id": 29,
-        "level": "Nivel 5",
-        "module": "Módulo 29",
-        "lesson": "Cloud e infraestructura como código",
-        "command": "Terraform y Cloud-init",
-        "englishMeaning": "Infrastructure as a Service",
-        "question": "¿Qué herramienta nativa del ecosistema cloud se utiliza para inyectar configuración (como usuarios, claves SSH o comandos) en el primer arranque (boot) de una instancia Linux?",
-        "options": [
-            "cloud-init",
-            "Terraform",
-            "Vagrant",
-            "Kubelet"
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: Terraform aprovisiona (crea la VM), Ansible la configura (a posteriori), pero 'cloud-init' es la herramienta que lee los metadatos en el momento exacto del primer arranque."
-    },
-    {
-        "id": 30,
-        "level": "Nivel 5",
-        "module": "Módulo 30",
-        "lesson": "Práctica profesional, ITIL y documentación",
-        "command": "Resolución de incidencias",
-        "englishMeaning": "Information Technology Infrastructure Library",
-        "question": "Bajo la metodología ITIL/DevOps, ¿cuál es el objetivo principal de un análisis 'post-mortem' (sin culpas) tras resolver una caída crítica del sistema?",
-        "options": [
-            "Identificar la causa raíz técnica y documentar medidas para prevenir que el incidente se repita en el futuro.",
-            "Despedir al operador que ejecutó el comando incorrecto.",
-            "Resetear las estadísticas de monitorización para mantener los SLA en verde.",
-            "Ocultar el problema a los usuarios para mantener la confianza en el servicio."
-        ],
-        "correctAnswer": 0,
-        "trap": "Trampa de examen: El enfoque moderno (blameless post-mortem) busca siempre la mejora del proceso y la automatización, asumiendo que si un humano puede romper el sistema, el sistema está mal diseñado."
-    }
-]
-
-db_json = json.dumps(db_preguntas, ensure_ascii=False, indent=4)
-
-html_content = f"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso Linux TAI - 30 Módulos Offline</title>
+    <title>Curso Linux TAI - 30 M贸dulos Offline</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {{
+        :root {
             --dark-aqua: #084c3e; 
             --light-aqua: #16a085;
             --bg-light: #f4f8f7;
@@ -535,44 +15,44 @@ html_content = f"""<!DOCTYPE html>
             --terminal-bg: #11221e;
             --terminal-text: #2ecc71;
             --gray: #808080;
-        }}
+        }
         
-        body {{ font-family: 'Montserrat', sans-serif; background-color: var(--bg-light); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.6; }}
-        .container {{ max-width: 900px; margin: 0 auto; background: var(--white); padding: 35px; border-radius: 12px; border-top: 8px solid var(--dark-aqua); box-shadow: 0 8px 25px rgba(8, 76, 62, 0.1); }}
-        h1, h2, h3 {{ color: var(--dark-aqua); font-weight: 700; }}
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-light); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; background: var(--white); padding: 35px; border-radius: 12px; border-top: 8px solid var(--dark-aqua); box-shadow: 0 8px 25px rgba(8, 76, 62, 0.1); }
+        h1, h2, h3 { color: var(--dark-aqua); font-weight: 700; margin-top: 0; }
         
-        .stats-container {{ background: #eaf3f1; padding: 15px; border-radius: 8px; margin-bottom: 25px; display: flex; justify-content: space-between; font-weight: 600; color: var(--dark-aqua); }}
-        .badge {{ display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; color: var(--white); margin-bottom: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }}
-        .badge-level {{ background: var(--dark-aqua); }}
-        .badge-module {{ background: var(--light-aqua); }}
+        .stats-container { background: #eaf3f1; padding: 15px; border-radius: 8px; margin-bottom: 25px; display: flex; justify-content: space-between; font-weight: 600; color: var(--dark-aqua); }
+        .badge { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; color: var(--white); margin-bottom: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .badge-level { background: var(--dark-aqua); }
+        .badge-module { background: var(--light-aqua); }
         
-        .progress-bar {{ width: 100%; background-color: #d1e2df; border-radius: 6px; margin-bottom: 25px; overflow: hidden; height: 10px; }}
-        .progress-fill {{ height: 10px; background-color: var(--dark-aqua); width: 0%; transition: width 0.4s ease; }}
+        .progress-bar { width: 100%; background-color: #d1e2df; border-radius: 6px; margin-bottom: 25px; overflow: hidden; height: 10px; }
+        .progress-fill { height: 10px; background-color: var(--dark-aqua); width: 0%; transition: width 0.4s ease; }
         
-        .option-btn {{ display: block; width: 100%; text-align: left; padding: 15px; margin-bottom: 12px; border: 2px solid #e2e8e6; border-radius: 8px; cursor: pointer; font-size: 15px; font-family: 'Montserrat', sans-serif; font-weight: 600; color: var(--text-main); background: var(--white); transition: all 0.2s ease; }}
-        .option-btn:hover {{ border-color: var(--light-aqua); background: #f0f9f7; transform: translateX(5px); }}
-        .option-btn.correct {{ background: var(--dark-aqua); color: var(--white); border-color: var(--dark-aqua); }}
-        .option-btn.wrong {{ background: #e74c3c; color: var(--white); border-color: #e74c3c; }}
+        .option-btn { display: block; width: 100%; text-align: left; padding: 15px; margin-bottom: 12px; border: 2px solid #e2e8e6; border-radius: 8px; cursor: pointer; font-size: 15px; font-family: 'Montserrat', sans-serif; font-weight: 600; color: var(--text-main); background: var(--white); transition: all 0.2s ease; }
+        .option-btn:hover { border-color: var(--light-aqua); background: #f0f9f7; transform: translateX(5px); }
+        .option-btn.correct { background: var(--dark-aqua); color: var(--white); border-color: var(--dark-aqua); }
+        .option-btn.wrong { background: #e74c3c; color: var(--white); border-color: #e74c3c; }
         
-        .feedback-box {{ display: none; background: #eaf3f1; border-left: 6px solid var(--dark-aqua); padding: 20px; margin-top: 25px; border-radius: 0 8px 8px 0; }}
-        .trap-warning {{ background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-top: 15px; border-radius: 0 4px 4px 0; }}
-        .nav-btn {{ background: var(--dark-aqua); color: var(--white); border: none; padding: 12px 25px; cursor: pointer; border-radius: 6px; margin-top: 20px; font-size: 16px; font-weight: 600; font-family: 'Montserrat', sans-serif; transition: background 0.3s; }}
-        .nav-btn:hover {{ background: var(--light-aqua); }}
+        .feedback-box { display: none; background: #eaf3f1; border-left: 6px solid var(--dark-aqua); padding: 20px; margin-top: 25px; border-radius: 0 8px 8px 0; }
+        .trap-warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-top: 15px; border-radius: 0 4px 4px 0; }
+        .nav-btn { background: var(--dark-aqua); color: var(--white); border: none; padding: 12px 25px; cursor: pointer; border-radius: 6px; margin-top: 20px; font-size: 16px; font-weight: 600; font-family: 'Montserrat', sans-serif; transition: background 0.3s; }
+        .nav-btn:hover { background: var(--light-aqua); }
         
         /* Terminal Styles */
-        .terminal-container {{ margin-top: 40px; background-color: var(--terminal-bg); border-radius: 8px; padding: 20px; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); }}
-        .terminal-header {{ color: #888; font-size: 13px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 8px; display: flex; align-items: center; }}
-        .terminal-header::before {{ content: "🔴 🟡 🟢"; letter-spacing: 2px; margin-right: 15px; font-size: 10px; }}
-        .terminal-output {{ color: var(--terminal-text); font-family: 'Courier New', Courier, monospace; font-size: 14.5px; min-height: 180px; max-height: 350px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 10px; }}
-        .terminal-input-line {{ display: flex; color: var(--terminal-text); font-family: 'Courier New', Courier, monospace; font-size: 14.5px; align-items: center; }}
-        .prompt {{ margin-right: 10px; color: var(--light-aqua); font-weight: bold; }}
-        #cmd-input {{ flex-grow: 1; background: transparent; border: none; color: var(--terminal-text); font-family: 'Courier New', Courier, monospace; font-size: 14.5px; outline: none; }}
+        .terminal-container { margin-top: 40px; background-color: var(--terminal-bg); border-radius: 8px; padding: 20px; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); }
+        .terminal-header { color: #888; font-size: 13px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 8px; display: flex; align-items: center; }
+        .terminal-header::before { content: "馃敶 馃煛 馃煝"; letter-spacing: 2px; margin-right: 15px; font-size: 10px; }
+        .terminal-output { color: var(--terminal-text); font-family: 'Courier New', Courier, monospace; font-size: 14.5px; min-height: 180px; max-height: 350px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 10px; display: flex; flex-direction: column; gap: 4px; }
+        .terminal-input-line { display: flex; color: var(--terminal-text); font-family: 'Courier New', Courier, monospace; font-size: 14.5px; align-items: center; }
+        .prompt { margin-right: 10px; color: var(--light-aqua); font-weight: bold; }
+        #cmd-input { flex-grow: 1; background: transparent; border: none; color: var(--terminal-text); font-family: 'Courier New', Courier, monospace; font-size: 14.5px; outline: none; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Curso de Administración Linux TAI</h1>
-    <p style="color: var(--gray);">Modo Offline: Evaluación de los 30 Módulos de Nivel 0 a 5</p>
+    <h1>Curso de Administraci贸n Linux TAI</h1>
+    <p style="color: var(--gray);">Modo Offline: Evaluaci贸n de los 30 M贸dulos de Nivel 0 a 5</p>
     
     <div class="stats-container">
         <span id="score-display">Aciertos: 0 | Fallos: 0</span>
@@ -586,8 +66,10 @@ html_content = f"""<!DOCTYPE html>
     <!-- TERMINAL VIRTUAL -->
     <div class="terminal-container">
         <div class="terminal-header">Terminal Interactiva Local (Offline)</div>
-        <div class="terminal-output" id="term-output">Bienvenido a la consola virtual TAI.
-Entorno local listo para probar sintaxis. Escribe 'help' para comandos de prueba.</div>
+        <div class="terminal-output" id="term-output">
+            <div>Bienvenido a la consola virtual TAI.</div>
+            <div>Entorno local listo para probar sintaxis. Escribe 'help' para comandos de prueba.</div>
+        </div>
         <div class="terminal-input-line">
             <span class="prompt">opositor@tai-linux:~$</span>
             <input type="text" id="cmd-input" autocomplete="off" spellcheck="false">
@@ -596,136 +78,162 @@ Entorno local listo para probar sintaxis. Escribe 'help' para comandos de prueba
 </div>
 
 <script>
-    // --- LÓGICA DEL TEST DE 30 MÓDULOS ---
-    const dbPreguntas = {db_json};
+    const dbPreguntas = [{"id": 1, "level": "Nivel 0", "module": "M贸dulo 1", "lesson": "Introducci贸n a Linux y laboratorio", "command": "Arquitectura y Familias", "englishMeaning": "Linux Architecture", "question": "驴Cu谩l es la diferencia fundamental entre el 'kernel' y el 'espacio de usuario' (user space) en Linux?", "options": ["El kernel gestiona los recursos del hardware y las llamadas al sistema, mientras el espacio de usuario ejecuta las aplicaciones normales.", "El espacio de usuario es donde se almacenan los m贸dulos del kernel.", "El kernel es exclusivo de distribuciones Red Hat, mientras Ubuntu usa espacio de usuario.", "Son lo mismo; ambos t茅rminos se refieren a las herramientas GNU."], "correctAnswer": 0, "trap": "Trampa de examen: El tribunal suele intentar confundir herramientas GNU (que corren en espacio de usuario) con funciones del propio Kernel (que maneja CPU, memoria y hardware)."}, {"id": 2, "level": "Nivel 0", "module": "M贸dulo 2", "lesson": "Terminal y Bash esencial", "command": "man, apropos y which", "englishMeaning": "Manual and Path Search", "question": "Si necesitas encontrar qu茅 comando sirve para una tarea concreta pero no sabes c贸mo se llama, 驴qu茅 orden usar铆as?", "options": ["apropos (o man -k)", "which", "whereis", "type"], "correctAnswer": 0, "trap": "Trampa de examen: 'which' y 'whereis' buscan comandos por nombre exacto en el PATH. 'apropos' busca por palabra clave en las descripciones de los manuales."}, {"id": 3, "level": "Nivel 0", "module": "M贸dulo 3", "lesson": "Sistema de ficheros y navegaci贸n", "command": "Enlaces duros y simb贸licos", "englishMeaning": "Hard and Soft Links", "question": "驴Qu茅 ocurre si eliminas el archivo original al que apunta un enlace duro (hard link)?", "options": ["El archivo sigue existiendo y accesible a trav茅s del enlace duro, ya que ambos apuntan al mismo inodo.", "El enlace duro se rompe y queda inaccesible.", "El enlace duro se convierte autom谩ticamente en un enlace simb贸lico.", "El sistema operativo impide borrar el original si tiene enlaces duros."], "correctAnswer": 0, "trap": "Trampa de examen: Un enlace simb贸lico se rompe si borras el origen, pero el enlace duro no, porque es literalmente otra 'etiqueta' apuntando al mismo bloque de datos f铆sicos (inodo)."}, {"id": 4, "level": "Nivel 0", "module": "M贸dulo 4", "lesson": "Procesado de texto y editores", "command": "grep, sed y awk", "englishMeaning": "Global Regular Expression Print", "question": "驴Qu茅 comando es el m谩s adecuado para extraer y procesar columnas espec铆ficas separadas por espacios o delimitadores en un archivo de log?", "options": ["awk", "grep", "tac", "wc"], "correctAnswer": 0, "trap": "Trampa de examen: Aunque 'cut' extrae columnas, 'awk' es el est谩ndar avanzado en los test para extraer campos/columnas y procesarlos l贸gicamente."}, {"id": 5, "level": "Nivel 1", "module": "M贸dulo 5", "lesson": "Usuarios y grupos", "command": "usermod y /etc/shadow", "englishMeaning": "User Modify", "question": "驴Qu茅 par谩metro debes usar con 'usermod' para a帽adir un usuario a un grupo suplementario sin borrarlo de los dem谩s grupos a los que ya pertenece?", "options": ["usermod -aG grupo usuario", "usermod -G grupo usuario", "usermod -g grupo usuario", "usermod -add grupo usuario"], "correctAnswer": 0, "trap": "Trampa de examen: Si usas solo '-G' (sin la 'a' de append), sobrescribes toda la lista de grupos suplementarios y lo expulsas de los anteriores."}, {"id": 6, "level": "Nivel 1", "module": "M贸dulo 6", "lesson": "Permisos, propietarios y ACL", "command": "chmod, chown y SUID", "englishMeaning": "Set User ID", "question": "驴Qu茅 efecto tiene el permiso especial SGID (Set Group ID) cuando se aplica sobre un directorio?", "options": ["Los archivos nuevos creados en su interior heredar谩n el grupo del directorio, no el grupo principal del creador.", "Los archivos se ejecutar谩n con los privilegios del grupo.", "Impide que los usuarios puedan borrar archivos que no sean suyos.", "Oculta el contenido del directorio a los miembros que no son del grupo."], "correctAnswer": 0, "trap": "Trampa de examen: El SGID en directorios es fundamental para entornos colaborativos. No confundir con el Sticky Bit (que impide el borrado a no-propietarios)."}, {"id": 7, "level": "Nivel 1", "module": "M贸dulo 7", "lesson": "Procesos y servicios (systemd)", "command": "systemctl y kill", "englishMeaning": "System Control", "question": "驴Qu茅 se帽al env铆a por defecto el comando 'kill' si no se especifica ninguna opci贸n?", "options": ["SIGTERM (15)", "SIGKILL (9)", "SIGHUP (1)", "SIGSTOP (19)"], "correctAnswer": 0, "trap": "Trampa de examen: Muchos piensan que kill 'mata' directamente (SIGKILL 9), pero por defecto env铆a SIGTERM (15), pidiendo al proceso que termine ordenadamente."}, {"id": 8, "level": "Nivel 1", "module": "M贸dulo 8", "lesson": "Gesti贸n de paquetes", "command": "apt vs dpkg / dnf vs rpm", "englishMeaning": "Debian Package / RPM Package Manager", "question": "驴Cu谩l de las siguientes afirmaciones sobre la gesti贸n de paquetes es correcta?", "options": ["dpkg opera a bajo nivel y no resuelve dependencias online autom谩ticamente, mientras apt s铆 lo hace.", "rpm descarga paquetes de los repositorios y dnf solo los instala localmente.", "apt-get ha sido completamente retirado de las distribuciones modernas a favor de dpkg.", "Flatpak requiere compilar el c贸digo fuente con ./configure antes de instalarse."], "correctAnswer": 0, "trap": "Trampa de examen: El tribunal siempre pone dpkg vs apt. dpkg es de bajo nivel offline; apt/apt-get gestionan dependencias descargando de repositorios."}, {"id": 9, "level": "Nivel 2", "module": "M贸dulo 9", "lesson": "Streams, pipes y scripting Bash", "command": "Redirecciones (>, 2>)", "englishMeaning": "Standard Error", "question": "驴C贸mo rediriges TANTO la salida est谩ndar (stdout) COMO la salida de error (stderr) a un mismo archivo llamado 'log.txt' en Bash?", "options": ["comando > log.txt 2>&1", "comando 1>&2 > log.txt", "comando >> log.txt 2> log.txt", "comando > log.txt &> log.txt"], "correctAnswer": 0, "trap": "Trampa de examen: El orden importa. Primero mandas stdout al archivo (> log.txt) y luego rediriges stderr a donde est茅 yendo stdout (2>&1). Si lo pones al rev茅s, stderr se quedar谩 en pantalla."}, {"id": 10, "level": "Nivel 2", "module": "M贸dulo 10", "lesson": "Tareas programadas", "command": "crontab y systemd.timer", "englishMeaning": "Cron Table", "question": "En el fichero de sistema /etc/crontab, la sintaxis incluye un campo extra que NO est谩 presente cuando usas 'crontab -e'. 驴Cu谩l es?", "options": ["El nombre del usuario que debe ejecutar la tarea.", "El a帽o de ejecuci贸n.", "El path absoluto del binario cron.", "El nivel de prioridad (nice) del proceso."], "correctAnswer": 0, "trap": "Trampa de examen: El crontab de usuario (crontab -e) asume que la tarea es de ese usuario. El de sistema (/etc/crontab) necesita saber como qui茅n ejecutarla."}, {"id": 11, "level": "Nivel 2", "module": "M贸dulo 11", "lesson": "Discos, particiones y sistemas de ficheros", "command": "fstab y particionado", "englishMeaning": "File System Table", "question": "Si a帽ades la opci贸n 'nofail' a un montaje en /etc/fstab, 驴qu茅 le est谩s indicando al sistema?", "options": ["Que contin煤e el proceso de arranque normal incluso si el dispositivo falla o no est谩 conectado.", "Que no monte el dispositivo de forma autom谩tica al iniciar el sistema (equivalente a noauto).", "Que monte la unidad en modo de solo lectura para evitar corrupci贸n de datos.", "Que deshabilite la comprobaci贸n de errores fsck durante el arranque."], "correctAnswer": 0, "trap": "Trampa de examen: Sin 'nofail', si un disco secundario no se monta, el servidor se detendr谩 en el modo de emergencia (rescue mode) y no arrancar谩 la red."}, {"id": 12, "level": "Nivel 2", "module": "M贸dulo 12", "lesson": "RAID, LVM y cifrado", "command": "LVM (lvresize, lvextend)", "englishMeaning": "Logical Volume Manager", "question": "驴Cu谩l es el orden correcto y seguro para reducir un volumen l贸gico (LV) formateado en ext4?", "options": ["Desmontar, revisar con fsck, reducir el sistema de ficheros (resize2fs) y finalmente reducir el volumen l贸gico (lvreduce).", "Reducir el volumen l贸gico primero (lvreduce) y luego reducir el sistema de ficheros para que se ajuste.", "Reducir el volumen l贸gico en caliente con lvresize -r sin desmontarlo.", "No se puede. Hay que crear un volumen nuevo y copiar los datos."], "correctAnswer": 0, "trap": "Trampa de examen: Reducir primero el contenedor (LV) cortar谩 datos y corromper谩 el sistema de archivos (FS) de forma irreversible. Siempre se encoge primero el FS desde dentro, luego el LV desde fuera."}, {"id": 13, "level": "Nivel 2", "module": "M贸dulo 13", "lesson": "Arranque, kernel y recuperaci贸n", "command": "GRUB y Targets", "englishMeaning": "Grand Unified Bootloader", "question": "驴A qu茅 equivale el antiguo concepto de 'runlevel 3' (multiusuario con red pero sin entorno gr谩fico) en el entorno moderno de systemd?", "options": ["multi-user.target", "graphical.target", "rescue.target", "network.target"], "correctAnswer": 0, "trap": "Trampa de examen: runlevel 3 = multi-user.target. Runlevel 5 = graphical.target. Runlevel 1 = rescue.target."}, {"id": 14, "level": "Nivel 2", "module": "M贸dulo 14", "lesson": "Logs, rendimiento y diagn贸stico", "command": "journalctl y dmesg", "englishMeaning": "Systemd Journal Control", "question": "Si un sistema se acaba de reiniciar por un fallo y quieres ver los logs exclusivos del arranque ANTERIOR usando journalctl, 驴qu茅 par谩metro usas?", "options": ["journalctl -b -1", "journalctl --previous", "journalctl -p err", "journalctl -u boot"], "correctAnswer": 0, "trap": "Trampa de examen: -b indica 'boot' (arranque actual). -b -1 indica el arranque inmediatamente anterior al actual. Para que funcione, el journal debe estar configurado como persistente."}, {"id": 15, "level": "Nivel 3", "module": "M贸dulo 15", "lesson": "Fundamentos de redes", "command": "Modelo OSI y TCP/IP", "englishMeaning": "Open Systems Interconnection", "question": "En el modelo OSI, 驴en qu茅 capa act煤an las direcciones IP (l贸gicas) y los routers?", "options": ["Capa 3 (Red)", "Capa 2 (Enlace de datos)", "Capa 4 (Transporte)", "Capa 7 (Aplicaci贸n)"], "correctAnswer": 0, "trap": "Trampa de examen: Capa 2 = MAC (Switches). Capa 3 = IP (Routers). Capa 4 = Puertos TCP/UDP."}, {"id": 16, "level": "Nivel 3", "module": "M贸dulo 16", "lesson": "Configuraci贸n de red en Linux", "command": "iproute2 (ip addr, ip route)", "englishMeaning": "Internet Protocol Route", "question": "驴Cu谩l es el comando moderno (sustituto de ifconfig) para mostrar las direcciones IP asignadas a las interfaces de red?", "options": ["ip addr show (o ip a)", "ip link show", "ip route show", "nmcli device status"], "correctAnswer": 0, "trap": "Trampa de examen: 'ip link' muestra el estado de las tarjetas (MAC, UP/DOWN) pero NO las IPs. Para las IPs se usa 'ip addr'."}, {"id": 17, "level": "Nivel 3", "module": "M贸dulo 17", "lesson": "Diagn贸stico de red", "command": "ss, netstat y tcpdump", "englishMeaning": "Socket Statistics", "question": "驴Qu茅 comando usar铆as para ver los sockets (puertos) TCP y UDP que est谩n 'escuchando' (listening) junto con el proceso que los tiene abiertos?", "options": ["ss -tulpn", "netstat -rn", "tcpdump -i eth0", "ip neigh"], "correctAnswer": 0, "trap": "Trampa de examen: t(TCP), u(UDP), l(listening), p(process), n(numeric - no resolver nombres). Es la navaja suiza del diagn贸stico de puertos."}, {"id": 18, "level": "Nivel 3", "module": "M贸dulo 18", "lesson": "Servicios de infraestructura: DNS, DHCP, NTP, SSH", "command": "BIND9 y DHCP", "englishMeaning": "Domain Name System", "question": "En la configuraci贸n de una zona DNS directa, 驴para qu茅 sirve un registro tipo 'CNAME'?", "options": ["Para crear un alias que apunte a otro nombre de dominio (registro A o AAAA).", "Para indicar la direcci贸n IP de un servidor de correo (MX).", "Para realizar resoluci贸n inversa (de IP a nombre).", "Para definir los servidores de nombres autoritativos (NS) de la zona."], "correctAnswer": 0, "trap": "Trampa de examen: CNAME no puede apuntar directamente a una IP, debe apuntar a un nombre. El registro inverso es el PTR."}, {"id": 19, "level": "Nivel 3", "module": "M贸dulo 19", "lesson": "Servicios de compartici贸n y web", "command": "Samba y NFS", "englishMeaning": "Network File System", "question": "驴Qu茅 opci贸n del fichero /etc/exports en NFS se usa (y a menudo viene por defecto) para convertir al usuario 'root' del cliente en el usuario an贸nimo 'nobody' en el servidor por seguridad?", "options": ["root_squash", "no_root_squash", "all_squash", "secure_root"], "correctAnswer": 0, "trap": "Trampa de examen: 'root_squash' evita que un administrador de una m谩quina cliente tenga privilegios totales de root sobre el disco del servidor de archivos NFS."}, {"id": 20, "level": "Nivel 3", "module": "M贸dulo 20", "lesson": "Firewall, NAT y VPN", "command": "iptables, nftables y WireGuard", "englishMeaning": "Network Address Translation", "question": "驴En qu茅 tabla de netfilter/iptables se configuran las reglas de enmascaramiento (MASQUERADE) para dar salida a Internet a una red local (NAT)?", "options": ["La tabla 'nat' (cadena POSTROUTING)", "La tabla 'filter' (cadena FORWARD)", "La tabla 'mangle' (cadena PREROUTING)", "La tabla 'raw' (cadena OUTPUT)"], "correctAnswer": 0, "trap": "Trampa de examen: Aunque el tr谩fico 'atraviese' el firewall (FORWARD), la traducci贸n de IP origen (SNAT/Masquerade) se hace justo al salir en la tabla NAT, cadena POSTROUTING."}, {"id": 21, "level": "Nivel 4", "module": "M贸dulo 21", "lesson": "Hardening y SSH seguro", "command": "sshd_config y fail2ban", "englishMeaning": "Secure Shell Daemon", "question": "En el fichero sshd_config, 驴qu茅 directiva impide completamente que un atacante inicie sesi贸n usando el usuario 'root', incluso si acierta la contrase帽a o tiene clave?", "options": ["PermitRootLogin no", "PasswordAuthentication no", "DenyUsers root", "IgnoreRhosts yes"], "correctAnswer": 0, "trap": "Trampa de examen: 'PasswordAuthentication no' solo bloquea el uso de contrase帽as, pero permitir铆a entrar como root con clave p煤blica. 'PermitRootLogin no' corta el acceso a root de ra铆z por cualquier m茅todo."}, {"id": 22, "level": "Nivel 4", "module": "M贸dulo 22", "lesson": "PAM, SELinux, AppArmor y control de acceso", "command": "SELinux y contextos", "englishMeaning": "Security-Enhanced Linux", "question": "En SELinux, si un fichero tiene el contexto (etiqueta) incorrecto y un servicio web no puede leerlo, 驴qu茅 comando debes usar para restaurar el contexto original seg煤n la pol铆tica por defecto del sistema?", "options": ["restorecon", "chcon", "setenforce", "semanage"], "correctAnswer": 0, "trap": "Trampa de examen: 'chcon' cambia el contexto temporalmente (se pierde al reiniciar o reetiquetar). 'restorecon' es la forma segura y persistente de aplicar el contexto definido en las pol铆ticas."}, {"id": 23, "level": "Nivel 4", "module": "M贸dulo 23", "lesson": "Identidad centralizada: LDAP, Kerberos, AD", "command": "LDAP y SSSD", "englishMeaning": "System Security Services Daemon", "question": "驴Qu茅 funci贸n cumple el daemon SSSD en un cliente Linux unido a un directorio activo (AD) o FreeIPA?", "options": ["Act煤a como cach茅 local de autenticaci贸n y puente entre el sistema (NSS/PAM) y el directorio central remoto.", "Es el servidor que emite los tickets de Kerberos.", "Es una base de datos local que reemplaza a LDAP.", "Es el protocolo cifrado (similar a LDAPS) para asegurar la comunicaci贸n."], "correctAnswer": 0, "trap": "Trampa de examen: SSSD permite que inicies sesi贸n en tu m谩quina incluso si se cae temporalmente la conexi贸n con el controlador de dominio, gracias a su cach茅."}, {"id": 24, "level": "Nivel 4", "module": "M贸dulo 24", "lesson": "Auditor铆a, PKI y cumplimiento", "command": "auditd y openssl", "englishMeaning": "Public Key Infrastructure", "question": "驴Qu茅 herramienta est谩ndar de Linux se utiliza (junto a sus reglas de n煤cleo) para registrar qu茅 usuario espec铆fico modific贸 un fichero cr铆tico como /etc/passwd?", "options": ["auditd (y auditctl/ausearch)", "journalctl", "rsyslog", "logrotate"], "correctAnswer": 0, "trap": "Trampa de examen: rsyslog y journalctl guardan logs generales, pero si quieres auditar accesos/modificaciones precisas a nivel de llamadas al sistema (qui茅n toc贸 qu茅 archivo y a qu茅 hora), necesitas auditd."}, {"id": 25, "level": "Nivel 5", "module": "M贸dulo 25", "lesson": "Git y Ansible", "command": "Ansible Playbooks e Inventarios", "englishMeaning": "Infrastructure as Code", "question": "En Ansible, 驴qu茅 principio de dise帽o garantiza que ejecutar un playbook varias veces seguidas sobre un servidor no producir谩 cambios adicionales si el servidor ya est谩 en el estado deseado?", "options": ["Idempotencia", "Orquestaci贸n", "Balanceo de carga", "Declaratividad estricta"], "correctAnswer": 0, "trap": "Trampa de examen: La idempotencia es el concepto clave de Ansible. 'Si ya est谩 hecho, no lo toques; si no est谩, ponlo como te he pedido'."}, {"id": 26, "level": "Nivel 5", "module": "M贸dulo 26", "lesson": "Monitorizaci贸n y logs centralizados", "command": "Prometheus y Grafana", "englishMeaning": "Service Level Objective", "question": "驴Qu茅 pieza del ecosistema Prometheus se instala t铆picamente en los servidores Linux de destino para exportar las m茅tricas de CPU, memoria y disco hacia el servidor central?", "options": ["node_exporter", "alertmanager", "promtail", "zabbix-agent"], "correctAnswer": 0, "trap": "Trampa de examen: Prometheus usa un modelo 'pull' y raspa (scrapes) las m茅tricas que expone el 'node_exporter' en el puerto 9100 de cada m谩quina."}, {"id": 27, "level": "Nivel 5", "module": "M贸dulo 27", "lesson": "Virtualizaci贸n y contenedores", "command": "Docker, Podman y KVM", "englishMeaning": "Kernel Virtual Machine", "question": "驴Cu谩l es la principal ventaja arquitect贸nica de Podman frente a Docker en entornos Linux empresariales orientados a la seguridad?", "options": ["Podman no requiere un demonio central en ejecuci贸n como root y permite ejecutar contenedores 'rootless' de forma nativa.", "Podman usa KVM para virtualizar el hardware completo, mientras Docker solo usa espacios de nombres.", "Podman est谩 escrito en Python y consume menos RAM.", "Podman es compatible con Docker Compose pero no con Kubernetes."], "correctAnswer": 0, "trap": "Trampa de examen: El 'daemonless' y 'rootless' de Podman evita el riesgo de que un atacante escape del contenedor y gane acceso root al host a trav茅s del demonio central."}, {"id": 28, "level": "Nivel 5", "module": "M贸dulo 28", "lesson": "Backups, recuperaci贸n y alta disponibilidad", "command": "Regla 3-2-1 y rsync", "englishMeaning": "High Availability", "question": "驴Qu茅 establece la cl谩sica 'Regla 3-2-1' en estrategias de backup?", "options": ["3 copias de los datos, en 2 soportes de medios distintos, 1 de ellas fuera de las instalaciones (off-site).", "3 servidores de backup, 2 switches de red, 1 conexi贸n a internet.", "3 copias completas, 2 incrementales, 1 diferencial por semana.", "3 a帽os de retenci贸n, 2 revisiones anuales, 1 auditor铆a externa."], "correctAnswer": 0, "trap": "Trampa de examen: Esta es una regla te贸rica universal que los tribunales adoran preguntar para validar metodolog铆as de contingencia, no solo comandos t茅cnicos."}, {"id": 29, "level": "Nivel 5", "module": "M贸dulo 29", "lesson": "Cloud e infraestructura como c贸digo", "command": "Terraform y Cloud-init", "englishMeaning": "Infrastructure as a Service", "question": "驴Qu茅 herramienta nativa del ecosistema cloud se utiliza para inyectar configuraci贸n (como usuarios, claves SSH o comandos) en el primer arranque (boot) de una instancia Linux?", "options": ["cloud-init", "Terraform", "Vagrant", "Kubelet"], "correctAnswer": 0, "trap": "Trampa de examen: Terraform aprovisiona (crea la VM), Ansible la configura (a posteriori), pero 'cloud-init' es la herramienta que lee los metadatos en el momento exacto del primer arranque."}, {"id": 30, "level": "Nivel 5", "module": "M贸dulo 30", "lesson": "Pr谩ctica profesional, ITIL y documentaci贸n", "command": "Resoluci贸n de incidencias", "englishMeaning": "Information Technology Infrastructure Library", "question": "Bajo la metodolog铆a ITIL/DevOps, 驴cu谩l es el objetivo principal de un an谩lisis 'post-mortem' (sin culpas) tras resolver una ca铆da cr铆tica del sistema?", "options": ["Identificar la causa ra铆z t茅cnica y documentar medidas para prevenir que el incidente se repita en el futuro.", "Despedir al operador que ejecut贸 el comando incorrecto.", "Resetear las estad铆sticas de monitorizaci贸n para mantener los SLA en verde.", "Ocultar el problema a los usuarios para mantener la confianza en el servicio."], "correctAnswer": 0, "trap": "Trampa de examen: El enfoque moderno (blameless post-mortem) busca siempre la mejora del proceso y la automatizaci贸n, asumiendo que si un humano puede romper el sistema, el sistema est谩 mal dise帽ado."}];
+    
     let currentQuestionIndex = 0;
-    let userStats = JSON.parse(localStorage.getItem('taiStatsV4')) || {{ hits: 0, misses: 0 }};
+    let userStats = { hits: 0, misses: 0 };
+    
+    // 1. SOLUCI脫N AL FALLO DE LOCALSTORAGE (Bloqueos de seguridad en local)
+    try {
+        const saved = localStorage.getItem('taiStatsV5');
+        if (saved) userStats = JSON.parse(saved);
+    } catch(e) {
+        console.warn('localStorage bloqueado por las pol铆ticas del navegador');
+    }
 
-    function updateScoreDisplay() {{
-        document.getElementById('score-display').innerText = `Aciertos: ${{userStats.hits}} | Fallos: ${{userStats.misses}}`;
+    function updateScoreDisplay() {
+        document.getElementById('score-display').innerText = `Aciertos: ${userStats.hits} | Fallos: ${userStats.misses}`;
         const progress = ((currentQuestionIndex) / dbPreguntas.length) * 100;
         document.getElementById('progress-fill').style.width = progress + '%';
-    }}
+    }
 
-    function saveStats() {{
-        localStorage.setItem('taiStatsV4', JSON.stringify(userStats));
+    function saveStats() {
+        try {
+            localStorage.setItem('taiStatsV5', JSON.stringify(userStats));
+        } catch(e) {}
         updateScoreDisplay();
-    }}
+    }
 
-    function resetStats() {{
-        if(confirm("¿Borrar tu expediente local?")) {{
-            userStats = {{ hits: 0, misses: 0 }};
+    function resetStats() {
+        if(confirm("驴Borrar tu expediente local?")) {
+            userStats = { hits: 0, misses: 0 };
             currentQuestionIndex = 0;
             saveStats();
             loadQuestion();
-        }}
-    }}
+        }
+    }
 
-    function shuffleArray(array) {{
-        let arr = array.map((val, i) => ({{val, i}}));
-        for (let i = arr.length - 1; i > 0; i--) {{
+    function shuffleArray(array) {
+        let arr = array.map((val, i) => ({val, i}));
+        for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [arr[i], arr[j]] = [arr[j], arr[i]];
-        }}
+        }
         return arr;
-    }}
+    }
 
-    function loadQuestion() {{
+    // 2. SOLUCI脫N A ETIQUETAS Y CARACTERES QUE ROMP脥AN EL HTML (< > &)
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag] || tag));
+    }
+
+    function loadQuestion() {
         if (currentQuestionIndex >= dbPreguntas.length) return;
         const q = dbPreguntas[currentQuestionIndex];
         const container = document.getElementById('quiz-container');
         
         const shuffledOptions = shuffleArray(q.options);
         let optionsHtml = '';
-        shuffledOptions.forEach((optObj) => {{
-            optionsHtml += `<button class="option-btn" onclick="checkAnswer(${{optObj.i}}, this)">${{optObj.val}}</button>`;
-        }});
+        shuffledOptions.forEach((optObj) => {
+            // 3. SOLUCI脫N AL FALLO DEL ONCLICK (usar data-index es 100% seguro)
+            optionsHtml += `<button class="option-btn" data-index="${optObj.i}" onclick="checkAnswer(${optObj.i}, this)">${escapeHTML(optObj.val)}</button>`;
+        });
 
         container.innerHTML = `
             <div>
-                <span class="badge badge-level">${{q.level}}</span>
-                <span class="badge badge-module">${{q.module}} | ${{q.lesson}}</span>
+                <span class="badge badge-level">${escapeHTML(q.level)}</span>
+                <span class="badge badge-module">${escapeHTML(q.module)} | ${escapeHTML(q.lesson)}</span>
                 <div style="font-size:13px; color:var(--gray); margin-bottom:10px;">
-                    🇬🇧 Etimología TAI: <i>${{q.englishMeaning}}</i>
+                    馃嚞馃嚙 Etimolog铆a TAI: <i>${escapeHTML(q.englishMeaning)}</i>
                 </div>
-                <h2>${{q.command}}</h2>
-                <p><strong>${{q.question}}</strong></p>
-                <div class="options-list">${{optionsHtml}}</div>
+                <h2>${escapeHTML(q.command)}</h2>
+                <p><strong>${escapeHTML(q.question)}</strong></p>
+                <div class="options-list">${optionsHtml}</div>
             </div>
             <div id="feedback" class="feedback-box">
                 <h3 id="feedback-title" style="margin-top:0;"></h3>
-                <div class="trap-warning"><strong>⚠️ Tribunal Evaluador:</strong><br>${{q.trap}}</div>
-                <button class="nav-btn" onclick="nextQuestion()">Avanzar al siguiente Módulo</button>
+                <div class="trap-warning"><strong>鈿狅笍 Tribunal Evaluador:</strong><br>${escapeHTML(q.trap)}</div>
+                <button class="nav-btn" onclick="nextQuestion()">Avanzar al siguiente M贸dulo</button>
             </div>
         `;
         updateScoreDisplay();
-    }}
+    }
 
-    function checkAnswer(originalIndex, btn) {{
+    function checkAnswer(originalIndex, btn) {
         const q = dbPreguntas[currentQuestionIndex];
         const buttons = document.querySelectorAll('.option-btn');
         buttons.forEach(b => b.style.pointerEvents = 'none'); 
 
-        if (originalIndex === q.correctAnswer) {{
+        if (originalIndex === q.correctAnswer) {
             btn.classList.add('correct');
-            document.getElementById('feedback-title').innerText = "✅ Respuesta Correcta";
+            document.getElementById('feedback-title').innerText = "鉁?Respuesta Correcta";
             document.getElementById('feedback-title').style.color = "var(--dark-aqua)";
             userStats.hits++;
-        }} else {{
+        } else {
             btn.classList.add('wrong');
-            document.getElementById('feedback-title').innerText = "❌ Error Crítico";
+            document.getElementById('feedback-title').innerText = "鉂?Error Cr铆tico";
             document.getElementById('feedback-title').style.color = "#e74c3c";
             userStats.misses++;
             
-            buttons.forEach(b => {{
-                if(b.onclick.toString().includes('checkAnswer(0,')) {{
+            // Usamos el data-index de forma segura
+            buttons.forEach(b => {
+                if(parseInt(b.getAttribute('data-index')) === q.correctAnswer) {
                     b.classList.add('correct');
-                }}
-            }});
-        }}
+                }
+            });
+        }
         
         saveStats();
         document.getElementById('feedback').style.display = 'block';
-    }}
+    }
 
-    function nextQuestion() {{
+    function nextQuestion() {
         currentQuestionIndex++;
-        if (currentQuestionIndex < dbPreguntas.length) {{
+        if (currentQuestionIndex < dbPreguntas.length) {
             loadQuestion();
-        }} else {{
+        } else {
             document.getElementById('quiz-container').innerHTML = `
-                <h2>¡Curso Teórico Completado!</h2>
-                <p>Has repasado los 30 módulos de la formación TAI Linux de Nivel 0 a 5.</p>
+                <h2>隆Curso Te贸rico Completado!</h2>
+                <p>Has repasado los 30 m贸dulos de la formaci贸n TAI Linux de Nivel 0 a 5.</p>
                 <button class="nav-btn" onclick="resetStats()">Volver a empezar</button>
             `;
             document.getElementById('progress-fill').style.width = '100%';
-        }}
-    }}
+        }
+    }
 
-    // --- LÓGICA DE LA TERMINAL VIRTUAL LOCAL ---
+    // --- L脫GICA DE LA TERMINAL VIRTUAL LOCAL ---
     const inputCmd = document.getElementById('cmd-input');
     const outputTerm = document.getElementById('term-output');
 
-    inputCmd.addEventListener('keypress', function(e) {{
-        if (e.key === 'Enter') {{
+    inputCmd.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
             const cmd = this.value.trim();
-            if (cmd) {{
-                printToTerminal(`opositor@tai-linux:~$ ${{cmd}}`);
+            if (cmd) {
+                printToTerminal(`opositor@tai-linux:~$ ${cmd}`);
                 processCommand(cmd);
-            }}
+            }
             this.value = '';
             outputTerm.scrollTop = outputTerm.scrollHeight;
-        }}
-    }});
+        }
+    });
 
-    function printToTerminal(text) {{
-        outputTerm.innerHTML += `\\n${{text}}`;
-    }}
+    function printToTerminal(text) {
+        // 4. SOLUCI脫N TERMINAL: Crear divs en vez de inyectar HTML, para que < y > no rompan el DOM
+        const line = document.createElement('div');
+        line.textContent = text;
+        outputTerm.appendChild(line);
+    }
 
-    function processCommand(cmd) {{
+    function processCommand(cmd) {
         const command = cmd.toLowerCase().split(' ')[0];
         
-        switch(command) {{
+        switch(command) {
             case 'clear':
                 outputTerm.innerHTML = '';
                 break;
@@ -748,29 +256,24 @@ Entorno local listo para probar sintaxis. Escribe 'help' para comandos de prueba
                 printToTerminal('Linux tai-server 6.1.0-17-amd64 x86_64 GNU/Linux');
                 break;
             case 'ip':
-                printToTerminal('1: lo: <LOOPBACK,UP,LOWER_UP>\\n2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> inet 192.168.1.100/24');
+                printToTerminal('1: lo: <LOOPBACK,UP,LOWER_UP>');
+                printToTerminal('2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> inet 192.168.1.100/24');
                 break;
             case 'sudo':
                 printToTerminal('[sudo] password for opositor: ');
                 printToTerminal('Lo siento, el incidente de seguridad ha sido reportado.');
                 break;
             default:
-                printToTerminal(`bash: ${{command}}: orden no encontrada`);
-        }}
-    }}
+                printToTerminal(`bash: ${command}: orden no encontrada`);
+        }
+    }
     
-    document.querySelector('.terminal-container').addEventListener('click', () => {{
+    document.querySelector('.terminal-container').addEventListener('click', () => {
         inputCmd.focus();
-    }});
+    });
 
-    // Arrancar la batería de test
+    // Arrancar la bater铆a de test
     loadQuestion();
 </script>
 </body>
 </html>
-"""
-
-with open("index_30_modulos_final.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-
-print("index_30_modulos_final.html generado exitosamente.")
