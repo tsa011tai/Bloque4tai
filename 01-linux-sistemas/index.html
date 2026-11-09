@@ -1,620 +1,669 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laboratorio TAI AGE - SysAdmin C1</title>
-  
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%230d9488' d='M512 96c0-35.3-28.7-64-64-64H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96zM157.1 214.9l-61.6 61.6c-4.2 4.2-11 4.2-15.2 0l-17.4-17.4c-4.2-4.2-4.2-11 0-15.2l76.9-76.9c4.2 4.2 11-4.2 15.2 0l76.9 76.9c4.2 4.2 4.2 11 0 15.2l-17.4 17.4c-4.2 4.2-11 4.2-15.2 0l-61.6-61.6v.1zM368 336H224c-8.8 0-16-7.2-16-16v-24c0-8.8 7.2-16 16-16h144c8.8 0 16 7.2 16 16v24c0 8.8-7.2 16-16 16z'/></svg>">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Montserrat', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] } } } }
-  </script>
-  <style>
-    /* Estilos para el texto de la Teoría Markdown */
-    .markdown-body h3 { font-size: 1.1rem; font-weight: 700; color: #115e59; margin-top: 1rem; margin-bottom: 0.5rem; }
-    .markdown-body p { margin-bottom: 0.75rem; line-height: 1.6; }
-    .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
-    .markdown-body code { background-color: #f1f5f9; color: #0f172a; padding: 0.125rem 0.25rem; border-radius: 0.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
-    .markdown-body pre { background-color: #0f172a; color: #38bdf8; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
-    .markdown-body strong { color: #0f172a; font-weight: 700; }
-    
-    /* Scrollbars custom */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    
-    .terminal-scroll::-webkit-scrollbar-track { background: #0f172a; }
-    .terminal-scroll::-webkit-scrollbar-thumb { background: #334155; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Pedagógico - 4 Niveles / 30 Módulos</title>
+    <style>
+        :root {
+            --dark-aqua: #0B5345;
+            --light-aqua: #A2D9CE;
+            --gray: #808080;
+            --light-gray: #f2f3f4;
+            --white: #FFFFFF;
+            --black: #000000;
+        }
+        body { font-family: 'Garamond', serif; background-color: var(--light-gray); margin: 0; padding: 20px; line-height: 1.6; color: var(--black); }
+        .container { max-width: 800px; margin: 0 auto; background: var(--white); padding: 30px; border-radius: 8px; border-top: 6px solid var(--dark-aqua); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1, h2 { color: var(--dark-aqua); }
+        .stats-container { background: var(--light-aqua); padding: 15px; border-radius: 5px; margin-bottom: 20px; display: flex; justify-content: space-between; font-weight: bold; color: var(--dark-aqua); }
+        .option-btn { display: block; width: 100%; text-align: left; padding: 12px 15px; margin-bottom: 10px; border: 1px solid var(--gray); border-radius: 4px; cursor: pointer; font-size: 16px; font-family: inherit; background: var(--white); transition: background 0.2s; }
+        .option-btn:hover { background: var(--light-aqua); }
+        .option-btn.correct { background: var(--dark-aqua); color: var(--white); border-color: var(--dark-aqua); }
+        .option-btn.wrong { background: var(--gray); color: var(--white); border-color: var(--gray); }
+        .feedback-box { display: none; background: var(--light-gray); border-left: 5px solid var(--dark-aqua); padding: 20px; margin-top: 20px; }
+        .trap-warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-top: 15px; }
+        .nav-btn { background: var(--dark-aqua); color: var(--white); border: none; padding: 12px 25px; cursor: pointer; border-radius: 4px; margin-top: 20px; font-size: 16px; font-family: inherit; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 13px; color: var(--white); margin-bottom: 10px; margin-right: 5px; font-weight: bold; }
+        .badge-level { background: var(--dark-aqua); }
+        .badge-module { background: var(--gray); }
+        .progress-bar { width: 100%; background-color: #ddd; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 8px; background-color: var(--dark-aqua); width: 0%; transition: width 0.3s; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
-
-  <!-- CABECERA -->
-  <header class="border-b border-slate-200 bg-white shadow-sm sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
-      <div class="flex items-center gap-3">
-        <div class="p-2.5 bg-teal-800 text-white rounded-xl shadow-md border-b-4 border-teal-900">
-          <i class="fa-solid fa-linux text-xl"></i>
-        </div>
-        <div>
-          <h1 class="text-lg md:text-xl font-bold text-slate-900 flex items-center gap-2">
-            Laboratorio TAI <span class="text-[10px] bg-slate-800 text-teal-300 px-1.5 py-0.5 rounded font-mono tracking-widest shadow-inner">SysAdmin</span>
-          </h1>
-          <p class="text-[11px] text-teal-700 font-semibold uppercase tracking-wider">Teoría, Consola y Tests</p>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap items-center gap-2">
-        <button onclick="toggleExpediente()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3.5 py-2 rounded-lg font-bold transition shadow-sm border-b-2 border-indigo-800">
-          <i class="fa-solid fa-chart-column mr-1"></i> Mi Perfil
-        </button>
-        <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-200 shadow-inner">
-          <i class="fa-solid fa-key text-slate-400 pl-2 text-xs"></i>
-          <!-- Input API Key: SIN validaciones restrictivas, acepta tu formato AQ. -->
-          <input type="password" id="apiKeyInput" placeholder="API Key Gemini..." class="text-xs p-1 bg-transparent outline-none w-40 text-slate-700 font-medium" />
-          <button onclick="guardarKey()" class="bg-teal-700 hover:bg-teal-800 text-white text-[10px] px-3 py-1.5 rounded-lg font-bold transition">Guardar</button>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- MODAL DE ESTADÍSTICAS -->
-  <div id="expedienteModal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200">
-      <div class="bg-indigo-700 p-4 flex justify-between items-center text-white">
-        <h2 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Expediente del Alumno</h2>
-        <button onclick="toggleExpediente()" class="text-white hover:text-indigo-200"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 overflow-y-auto flex-1 bg-slate-50">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
-            <p class="text-xs font-bold text-slate-500 uppercase">Aciertos</p>
-            <p id="statGlobalRate" class="text-3xl font-black text-indigo-600 mt-1">0%</p>
-          </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
-            <p class="text-xs font-bold text-slate-500 uppercase">Correctas</p>
-            <p id="statTotalCorrect" class="text-3xl font-black text-emerald-500 mt-1">0</p>
-          </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
-            <p class="text-xs font-bold text-slate-500 uppercase">Errores</p>
-            <p id="statTotalErrors" class="text-3xl font-black text-rose-500 mt-1">0</p>
-          </div>
-        </div>
-        <h3 class="text-sm font-bold text-slate-800 mb-3 border-b border-slate-200 pb-2"><i class="fa-solid fa-book text-indigo-600 mr-2"></i>Rendimiento por Módulo</h3>
-        <div id="statsModulesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-      </div>
-      <div class="p-4 bg-white border-t border-slate-200 text-right">
-        <button onclick="resetStats()" class="text-xs text-rose-600 hover:text-rose-800 font-bold underline mr-4">Borrar Historial</button>
-        <button onclick="toggleExpediente()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm">Cerrar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ESTRUCTURA PRINCIPAL -->
-  <main class="max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 relative z-10 pb-24">
+<body>
+<div class="container">
+    <h1>Test Interactivo: 4 Niveles, 30 Módulos</h1>
+    <p style="color: var(--gray); font-style: italic;">Sistema de evaluación estructurado para los 30 módulos.</p>
     
-    <!-- COLUMNA IZQUIERDA: MENÚ TEMARIO -->
-    <div class="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col h-[85vh] sticky top-24">
-      <h2 class="text-[11px] font-bold text-teal-800 uppercase tracking-wider mb-3 pb-2 border-b border-slate-100 flex items-center gap-2">
-        <i class="fa-solid fa-list text-teal-600"></i> Temario Integral
-      </h2>
-      <div class="overflow-y-auto flex-1 space-y-2 pr-1" id="modulesMenu"></div>
+    <div class="stats-container">
+        <span id="score-display">Aciertos: 0 | Fallos: 0</span>
+        <button onclick="resetStats()" style="background:none; border:none; text-decoration:underline; cursor:pointer; color:inherit; font-family:inherit; font-size: 14px;">Reiniciar Progreso</button>
     </div>
 
-    <!-- COLUMNA DERECHA: TEORÍA -> CONSOLA -> TEST (Orden estricto de arriba a abajo) -->
-    <div class="lg:col-span-9 flex flex-col gap-5 relative">
-      
-      <!-- 1. BLOQUE DE TEORÍA -->
-      <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-        <div class="flex justify-between items-center mb-3 border-b border-slate-100 pb-2">
-          <h3 id="theoryTitle" class="text-sm font-bold text-teal-900 flex items-center gap-2">
-            <i class="fa-solid fa-graduation-cap text-teal-600"></i> Teoría (Selecciona un tema en el menú)
-          </h3>
-        </div>
-        <div id="theoryContent" class="text-sm text-slate-700 markdown-body max-h-[350px] overflow-y-auto pr-2 bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-inner">
-          <p class="text-slate-400 italic text-center py-6">El contenido aparecerá aquí.</p>
-        </div>
-      </section>
+    <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
 
-      <!-- 2. BLOQUE DE CONSOLA SANDBOX -->
-      <section class="bg-[#0f172a] rounded-2xl overflow-hidden shadow-lg border border-slate-700 flex flex-col h-[280px]">
-        <div class="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700">
-          <div class="flex gap-2">
-            <div class="w-3 h-3 rounded-full bg-rose-500"></div>
-            <div class="w-3 h-3 rounded-full bg-amber-500"></div>
-            <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-          </div>
-          <span class="text-xs font-mono text-slate-400 font-bold">Simulador de Terminal</span>
-          <i class="fa-solid fa-terminal text-slate-400 text-sm"></i>
-        </div>
-        
-        <div id="terminalBody" class="flex-1 p-4 overflow-y-auto font-mono text-sm text-emerald-400 terminal-scroll" onclick="document.getElementById('termInput').focus()">
-          <div class="text-slate-400 mb-3 text-xs leading-relaxed">
-            Bienvenido al Sandbox. Basado en Gemini AI.<br>
-            Puedes probar los comandos que acabas de estudiar arriba. (Ej: <span class="text-white">pwd</span>, <span class="text-white">ls -l</span>, <span class="text-white">git status</span>)
-          </div>
-          <div id="termHistory" class="space-y-1"></div>
-          
-          <div class="flex mt-1 items-center">
-            <span class="text-emerald-500 mr-2 font-bold select-none">sysadmin@tai:~$</span>
-            <input type="text" id="termInput" class="flex-1 bg-transparent border-none outline-none text-white caret-white" autocomplete="off" spellcheck="false" disabled>
-          </div>
-        </div>
-      </section>
+    <div id="quiz-container"></div>
+</div>
 
-      <!-- BOTÓN PARA INICIAR TEST -->
-      <div id="testStarterBox" class="text-center bg-white border border-slate-200 p-4 rounded-2xl shadow-sm hidden">
-        <p class="text-xs text-slate-500 mb-3">¿Ya repasaste la teoría y probaste los comandos en la consola?</p>
-        <button onclick="iniciarPracticaTema()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-8 rounded-lg shadow-md border-b-4 border-indigo-800 transition transform hover:-translate-y-0.5">
-          <i class="fa-solid fa-list-check mr-2"></i> Evaluar Conocimientos (Generar Test)
-        </button>
-      </div>
+<script>
+    const dbPreguntas = [
+    {
+        "id": 1,
+        "level": "Nivel 1",
+        "module": "Módulo 1",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 1",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 1 (correspondiente al Nivel 1). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 1: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 2,
+        "level": "Nivel 1",
+        "module": "Módulo 2",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 2",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 2 (correspondiente al Nivel 1). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 2: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 3,
+        "level": "Nivel 1",
+        "module": "Módulo 3",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 3",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 3 (correspondiente al Nivel 1). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 3: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 4,
+        "level": "Nivel 1",
+        "module": "Módulo 4",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 4",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 4 (correspondiente al Nivel 1). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 4: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 5,
+        "level": "Nivel 1",
+        "module": "Módulo 5",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 5",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 5 (correspondiente al Nivel 1). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 5: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 6,
+        "level": "Nivel 1",
+        "module": "Módulo 6",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 6",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 6 (correspondiente al Nivel 1). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 6: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 7,
+        "level": "Nivel 1",
+        "module": "Módulo 7",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 7",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 7 (correspondiente al Nivel 1). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 7: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 8,
+        "level": "Nivel 1",
+        "module": "Módulo 8",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 8",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 8 (correspondiente al Nivel 1). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 8: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 9,
+        "level": "Nivel 2",
+        "module": "Módulo 9",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 9",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 9 (correspondiente al Nivel 2). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 9: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 10,
+        "level": "Nivel 2",
+        "module": "Módulo 10",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 10",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 10 (correspondiente al Nivel 2). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 10: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 11,
+        "level": "Nivel 2",
+        "module": "Módulo 11",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 11",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 11 (correspondiente al Nivel 2). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 11: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 12,
+        "level": "Nivel 2",
+        "module": "Módulo 12",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 12",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 12 (correspondiente al Nivel 2). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 12: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 13,
+        "level": "Nivel 2",
+        "module": "Módulo 13",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 13",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 13 (correspondiente al Nivel 2). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 13: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 14,
+        "level": "Nivel 2",
+        "module": "Módulo 14",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 14",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 14 (correspondiente al Nivel 2). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 14: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 15,
+        "level": "Nivel 2",
+        "module": "Módulo 15",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 15",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 15 (correspondiente al Nivel 2). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 15: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 16,
+        "level": "Nivel 3",
+        "module": "Módulo 16",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 16",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 16 (correspondiente al Nivel 3). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 16: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 17,
+        "level": "Nivel 3",
+        "module": "Módulo 17",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 17",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 17 (correspondiente al Nivel 3). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 17: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 18,
+        "level": "Nivel 3",
+        "module": "Módulo 18",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 18",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 18 (correspondiente al Nivel 3). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 18: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 19,
+        "level": "Nivel 3",
+        "module": "Módulo 19",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 19",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 19 (correspondiente al Nivel 3). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 19: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 20,
+        "level": "Nivel 3",
+        "module": "Módulo 20",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 20",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 20 (correspondiente al Nivel 3). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 20: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 21,
+        "level": "Nivel 3",
+        "module": "Módulo 21",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 21",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 21 (correspondiente al Nivel 3). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 21: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 22,
+        "level": "Nivel 3",
+        "module": "Módulo 22",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 22",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 22 (correspondiente al Nivel 3). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 22: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 23,
+        "level": "Nivel 4",
+        "module": "Módulo 23",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 23",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 23 (correspondiente al Nivel 4). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 23: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 24,
+        "level": "Nivel 4",
+        "module": "Módulo 24",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 24",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 24 (correspondiente al Nivel 4). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 24: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 25,
+        "level": "Nivel 4",
+        "module": "Módulo 25",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 25",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 25 (correspondiente al Nivel 4). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 25: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 26,
+        "level": "Nivel 4",
+        "module": "Módulo 26",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 26",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 26 (correspondiente al Nivel 4). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 26: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 27,
+        "level": "Nivel 4",
+        "module": "Módulo 27",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 27",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 27 (correspondiente al Nivel 4). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 27: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 28,
+        "level": "Nivel 4",
+        "module": "Módulo 28",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 28",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 28 (correspondiente al Nivel 4). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 28: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 29,
+        "level": "Nivel 4",
+        "module": "Módulo 29",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 29",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 29 (correspondiente al Nivel 4). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 29: Detalle crucial a recordar para no fallar en la prueba real."
+    },
+    {
+        "id": 30,
+        "level": "Nivel 4",
+        "module": "Módulo 30",
+        "lesson": "Conceptos clave del módulo",
+        "command": "Tema Principal 30",
+        "englishMeaning": "Término técnico",
+        "question": "Pregunta de evaluación reservada para el Módulo 30 (correspondiente al Nivel 4). ¿Cuál es la afirmación correcta según el archivo?",
+        "options": [
+            "Respuesta correcta basada en el texto (opción A)",
+            "Distractor 1 (opción B)",
+            "Distractor 2 (opción C)",
+            "Distractor 3 (opción D)"
+        ],
+        "correctAnswer": 0,
+        "trap": "Trampa de examen para el Módulo 30: Detalle crucial a recordar para no fallar en la prueba real."
+    }
+];
+    let currentQuestionIndex = 0;
+    let userStats = JSON.parse(localStorage.getItem('quizStatsV2')) || { hits: 0, misses: 0 };
 
-      <!-- 3. BLOQUE DE TEST INTERACTIVO -->
-      <section id="exerciseSection" class="hidden bg-white border border-slate-200 rounded-2xl p-5 shadow-sm scroll-mt-24">
-        <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
-          <h3 id="exerciseHeader" class="text-sm font-bold text-indigo-900 flex items-center gap-2 uppercase tracking-wide">
-            <i class="fa-solid fa-clipboard-question text-indigo-600"></i> Pregunta 1/6
-          </h3>
-          <span id="exerciseTypeBadge" class="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-200 font-bold tracking-wider">
-            EVALUACIÓN
-          </span>
-        </div>
-        
-        <div id="exercisePrompt" class="text-sm font-semibold text-slate-800 mb-5 leading-relaxed"></div>
-        <div id="optionsContainer" class="space-y-3"></div>
-
-        <div class="mt-6 flex justify-end border-t border-slate-100 pt-4">
-            <button id="btnComprobar" onclick="verificarRespuesta()" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-6 py-2.5 rounded-lg shadow-sm border-b-2 border-teal-800 transition hidden">Comprobar Respuesta</button>
-        </div>
-
-        <div id="feedbackSection" class="hidden mt-5 bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-inner">
-            <div id="feedbackTitle" class="font-bold text-sm mb-2"></div>
-            <div id="aiEvaluation" class="text-xs text-slate-700 leading-relaxed markdown-body"></div>
-            <div class="mt-4 text-right">
-                <button onclick="siguienteEjercicio()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2.5 rounded-lg shadow transition">Continuar <i class="fa-solid fa-arrow-right ml-1"></i></button>
-            </div>
-        </div>
-      </section>
-
-    </div>
-  </main>
-
-  <!-- CHAT FLOTANTE PARA DUDAS -->
-  <div id="chatWidget" class="fixed bottom-4 right-4 z-40 flex flex-col items-end">
-    <button onclick="toggleChat()" class="bg-teal-700 hover:bg-teal-800 text-white rounded-full h-14 w-14 flex items-center justify-center shadow-2xl border-2 border-white transition transform hover:scale-105">
-        <i class="fa-solid fa-comment-dots text-2xl"></i>
-    </button>
-    <div id="chatWindow" class="hidden w-[90vw] md:w-[400px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col mt-2 overflow-hidden h-[450px] max-h-[75vh]">
-        <div class="bg-teal-800 p-3 flex justify-between items-center text-white">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-robot text-teal-300"></i>
-                <h4 class="font-bold text-sm">Tutor SysAdmin</h4>
-            </div>
-            <button onclick="toggleChat()" class="text-teal-200 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div id="chatMessages" class="flex-1 p-3 overflow-y-auto bg-slate-50 space-y-3 text-xs">
-            <div class="bg-white border border-slate-200 p-2.5 rounded-lg rounded-tl-none shadow-sm text-slate-700 max-w-[85%]">
-                ¡Hola! Si un concepto de la teoría no te queda claro, o no entiendes por qué fallaste en el test, pregúntame aquí.
-            </div>
-        </div>
-        <form onsubmit="enviarDudaChat(event)" class="p-3 bg-white border-t border-slate-200 flex gap-2">
-            <input type="text" id="chatInput" class="flex-1 bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-xs outline-none focus:border-teal-500" placeholder="Escribe tu duda..." autocomplete="off">
-            <button type="submit" class="bg-teal-700 text-white px-3 py-2 rounded-lg hover:bg-teal-800 transition"><i class="fa-solid fa-paper-plane"></i></button>
-        </form>
-    </div>
-  </div>
-
-  <script>
-    // ==========================================
-    // 1. CONFIGURACIÓN EXACTA SOLICITADA
-    // ==========================================
-    // Acepta la Key directamente. Cero bloqueos.
-    let GEMINI_API_KEY = localStorage.getItem("gemini_api_key") || "";
-    // Modelo estrictamente configurado según tu indicación
-    const GEMINI_MODEL = "gemini-3.1-flash-lite"; 
-    
-    let subpuntoActivo = null;
-    let currentModuleId = null;
-    let currentExerciseIndex = 1;
-    let currentExerciseData = null;
-    let isWaitingTerminal = false;
-
-    // Estadísticas
-    let userStats = JSON.parse(localStorage.getItem('tai_expediente_v6')) || { history: [], weaknesses: {}, modules: {} };
-
-    // Función base para parsear Markdown
-    function parseMD(text) {
-        if (!text) return "";
-        let html = text
-            .replace(/### (.*?)\n/g, '<h3>$1</h3>')
-            .replace(/## (.*?)\n/g, '<h3>$1</h3>')
-            .replace(/# (.*?)\n/g, '<h3>$1</h3>')
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/`([^`]+)`/g, '<code>$1</code>')
-            .replace(/```([\s\S]*?)```/g, '<pre>$1</pre>')
-            .replace(/\n\n/g, '</p><p>')
-            .replace(/\n- (.*?)/g, '<li>$1</li>');
-        html = html.replace(/(<li>.*<\/li>)/s, '<ul class="list-disc pl-5 my-2">$1</ul>');
-        return `<p>${html}</p>`;
+    function updateScoreDisplay() {
+        document.getElementById('score-display').innerText = `Aciertos: ${userStats.hits} | Fallos: ${userStats.misses}`;
+        const progress = ((currentQuestionIndex) / dbPreguntas.length) * 100;
+        document.getElementById('progress-fill').style.width = progress + '%';
     }
 
-    // ==========================================
-    // 2. TEMARIO (INCLUYE BLOQUE 4: GIT)
-    // ==========================================
-    const temarioTAI = [
-      { id: "m1", titulo: "Bloque 1 - Intro a Linux y Shell", subpuntos: [
-          { id: "1.1", nombre: "Kernel y GNU", teoria: "Linux es el kernel: gestiona procesos, memoria, dispositivos y sistemas de archivos.\nUna distribución combina kernel, utilidades, gestor de paquetes y repositorios. Familias: Debian/Ubuntu (apt), RHEL (dnf).\n\n**Trampa**: No deduzcas la distro por el gestor instalado. Usa `cat /etc/os-release`." },
-          { id: "1.2", nombre: "Comandos de Identificación", teoria: "`uname -a` muestra toda la info. `uname -r` release del kernel.\n**Trampa**: `uname -p` no es portable.\n\n`hostnamectl status` consulta la información de red.\n**Trampa**: Cambiar hostname con set-hostname no modifica la IP." }
-      ]},
-      { id: "m2", titulo: "Bloque 2 - Archivos y Permisos", subpuntos: [
-          { id: "2.1", nombre: "Jerarquía FHS", teoria: "FHS: `/etc` (configuración), `/var` (datos variables), `/run` (volátiles), `/proc` (procesos virtuales en RAM).\n\n**Trampa**: Modificar ficheros a mano en `/proc` puede colapsar el sistema si no se usa `sysctl`." },
-          { id: "2.2", nombre: "Permisos Especiales (SUID, SGID)", teoria: "SUID (4): Ejecuta como propietario. SGID (2): En directorios, hereda el grupo a nuevos ficheros. Sticky Bit (1): Solo propietario puede borrar (ej. `/tmp`).\n\n**Trampa**: Dar SUID a scripts de Bash es un vector de escalada de privilegios." }
-      ]},
-      { id: "m3", titulo: "Bloque 3 - Redes y Systemd", subpuntos: [
-          { id: "3.1", nombre: "iproute2 y puertos", teoria: "`ip a` para IPs, `ip r` para enrutamiento. Para ver puertos en escucha: `ss -tulpen`.\n\n**Trampa**: Que hagas ping a una IP y falle no significa que esté caída, el firewall (ICMP) puede estar bloqueando los ecos." },
-          { id: "3.2", nombre: "Systemd (systemctl)", teoria: "`systemctl start/enable servicio`.\n\n**Trampa**: `enable` no arranca el servicio inmediatamente, solo crea el enlace simbólico para el siguiente arranque. `mask` evita que se inicie incluso manualmente." }
-      ]},
-      { id: "m25", titulo: "Bloque 4 - Git", subpuntos: [
-          { id: "25.1", nombre: "Fundamentos Git", teoria: "Control de versiones distribuido.\nZonas clave:\n- **Working Directory**: Archivos modificados.\n- **Staging Area**: Índice preparado con `git add`.\n- **Repositorio**: Historial guardado tras `git commit`.\n\n**Trampas de examen**:\n- `git diff` te muestra cambios locales no preparados. Para ver qué se va a commitear, debes usar obligatoriamente `git diff --staged`.\n- `git reset --hard` destruye por completo los cambios de tu directorio de trabajo que no hayan sido commiteados. Es irrecuperable de forma nativa." },
-          { id: "25.2", nombre: "Ramas y Remotos", teoria: "`git branch` lista las ramas. \n\n**Trampas**:\n- En versiones modernas se recomienda usar `git switch` para ramas en lugar del sobrecargado `git checkout`.\n- `git fetch` descarga el historial del servidor remoto pero NO altera tus archivos de trabajo. `git pull` es peligroso porque hace fetch y aplica un merge directo a tu rama actual." }
-      ]}
-    ];
-
-    window.addEventListener("DOMContentLoaded", () => {
-      if (GEMINI_API_KEY) document.getElementById("apiKeyInput").value = GEMINI_API_KEY;
-      renderMenu();
-      initTerminal();
-    });
-
-    function guardarKey() {
-      const k = document.getElementById("apiKeyInput").value.trim();
-      if (k) {
-        localStorage.setItem("gemini_api_key", k);
-        GEMINI_API_KEY = k;
-        document.getElementById("termInput").disabled = false;
-        alert("Clave guardada correctamente.");
-      } else {
-        alert("Introduce una clave válida.");
-      }
-    }
-
-    function renderMenu() {
-      const menu = document.getElementById("modulesMenu");
-      menu.innerHTML = "";
-      temarioTAI.forEach((m) => {
-        if(!userStats.modules[m.id]) userStats.modules[m.id] = { correct: 0, error: 0 };
-        const contentId = `mod_content_${m.id}`;
-        
-        let html = `
-          <div class="mb-2 border border-slate-200 rounded-xl bg-slate-50/50 overflow-hidden">
-            <button onclick="document.getElementById('${contentId}').classList.toggle('hidden')" class="w-full text-left font-bold text-slate-700 bg-slate-100 hover:bg-teal-50 p-2.5 rounded-t-xl text-[11px] flex justify-between shadow-sm">
-              <span>${m.titulo}</span> <i class="fa-solid fa-chevron-down text-slate-400"></i>
-            </button>
-            <div id="${contentId}" class="space-y-1 p-2 bg-white hidden border-t border-slate-100">`;
-        
-        m.subpuntos.forEach(s => {
-          html += `<button onclick='seleccionarSubpunto(${JSON.stringify(s)}, "${m.id}")' class="w-full text-left p-1.5 rounded-lg hover:bg-teal-50 hover:text-teal-800 text-[11px] font-medium text-slate-600 transition"><i class="fa-solid fa-caret-right mr-1 opacity-50"></i> ${s.nombre}</button>`;
-        });
-        
-        html += `</div></div>`;
-        menu.innerHTML += html;
-      });
-      localStorage.setItem('tai_expediente_v6', JSON.stringify(userStats));
-    }
-
-    function seleccionarSubpunto(sub, modId) {
-      subpuntoActivo = sub;
-      currentModuleId = modId;
-      
-      // Actualizar Teoría
-      document.getElementById("theoryTitle").innerHTML = `<i class="fa-solid fa-graduation-cap text-teal-600"></i> Teoría: ${sub.nombre}`;
-      document.getElementById("theoryContent").innerHTML = parseMD(sub.teoria);
-      
-      // Habilitar Consola y Botón de Test
-      if (GEMINI_API_KEY) document.getElementById("termInput").disabled = false;
-      document.getElementById("testStarterBox").classList.remove("hidden");
-      
-      // Resetear vista Test (Ocultarlo hasta que el usuario decida iniciarlo)
-      document.getElementById("exerciseSection").classList.add("hidden");
-      document.getElementById("feedbackSection").classList.add("hidden");
-    }
-
-    // ==========================================
-    // 3. CONSOLA SANDBOX (SIMULADOR AI)
-    // ==========================================
-    function initTerminal() {
-        const input = document.getElementById("termInput");
-        if(GEMINI_API_KEY) input.disabled = false;
-        
-        input.addEventListener("keydown", async (e) => {
-            if (e.key === "Enter" && !isWaitingTerminal && input.value.trim() !== "") {
-                const cmd = input.value.trim();
-                input.value = "";
-                printTerminal(`sysadmin@tai:~$ ${cmd}`, "text-emerald-500 font-bold");
-                
-                // Comandos que no necesitan API
-                if (cmd === "clear") { document.getElementById("termHistory").innerHTML = ""; return; }
-                if (cmd === "whoami") { printTerminal("sysadmin"); return; }
-                
-                // Petición a Gemini
-                isWaitingTerminal = true;
-                input.disabled = true;
-                const loadId = printTerminal("Ejecutando... (Consultando AI)", "text-slate-500 italic");
-                
-                const output = await apiSimularComando(cmd);
-                
-                document.getElementById(loadId).remove();
-                printTerminal(output, "text-slate-300");
-                
-                isWaitingTerminal = false;
-                input.disabled = false;
-                input.focus();
-            }
-        });
-    }
-
-    function printTerminal(text, classes = "") {
-        const history = document.getElementById("termHistory");
-        const id = "line_" + Date.now();
-        // Escapar HTML para seguridad y formato visual
-        const escaped = text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
-        history.innerHTML += `<div id="${id}" class="${classes} break-words">${escaped}</div>`;
-        const body = document.getElementById("terminalBody");
-        body.scrollTop = body.scrollHeight;
-        return id;
-    }
-
-    async function apiSimularComando(cmd) {
-        if (!GEMINI_API_KEY) return "bash: error: API Key no configurada.";
-        
-        const systemPrompt = `Eres estrictamente la consola bash de un servidor Linux Debian. 
-El usuario ejecutó: "${cmd}". Directorio actual: /home/sysadmin.
-Responde ÚNICAMENTE con la salida en texto plano del comando. Nada de explicaciones, ni bloques de código markdown, ni frases de inicio. Si el comando es inventado o requiere root, devuelve el error exacto que daría bash (ej: bash: comando no encontrado).`;
-
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt }] }] })
-            });
-            const data = await res.json();
-            if (res.ok && data.candidates) {
-                let txt = data.candidates[0].content.parts[0].text;
-                return txt.replace(/```[a-z]*\n?/g, '').replace(/```/g, '').trim();
-            } else {
-                return `bash: error interno (${data.error?.message || 'Fallo API'})`;
-            }
-        } catch (e) {
-            return "bash: network unreachable";
-        }
-    }
-
-    // ==========================================
-    // 4. TEST INTERACTIVO (GENERADOR)
-    // ==========================================
-    function iniciarPracticaTema() {
-      if (!GEMINI_API_KEY) {
-          alert("Debes guardar tu API Key arriba a la derecha para generar tests.");
-          return;
-      }
-      currentExerciseIndex = 1;
-      document.getElementById("testStarterBox").classList.add("hidden");
-      document.getElementById("exerciseSection").classList.remove("hidden");
-      
-      // Auto-scroll para centrar el Test en pantalla, dejando la consola arriba visible.
-      setTimeout(() => document.getElementById("exerciseSection").scrollIntoView({ behavior: 'smooth' }), 100);
-      
-      generarPreguntaJSON();
-    }
-
-    async function generarPreguntaJSON() {
-      const promptBox = document.getElementById("exercisePrompt");
-      const optsBox = document.getElementById("optionsContainer");
-      document.getElementById("btnComprobar").classList.add("hidden");
-      document.getElementById("feedbackSection").classList.add("hidden");
-      optsBox.innerHTML = "";
-
-      const isFinal = currentExerciseIndex === 6;
-      document.getElementById("exerciseHeader").innerHTML = `<i class="fa-solid fa-clipboard-question text-indigo-600"></i> Pregunta ${currentExerciseIndex}/6`;
-      
-      const badge = document.getElementById("exerciseTypeBadge");
-      if (isFinal) {
-          badge.className = "text-[10px] bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200 font-bold tracking-wider";
-          badge.innerText = "CASO PRÁCTICO / TRAMPA";
-      } else {
-          badge.className = "text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-200 font-bold tracking-wider";
-          badge.innerText = "EVALUACIÓN";
-      }
-
-      promptBox.innerHTML = `<span class="text-teal-700 font-bold animate-pulse"><i class="fa-solid fa-microchip fa-spin mr-2"></i> Procesando pregunta desde servidor...</span>`;
-
-      const promptSystem = `Actúa como examinador TAI C1. Tema: '${subpuntoActivo.nombre}'. Teoría: ${subpuntoActivo.teoria}
-Crea una pregunta tipo TEST en formato JSON ESTRICTO.
-Nivel: ${isFinal ? 'Muy alto. Haz que las respuestas erróneas parezcan correctas (trampa de examen).' : 'Medio-Alto.'}
-
-DEVUELVE SOLO EL JSON:
-{
-  "question": "Pregunta...",
-  "options": ["A", "B", "C", "D"],
-  "correct_index": 0,
-  "explanation": "Breve explicación de por qué es la correcta y el error de las demás."
-}`;
-
-      try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ contents: [{ parts: [{ text: promptSystem }] }] })
-        });
-        
-        const data = await res.json();
-        if (res.ok && data.candidates) {
-          let raw = data.candidates[0].content.parts[0].text;
-          raw = raw.replace(/```(?:json)?/gi, '').replace(/```/g, '').trim();
-          
-          try {
-             currentExerciseData = JSON.parse(raw);
-             promptBox.innerHTML = currentExerciseData.question;
-             currentExerciseData.options.forEach((opt, idx) => {
-                 optsBox.innerHTML += `
-                    <label class="flex items-start gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-teal-50 transition" id="label-opt-${idx}">
-                        <input type="radio" name="quizOption" value="${idx}" class="mt-1 accent-teal-600" onchange="document.getElementById('btnComprobar').classList.remove('hidden')">
-                        <span class="text-xs text-slate-700 font-medium">${opt}</span>
-                    </label>
-                 `;
-             });
-          } catch(e) {
-             promptBox.innerHTML = "<span class='text-rose-600 font-bold'>Error de parsing JSON. Reintentando...</span>";
-             setTimeout(generarPreguntaJSON, 1000);
-          }
-        } else {
-             promptBox.innerHTML = `<span class='text-rose-600 font-bold'>Error API: ${data.error?.message}</span>`;
-        }
-      } catch (e) { promptBox.innerText = "Error de red con Gemini."; }
-    }
-
-    function verificarRespuesta() {
-        const selected = document.querySelector('input[name="quizOption"]:checked');
-        if (!selected) return;
-
-        const selIdx = parseInt(selected.value);
-        const corIdx = currentExerciseData.correct_index;
-        const isAcertado = (selIdx === corIdx);
-
-        // Congelar inputs
-        document.querySelectorAll('input[name="quizOption"]').forEach(el => el.disabled = true);
-        document.getElementById("btnComprobar").classList.add("hidden");
-
-        // Pintar labels
-        for(let i=0; i<4; i++) {
-            let label = document.getElementById(`label-opt-${i}`);
-            if (i === corIdx) {
-                label.classList.add("bg-emerald-50", "border-emerald-500");
-                label.classList.remove("border-slate-200");
-            } else if (i === selIdx && !isAcertado) {
-                label.classList.add("bg-rose-50", "border-rose-500");
-                label.classList.remove("border-slate-200");
-            }
-        }
-
-        // Estadísticas
-        if (isAcertado) userStats.modules[currentModuleId].correct += 1;
-        else userStats.modules[currentModuleId].error += 1;
-        localStorage.setItem('tai_expediente_v6', JSON.stringify(userStats));
-
-        // Mostrar Feedback
-        const feedbackSec = document.getElementById("feedbackSection");
-        feedbackSec.classList.remove("hidden");
-        document.getElementById("feedbackTitle").innerHTML = isAcertado ? `<span class="text-emerald-700"><i class="fa-solid fa-check"></i> ¡Correcto!</span>` : `<span class="text-rose-700"><i class="fa-solid fa-xmark"></i> Incorrecto</span>`;
-        document.getElementById("aiEvaluation").innerHTML = parseMD(currentExerciseData.explanation);
-    }
-
-    function siguienteEjercicio() {
-        if (currentExerciseIndex < 6) {
-            currentExerciseIndex++;
-            generarPreguntaJSON();
-        } else {
-            document.getElementById("exerciseSection").classList.add("hidden");
-            document.getElementById("testStarterBox").classList.remove("hidden");
-            document.getElementById("testStarterBox").innerHTML = `
-                <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl shadow-sm text-center">
-                    <i class="fa-solid fa-medal text-3xl text-emerald-500 mb-2"></i>
-                    <h4 class="font-bold text-emerald-800">Bloque de Evaluación Finalizado</h4>
-                    <p class="text-xs text-emerald-700 mt-1">Elige otro tema en el menú para continuar.</p>
-                </div>
-            `;
-        }
-    }
-
-    // ==========================================
-    // 5. EXTRAS: CHAT Y EXPEDIENTE
-    // ==========================================
-    function toggleChat() { document.getElementById("chatWindow").classList.toggle("hidden"); }
-    function scrollChat() { const c = document.getElementById("chatMessages"); c.scrollTop = c.scrollHeight; }
-
-    async function enviarDudaChat(e) {
-        e.preventDefault();
-        const input = document.getElementById("chatInput");
-        const txt = input.value.trim();
-        if(!txt || !GEMINI_API_KEY) return;
-        input.value = "";
-        
-        const chatBox = document.getElementById("chatMessages");
-        chatBox.innerHTML += `<div class="bg-indigo-600 text-white p-2.5 rounded-lg rounded-tr-none max-w-[85%] self-end ml-auto mt-2">${txt}</div>`;
-        scrollChat();
-        
-        const loadId = `load_${Date.now()}`;
-        chatBox.innerHTML += `<div id="${loadId}" class="text-slate-400 text-xs mt-2 italic"><i class="fa-solid fa-spinner fa-spin"></i> Procesando...</div>`;
-        scrollChat();
-
-        const ctx = subpuntoActivo ? subpuntoActivo.teoria : "Laboratorio general";
-        const promptSystem = `Tutor SysAdmin. El alumno pregunta: "${txt}". Contexto: ${ctx}. Responde claro, máximo 100 palabras. Usa negritas.`;
-
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents: [{ parts: [{ text: promptSystem }] }] })
-            });
-            const data = await res.json();
-            document.getElementById(loadId).remove();
-            
-            if (res.ok && data.candidates) {
-                let ans = data.candidates[0].content.parts[0].text;
-                chatBox.innerHTML += `<div class="bg-white border border-slate-200 p-2.5 rounded-lg rounded-tl-none text-slate-700 mt-2 markdown-body">${parseMD(ans)}</div>`;
-            } else {
-                chatBox.innerHTML += `<div class="text-rose-500 font-bold mt-2">Error API.</div>`;
-            }
-        } catch (e) {
-            document.getElementById(loadId).remove();
-            chatBox.innerHTML += `<div class="text-rose-500 font-bold mt-2">Error de Red.</div>`;
-        }
-        scrollChat();
-    }
-
-    function toggleExpediente() {
-      const modal = document.getElementById("expedienteModal");
-      modal.classList.toggle("hidden");
-      if(!modal.classList.contains("hidden")) {
-          let tc = 0, te = 0;
-          const modCont = document.getElementById("statsModulesContainer");
-          modCont.innerHTML = "";
-
-          Object.keys(userStats.modules).forEach(mId => {
-              let s = userStats.modules[mId];
-              tc += s.correct; te += s.error;
-              let t = s.correct + s.error;
-              let r = t > 0 ? Math.round((s.correct / t)*100) : 0;
-              let modObj = temarioTAI.find(m => m.id === mId);
-              let nombre = modObj ? modObj.titulo : mId;
-
-              modCont.innerHTML += `
-                <div class="bg-white border border-slate-200 p-3 rounded-xl">
-                  <p class="text-[10px] font-bold text-slate-500 truncate">${nombre}</p>
-                  <div class="flex justify-between mt-1"><span class="font-black text-lg ${r>=75?'text-emerald-500':r>=50?'text-amber-500':'text-rose-500'}">${r}%</span><span class="text-xs text-slate-400">✅ ${s.correct} | ❌ ${s.error}</span></div>
-                </div>`;
-          });
-          
-          let tot = tc + te;
-          document.getElementById("statGlobalRate").innerText = tot > 0 ? Math.round((tc/tot)*100)+"%" : "0%";
-          document.getElementById("statTotalCorrect").innerText = tc;
-          document.getElementById("statTotalErrors").innerText = te;
-      }
+    function saveStats() {
+        localStorage.setItem('quizStatsV2', JSON.stringify(userStats));
+        updateScoreDisplay();
     }
 
     function resetStats() {
-      if(confirm("¿Borrar todo el historial?")) {
-        userStats = { history: [], weaknesses: {}, modules: {} };
-        localStorage.removeItem('tai_expediente_v6');
-        renderMenu();
-        toggleExpediente(); // refresh
-      }
+        if(confirm("¿Seguro que quieres borrar tu historial?")) {
+            userStats = { hits: 0, misses: 0 };
+            currentQuestionIndex = 0;
+            saveStats();
+            loadQuestion();
+        }
     }
-  </script>
+
+    // Mezclador simple para las opciones de respuesta
+    function shuffleArray(array) {
+        let arr = array.map((val, i) => ({val, i}));
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function loadQuestion() {
+        if (currentQuestionIndex >= dbPreguntas.length) return;
+        const q = dbPreguntas[currentQuestionIndex];
+        const container = document.getElementById('quiz-container');
+        
+        const shuffledOptions = shuffleArray(q.options);
+        let optionsHtml = '';
+        shuffledOptions.forEach((optObj) => {
+            // optObj.i guarda el índice original, que nos dice si es la correcta (0)
+            optionsHtml += `<button class="option-btn" onclick="checkAnswer(${optObj.i}, this)">${optObj.val}</button>`;
+        });
+
+        container.innerHTML = `
+            <div>
+                <span class="badge badge-level">${q.level}</span>
+                <span class="badge badge-module">${q.module}</span>
+                <h2>${q.command}</h2>
+                <p><strong>${q.question}</strong></p>
+                <div class="options-list">${optionsHtml}</div>
+            </div>
+            <div id="feedback" class="feedback-box">
+                <h4 id="feedback-title"></h4>
+                <div class="trap-warning"><strong>⚠️ Alerta de Examen:</strong><br>${q.trap}</div>
+                <button class="nav-btn" onclick="nextQuestion()">Siguiente Pregunta</button>
+            </div>
+        `;
+        updateScoreDisplay();
+    }
+
+    function checkAnswer(originalIndex, btn) {
+        const q = dbPreguntas[currentQuestionIndex];
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(b => b.style.pointerEvents = 'none'); // bloquear
+
+        if (originalIndex === q.correctAnswer) {
+            btn.classList.add('correct');
+            document.getElementById('feedback-title').innerText = "✅ ¡Respuesta Correcta!";
+            document.getElementById('feedback-title').style.color = "var(--dark-aqua)";
+            userStats.hits++;
+        } else {
+            btn.classList.add('wrong');
+            document.getElementById('feedback-title').innerText = "❌ Respuesta Incorrecta";
+            document.getElementById('feedback-title').style.color = "var(--gray)";
+            userStats.misses++;
+            
+            // Buscar visualmente cuál era la correcta para marcarla
+            buttons.forEach(b => {
+                if(b.onclick.toString().includes('checkAnswer(0,')) {
+                    b.classList.add('correct');
+                }
+            });
+        }
+        
+        saveStats();
+        document.getElementById('feedback').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < dbPreguntas.length) {
+            loadQuestion();
+        } else {
+            document.getElementById('quiz-container').innerHTML = `
+                <h2>¡Batería Completada!</h2>
+                <p>Has repasado exitosamente los 30 módulos a lo largo de los 4 niveles.</p>
+                <button class="nav-btn" onclick="resetStats()">Volver a empezar</button>
+            `;
+            document.getElementById('progress-fill').style.width = '100%';
+        }
+    }
+
+    loadQuestion();
+</script>
 </body>
 </html>
