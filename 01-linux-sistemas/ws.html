@@ -76,6 +76,18 @@ a{color:var(--indigo)}
 .doc li{margin:4px 0}
 .doc strong{color:var(--indigo-2)}
 .doc code{font-family:var(--mono);background:var(--inline-bg);color:var(--inline-text);padding:1px 6px;border-radius:6px;font-size:.9em;word-break:break-word}
+.box{border-radius:14px;padding:6px 18px;margin:14px 0 18px;border:1px solid var(--line)}
+.box p{margin:10px 0}
+.box-facil{background:linear-gradient(180deg,var(--indigo-soft),var(--panel));border-left:6px solid var(--indigo)}
+.box-ingles{background:var(--panel);border-left:6px solid #0e8a7a}
+.box-ingles strong{color:#0b6e62}
+:root[data-theme="dark"] .box-ingles strong{color:#6fe0cf}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .box-ingles strong{color:#6fe0cf}}
+.box .tbl{margin:10px 0}
+.doc td code{white-space:nowrap;word-break:normal}
+:root[data-theme="dark"] .topic.active{color:#12132a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .topic.active{color:#12132a}}
+.box em{font-style:italic;color:var(--muted)}
 .doc pre{position:relative;background:var(--code-bg);color:var(--code-text);padding:34px 16px 14px;border-radius:10px;overflow:auto;font-size:14px;line-height:1.55;margin:12px 0}
 .doc pre code{background:none;color:inherit;padding:0;font-size:inherit;word-break:normal;white-space:pre}
 .doc pre .cm{color:#9aa0d8}
@@ -198,6 +210,100 @@ h2.view{font-size:26px;margin:0 0 6px;color:var(--indigo-2)}
 - `> ⚠️ Trampa:` = lo que suelen preguntar para pillarte.
 - `> 💡 Clave:` = lo que tienes que saber sí o sí.
 - `> 🏛️ AGE:` = contexto de la Administración General del Estado.
+- `:::facil` **🧭 En pocas palabras** = explicación sencilla con un ejemplo de la vida real, al principio de cada tema.
+- `:::ingles` **🔤 Para recordarlo** = de qué palabras inglesas vienen los comandos y sus opciones, y trucos para memorizar.
+
+## Guía rápida: el inglés de los comandos
+
+> 💡 Clave: **no memorices comandos, entiéndelos**. Casi todos son una frase corta en inglés. Si sabes lo que significan las palabras, puedes **reconstruir** el comando en el examen aunque no lo recuerdes de memoria.
+
+### Los verbos de PowerShell (la primera palabra del cmdlet)
+
+| Verbo | Traducción | Piensa en… | Ejemplo |
+|---|---|---|---|
+| Get | obtener | "dame" | `Get-Service` → dame los servicios |
+| Set | establecer | "cambia" | `Set-Service` → cambia un servicio |
+| New | nuevo | "crea" | `New-ADUser` → crea un usuario |
+| Remove | quitar | "borra" | `Remove-Item` → borra un fichero |
+| Add / Remove | añadir / quitar | meter o sacar de algo que ya existe | `Add-ADGroupMember` |
+| Start / Stop / Restart | iniciar / parar / reiniciar | el botón de encendido | `Restart-Computer` |
+| Enable / Disable | habilitar / deshabilitar | encender o apagar algo que ya existe | `Disable-ADAccount` |
+| Test | probar | "¿funciona?" → responde sí o no | `Test-NetConnection` |
+| Invoke | invocar | "ejecuta" | `Invoke-Command` |
+| Install / Uninstall | instalar / desinstalar | | `Install-WindowsFeature` |
+| Import / Export | importar / exportar | leer de / guardar a fichero | `Export-Csv` |
+| ConvertTo / ConvertFrom | convertir a / desde | cambiar de formato | `ConvertTo-Json` |
+| Select / Where / Sort | seleccionar / donde / ordenar | columnas / filas / orden | `Where-Object` |
+| Search / Find | buscar | | `Search-ADAccount` |
+| Unlock / Lock | desbloquear / bloquear | el cerrojo | `Unlock-ADAccount` |
+| Grant / Revoke | conceder / revocar | dar o quitar un permiso | `Grant-SmbShareAccess` |
+| Move / Rename | mover / renombrar | | `Move-ADObject` |
+| Resolve | resolver | averiguar (un nombre, una ruta) | `Resolve-DnsName` |
+| Register / Unregister | registrar / dar de baja | | `Register-ScheduledTask` |
+| Backup / Restore | copia / restaurar | | `Backup-GPO` |
+| Enter / Exit | entrar / salir | | `Enter-PSSession` |
+| Receive / Wait | recibir / esperar | | `Receive-Job` |
+| Update | actualizar | | `Update-Help` |
+
+### Los sustantivos que más se repiten
+
+| Sustantivo | Significa | | Sustantivo | Significa |
+|---|---|---|---|---|
+| Item | elemento (fichero o carpeta) | | Service | servicio |
+| ChildItem | elemento hijo (lo que hay dentro) | | Process | proceso (programa en marcha) |
+| Content | contenido (de un fichero) | | Computer | equipo |
+| Location | ubicación (dónde estoy) | | Account | cuenta |
+| Member | miembro (de un objeto o grupo) | | Group | grupo |
+| Object | objeto | | Credential | credencial |
+| Path | ruta | | Session | sesión (conexión remota) |
+| Feature | característica, función | | Policy | directiva |
+| Share | recurso compartido | | Lease | concesión (DHCP) |
+| Scope | ámbito | | Zone | zona (DNS) |
+| Route | ruta (de red) | | Neighbor | vecino (ARP) |
+| Adapter | adaptador (tarjeta de red) | | Counter | contador (rendimiento) |
+
+### Los parámetros que más se repiten
+
+| Parámetro | Significa | Truco |
+|---|---|---|
+| `-Name` / `-Identity` | nombre / identidad | "¿quién?" |
+| `-Path` | ruta | "¿dónde?" |
+| `-Filter` | filtro | "¿cuáles?" |
+| `-Recurse` | recursivo | entra en todas las subcarpetas |
+| `-Force` | forzar | sin preguntar, e incluye lo oculto |
+| `-WhatIf` | "¿y si…?" | **simula** sin hacer nada |
+| `-Confirm` | confirmar | pregunta antes de cada acción |
+| `-Credential` | credencial | "¿con qué usuario?" |
+| `-ComputerName` | nombre del equipo | "¿en qué máquina?" |
+| `-Properties` | propiedades | "enséñame más datos" (AD) |
+| `-Scope` | ámbito | "¿hasta dónde llega?" |
+| `-First` / `-Last` / `-Skip` | primeros / últimos / saltar | |
+| `-Descending` | descendente | de mayor a menor |
+| `-Quiet` | silencioso | responde solo True/False |
+| `-Detailed` / `-Full` | detallado / completo | más información |
+| `-AsPlainText` | como texto plano | sin cifrar (cuidado) |
+| `-Enabled` | habilitado | `$true` / `$false` |
+
+### Las opciones de cmd suelen ser la inicial de una palabra inglesa
+
+| Opción | Palabra | Aparece en |
+|---|---|---|
+| `/all`, `-a` | **a**ll, todo | `ipconfig /all`, `netstat -a`, `arp -a` |
+| `-n` | **n**umeric (netstat) / **n**úmero (ping en Windows) | `netstat -ano`, `ping -n 10` |
+| `-o` | **o**wner, el proceso dueño (PID) | `netstat -ano` |
+| `-t` | hasta que lo pares | `ping -t` |
+| `-d` | **d**elete (arp) / no **D**NS (tracert) | `arp -d *`, `tracert -d` |
+| `-p` | **p**ersistent | `route -p add` |
+| `/f`, `/F` | **f**orce / **f**ix | `taskkill /F`, `chkdsk /f` |
+| `/r` | **r**estart / **r**ecover / **r**eport | `shutdown /r`, `chkdsk /r`, `gpresult /r` |
+| `/s` | **s**hutdown | `shutdown /s` |
+| `/t` | **t**ime (segundos) | `shutdown /r /t 0` |
+| `/a` | **a**bort | `shutdown /a` |
+| `/h` | **h**tml | `gpresult /h informe.html` |
+| `/v` | **v**erbose, detallado | `gpresult /v`, `getmac /v` |
+| `/T` | **T**ree, todo el árbol | `icacls /T`, `takeown /R` (**R**ecursive) |
+
+> 💡 Clave: los nombres de los comandos clásicos también son inglés abreviado: `ipconfig` (IP configuration), `netstat` (network statistics), `nslookup` (name server lookup), `tracert` (trace route), `gpupdate` (group policy update), `gpresult` (group policy result), `dcdiag` (domain controller diagnostics), `repadmin` (replication administrator), `sfc` (System File Checker), `chkdsk` (check disk), `schtasks` (scheduled tasks), `wevtutil` (Windows events utility).
 
 ---
 
@@ -206,6 +312,22 @@ h2.view{font-size:26px;margin:0 0 6px;color:var(--indigo-2)}
 ## Nivel 1 — Primeros pasos
 
 ### PS-1.1 · Qué es PowerShell y qué versiones existen
+
+:::facil
+**🧭 En pocas palabras.** PowerShell es la "ventana de comandos" moderna de Windows: escribes una orden y el sistema la ejecuta. Lo que la hace especial es que **no devuelve texto, devuelve objetos**: fichas ordenadas con datos (nombre, estado, tamaño…) que puedes filtrar y ordenar sin recortar texto.
+
+Existen dos "familias": **5.1**, que viene dentro de Windows y ya no evoluciona, y **7**, que se instala aparte, funciona también en Linux y macOS y es la que recibe novedades.
+
+**Imagínatelo así:** cmd te da una *foto* de una tabla; si quieres un dato tienes que recortarlo. PowerShell te da la *hoja de Excel*: eliges columnas, filtras y ordenas.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Shell* = concha o caparazón: la capa que envuelve al sistema y por la que le hablas. **PowerShell** = "la concha potente".
+- `pwsh` = **P**o**W**er**SH**ell abreviado → el ejecutable de la 7. `powershell.exe` → la 5.1 de siempre.
+- `$PSVersionTable` = *PS Version Table*, "tabla de la versión de PowerShell".
+- **LTS** = *Long-Term Support*, soporte largo.
+- 🧠 Truco: **"la 5.1 viene de casa, la 7 te la compras"** (se instala). Y **las LTS son pares**: 7.0, 7.2, 7.4, 7.6.
+:::
 
 PowerShell es un **shell de línea de comandos + lenguaje de scripting** de Microsoft, orientado a **objetos .NET** (no a texto, como bash o cmd). Cada comando devuelve objetos con propiedades y métodos.
 
@@ -231,6 +353,31 @@ PowerShell es un **shell de línea de comandos + lenguaje de scripting** de Micr
 > 💡 Clave: la versión actual LTS es **7.6** (marzo 2026). En Windows Server 2025 viene de serie **Windows PowerShell 5.1**; PowerShell 7 hay que instalarlo.
 
 ### PS-1.2 · Cmdlets, sintaxis Verbo-Sustantivo y ayuda
+
+:::facil
+**🧭 En pocas palabras.** Los comandos de PowerShell se llaman **cmdlets** y se leen como una frase corta en inglés: **verbo + guion + cosa**. `Get-Service` = "dame los servicios"; `Stop-Process` = "para el proceso". No hay que memorizar cientos de nombres raros: casi siempre puedes **adivinarlos** pensando la frase en inglés.
+
+**Imagínatelo así:** es como pedir en un bar: primero *qué quieres hacer* (traer, quitar, cambiar) y después *sobre qué* (un café, la cuenta).
+:::
+:::ingles
+**🔤 Para recordarlo: los verbos que más vas a ver**
+
+| Verbo | Significa | Ejemplo |
+|---|---|---|
+| Get | obtener, dame | `Get-Service` |
+| Set | establecer, cambia | `Set-Service` |
+| New | crear uno nuevo | `New-ADUser` |
+| Remove | quitar, borrar | `Remove-Item` |
+| Add | añadir (a algo que ya existe) | `Add-ADGroupMember` |
+| Start / Stop / Restart | arrancar / parar / reiniciar | `Restart-Service` |
+| Enable / Disable | habilitar / deshabilitar | `Disable-ADAccount` |
+| Test | comprobar (devuelve sí/no) | `Test-Path` |
+| Invoke | invocar = ejecutar | `Invoke-Command` |
+
+- `Get-Command` = "dame los comandos"; `Get-Help` = "dame ayuda"; `Get-Member` = "dame los miembros" (las piezas de un objeto).
+- Parámetros de la ayuda: `-Examples` (ejemplos), `-Detailed` (detallada), `-Full` (completa), `-Online` (en la web).
+- 🧠 Truco: si no sabes el nombre, **dilo en inglés y busca con comodines**: "quiero algo de firewall" → `Get-Command *firewall*`.
+:::
 
 Un **cmdlet** ("command-let") es un comando nativo con forma **Verbo-Sustantivo** en singular: `Get-Service`, `Stop-Process`, `New-ADUser`.
 
@@ -279,6 +426,19 @@ Get-Command ipconfig        # muestra que es una Application
 
 ### PS-1.3 · Alias y equivalencias con cmd y Linux
 
+:::facil
+**🧭 En pocas palabras.** Un **alias** es un **apodo** de un cmdlet. Sirve para escribir menos o para que la gente que viene de cmd o de Linux encuentre sus comandos de siempre. Pero **solo cambia el nombre**: las opciones siguen siendo las del cmdlet de PowerShell.
+
+**Imagínatelo así:** Francisco tiene los apodos Paco y Fran. `Get-ChildItem` tiene los apodos `dir` (cmd), `ls` (Linux) y `gci` (sus iniciales). Llamarlo Paco no lo convierte en otra persona: si le hablas en "idioma Linux" (`ls -la`) no te entiende.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *ChildItem* = "elemento hijo": lo que hay **dentro** de una carpeta (sus hijos). `Get-ChildItem` = "dame los hijos" = listar.
+- 🧠 Muchos alias son **las iniciales**: `gci` = **G**et-**C**hild**I**tem, `gsv` = **G**et-**S**er**v**ice, `gps` = **G**et-**P**roces**s**, `gm` = **G**et-**M**ember, `sls` = **S**e**l**ect-**S**tring, `iwr` = **I**nvoke-**W**eb**R**equest, `gal` = **G**et-**Al**ias.
+- 🧠 Los símbolos: `?` parece una pregunta, **"¿cuáles cumplen?"** → `Where-Object`. `%` recuerda a "por ciento", **"a cada uno"** → `ForEach-Object`.
+- *Select-String* = "selecciona texto" (el `grep` de PowerShell).
+:::
+
 | Cmdlet | Alias de PowerShell | Equivalente cmd | Equivalente Linux |
 |---|---|---|---|
 | `Get-ChildItem` | `gci`, `dir`, `ls` | `dir` | `ls` |
@@ -317,6 +477,25 @@ Get-Command ipconfig        # muestra que es una Application
 
 ### PS-1.4 · Política de ejecución (Execution Policy)
 
+:::facil
+**🧭 En pocas palabras.** La **directiva de ejecución** decide si PowerShell te deja ejecutar **ficheros de script** (`.ps1`). No afecta a los comandos que escribes a mano. Es una medida para **evitar despistes** (abrir un script descargado sin querer), **no** un sistema de seguridad serio.
+
+**Imagínatelo así:** el portero de un local:
+- **Restricted**: puerta cerrada, no pasa nadie.
+- **RemoteSigned**: los de casa (scripts locales) pasan; los de fuera (descargados de Internet) solo con DNI (**firma**).
+- **AllSigned**: todo el mundo con DNI.
+- **Unrestricted**: pasan todos, pero avisa a los de fuera.
+- **Bypass**: ni siquiera hay portero.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Execution Policy* = directiva de ejecución. *Restricted* = restringido. *Remote Signed* = "lo remoto, firmado". *All Signed* = "todo firmado". *Bypass* = desvío, rodear.
+- *Scope* = ámbito, alcance. *Process* = este proceso (esta ventana). *CurrentUser* = usuario actual. *LocalMachine* = todo el equipo.
+- `Unblock-File` = "desbloquear fichero": quita la marca de "descargado de Internet".
+- 🧠 Truco: **"Servidor = Remoto, Cliente = Restringido"**: Windows Server viene con RemoteSigned y Windows 10/11 con Restricted.
+- 🧠 Truco: **"la GPO manda siempre"**: lo que venga por directiva de grupo gana a todo lo que pongas a mano.
+:::
+
 Controla si se pueden ejecutar scripts `.ps1` y archivos de configuración. **No es una barrera de seguridad**, es una medida para evitar ejecuciones accidentales.
 
 | Política | Comportamiento |
@@ -350,6 +529,21 @@ Unblock-File .\script.ps1                 # quita la marca "descargado de Intern
 > ⚠️ Trampa: cambiar `LocalMachine` requiere **ejecutar como administrador**; `CurrentUser` y `Process`, no.
 
 ### PS-1.5 · Navegación y ficheros
+
+:::facil
+**🧭 En pocas palabras.** Para moverte por carpetas y ficheros se usan unos pocos cmdlets con el sustantivo **Item** (elemento = fichero o carpeta), **Location** (ubicación) y **Content** (contenido del fichero).
+
+**Imagínatelo así:** *Set-Content* es **reescribir la hoja** entera; *Add-Content* es **añadir una línea al final** del cuaderno.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- `Set-Location` = "pon la ubicación" = `cd`. `Get-Location` = "dame la ubicación" = `pwd`.
+- `New-Item` = crear elemento; `Copy-Item` = copiar; `Move-Item` = mover; `Rename-Item` = renombrar; `Remove-Item` = borrar.
+- `Get-Content` = "dame el contenido" (= `cat`/`type`).
+- Parámetros: *Recurse* = recursivo, entrar en **todas** las subcarpetas (como muñecas rusas); *Force* = forzar (también lo oculto); *Filter* = filtro; *Tail* = cola, **lo último**; *Wait* = esperar, seguir mirando; *Raw* = en bruto, todo junto; *Directory*/*File* = solo carpetas/solo ficheros.
+- *WhatIf* = "¿y si…?" → **simula** sin hacer nada. *Confirm* = pide confirmación.
+- 🧠 Truco: antes de borrar en un servidor, **siempre** pregunta "¿y si…?" (`-WhatIf`).
+:::
 
 ```powershell
 Set-Location C:\Datos                       # cd
@@ -385,6 +579,30 @@ Get-Item C:\a.txt | Select-Object Length, LastWriteTime
 ## Nivel 2 — Objetos y pipeline
 
 ### PS-2.1 · Variables, tipos y operadores
+
+:::facil
+**🧭 En pocas palabras.** Una **variable** es una **caja con etiqueta** donde guardas un dato. En PowerShell la etiqueta empieza siempre por `$`: `$nombre = "Ana"`.
+
+Las **comillas dobles** "abren la caja" y sustituyen la variable por su valor. Las **comillas simples** son literales: escriben exactamente lo que pone.
+
+Los operadores de comparación son **palabras** (`-eq`, `-gt`) porque los símbolos `>` y `<` ya están ocupados: sirven para **redirigir** la salida a un fichero.
+:::
+:::ingles
+**🔤 Para recordarlo: los operadores salen del inglés**
+
+| Operador | En inglés | Significa |
+|---|---|---|
+| `-eq` / `-ne` | **eq**ual / **n**ot **e**qual | igual / distinto |
+| `-gt` / `-ge` | **g**reater **t**han / **g**reater or **e**qual | mayor / mayor o igual |
+| `-lt` / `-le` | **l**ess **t**han / **l**ess or **e**qual | menor / menor o igual |
+| `-like` | like = "como, parecido a" | se parece (comodines `*` `?`) |
+| `-match` | match = coincidir | coincide con un patrón (regex) |
+| `-contains` / `-in` | contiene / está en | la colección contiene el valor / el valor está en la colección |
+
+- 🧠 Truco: **`>` es un cocodrilo que se come la salida y la mete en un fichero**, no compara nada.
+- 🧠 Truco: **dobles = "dinámicas" (interpretan); simples = "sosas" (literales)**.
+- 🧠 Truco: con `-contains` **la caja va primero** ("la caja contiene…"); con `-in` **el valor va primero** ("el valor está en…").
+:::
 
 ```powershell
 $nombre = "Teresa"           # variable (siempre con $)
@@ -446,6 +664,21 @@ Unidades: `1KB`, `1MB`, `1GB`, `1TB` son numéricos (`1GB` = 1073741824).
 
 ### PS-2.2 · El pipeline y Get-Member
 
+:::facil
+**🧭 En pocas palabras.** El **pipeline** (`|`) une comandos: lo que sale de uno entra en el siguiente. En PowerShell lo que viaja es **el objeto entero**, con todos sus datos.
+
+**Imagínatelo así:** una **cadena de montaje**. Cada estación recibe la pieza completa, hace su trabajo y la pasa a la siguiente.
+
+Un objeto tiene **propiedades** (datos: color, matrícula) y **métodos** (acciones: arrancar, frenar). `Get-Member` te enseña la ficha completa de cualquier objeto.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Pipeline* = tubería. *Pipe* `|` = el tubo.
+- *Member* = miembro: las piezas de un objeto. *Property* = propiedad (un dato). *Method* = método (una acción, se escribe con paréntesis: `.AddDays(-30)`).
+- *ByValue* = "por valor" (se pasa el objeto entero). *ByPropertyName* = "por nombre de propiedad" (se casa la columna con el parámetro que se llama igual).
+- 🧠 Truco: **"Format-* es el maquillaje: lo último antes de salir de casa"**. Si después de `Format-Table` pones otro comando, le llega maquillaje, no datos.
+:::
+
 El símbolo `|` pasa **objetos completos** (no texto) de un comando al siguiente.
 
 ```powershell
@@ -470,6 +703,24 @@ Get-Service -Name Spooler | Stop-Service    # el objeto servicio va entero
 > ⚠️ Trampa: la salida de `Format-Table`/`Format-List` son objetos de formato. **Format-* siempre al final del pipeline**: `Get-Process | Format-Table | Export-Csv` genera basura.
 
 ### PS-2.3 · Filtrar, seleccionar, ordenar y medir
+
+:::facil
+**🧭 En pocas palabras.** Una vez tienes objetos, los tratas como una tabla de Excel: **filtras filas**, **eliges columnas**, **ordenas**, **agrupas** y **cuentas**.
+
+**Imagínatelo así:** tienes la lista de todos los empleados.
+- *Where-Object*: "quédate solo con los de Informática" (filas).
+- *Select-Object*: "de esos, enséñame solo nombre y teléfono" (columnas).
+- *Sort-Object*: "ordénalos por apellido".
+- *Measure-Object*: "¿cuántos son?".
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Where* = donde (filtra **filas**). *Select* = seleccionar (elige **columnas** o cuántos). *Sort* = ordenar. *Group* = agrupar. *Measure* = medir (contar, sumar, máximo…).
+- *Descending* = descendente (de mayor a menor). *First* = primeros. *Last* = últimos. *Skip* = saltar. *Unique* = únicos (sin repetidos).
+- *ExpandProperty* = "despliega la propiedad": saca **el valor** de dentro de la caja.
+- 🧠 Truco: **"Where = filas, Select = columnas"**, igual que en SQL.
+- 🧠 Truco del "filter left": **filtra en la tienda, no en casa**. No compres todo el supermercado (`Get-ADUser -Filter *`) para tirar después lo que no quieres.
+:::
 
 ```powershell
 # Filtrar (WHERE)
@@ -510,6 +761,21 @@ Compare-Object (Get-Content a.txt) (Get-Content b.txt)    # <= solo en referenci
 
 ### PS-2.4 · Formato, salida, exportación e importación
 
+:::facil
+**🧭 En pocas palabras.** Hay dos tipos de comandos para "sacar" información:
+- **Format-*** sirve solo para **mirar** en pantalla.
+- **Export-*** / **Out-File** / **ConvertTo-*** sirven para **guardar o enviar** los datos a otro sitio (CSV, JSON, HTML, fichero de texto).
+
+**Imagínatelo así:** *Format-Table* es el **escaparate** de la tienda; *Export-Csv* es **empaquetar** el producto para mandarlo.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Format* = dar formato. *Table* = tabla, *List* = lista, *Wide* = ancho.
+- *Export* = exportar (sacar a fichero). *Import* = importar (leer del fichero). *ConvertTo/ConvertFrom* = convertir a/desde. *Out* = salida hacia (`Out-File` a fichero, `Out-GridView` a una ventana, `Out-Null` a la nada).
+- *NoTypeInformation* = "sin información de tipo" (la línea `#TYPE` de la 5.1). *Delimiter* = delimitador (separador). *Append* = añadir al final. *Depth* = profundidad.
+- 🧠 Truco de los flujos: **1 = lo bueno (salida), 2 = los errores**. Por eso `2>` guarda errores y `2>&1` "manda los errores con lo bueno".
+:::
+
 ```powershell
 Get-Service | Format-Table Name, Status -AutoSize      # ft
 Get-Service Spooler | Format-List *                    # fl: todas las propiedades
@@ -538,6 +804,22 @@ Get-Service | Out-Null                                 # descarta la salida
 
 ### PS-3.1 · Servicios y procesos
 
+:::facil
+**🧭 En pocas palabras.**
+- Un **proceso** es cualquier programa que está en marcha. Tiene un número único, el **PID**, como un DNI temporal.
+- Un **servicio** es un programa especial que trabaja **en segundo plano**, aunque nadie haya iniciado sesión: el spooler de impresión, el DNS, el servidor web…
+
+**Imagínatelo así:** los procesos son las personas que hay en el edificio ahora mismo; los servicios son el **personal de mantenimiento**, que trabaja aunque la oficina esté vacía y arranca solo cada mañana si así está configurado.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *StartupType* = tipo de arranque: *Automatic* (solo al encender), *Manual* (cuando alguien lo pide), *Disabled* (deshabilitado, no arranca).
+- *DependentServices* = "los que **dependen de él**". *RequiredServices* = "los que **él necesita**".
+- `Start-Process … -Verb RunAs` = "ejecutar **como**" administrador.
+- cmd: `sc` = **S**ervice **C**ontrol. `tasklist` = lista de tareas. `taskkill` = matar tarea, con `/F` (**F**orce, forzar), `/IM` (**IM**age, nombre del ejecutable) y `/PID`.
+- 🧠 Truco del `sc`: **"start= y después espacio"**: `sc config Spooler start= disabled`. El igual va pegado a *start* y el valor separado.
+:::
+
 ```powershell
 Get-Service                                    # todos
 Get-Service -Name Spooler, W32Time
@@ -565,6 +847,22 @@ Equivalentes clásicos: `sc query`, `sc config Spooler start= disabled` (¡espac
 > ⚠️ Trampa: `Stop-Service` no detiene un servicio con dependientes activos salvo con `-Force`.
 
 ### PS-3.2 · Registro, proveedores y unidades PS (PSDrives)
+
+:::facil
+**🧭 En pocas palabras.** El **registro** es el gran **archivador de configuración** de Windows. Tiene **claves** (como carpetas) y dentro **valores** (como fichas con un nombre y un dato).
+
+PowerShell hace un truco muy cómodo: presenta el registro, las variables de entorno o los certificados **como si fueran discos** (`HKLM:`, `Env:`, `Cert:`). Así usas los mismos comandos que con carpetas (`cd`, `dir`).
+
+**Imagínatelo así:** clave = **cajón**; valor = **ficha dentro del cajón**.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **HKLM** = *HKEY_LOCAL_MACHINE*, "la máquina local": configuración de **todo el equipo**. **HKCU** = *HKEY_CURRENT_USER*, "el usuario actual": configuración **solo del que ha iniciado sesión**.
+- *PSDrive* = unidad de PowerShell. *Provider* = proveedor (el "traductor" que hace que el registro parezca un disco).
+- *ItemProperty* = "propiedad del elemento" = **el valor** dentro de la clave.
+- *DWord* = *double word*, un número de 32 bits (el tipo más común: 0 o 1 para activar o desactivar).
+- 🧠 Truco: **"Item = cajón, ItemProperty = ficha del cajón"**. Para crear un cajón, `New-Item`; para crear una ficha, `New-ItemProperty`.
+:::
 
 PowerShell accede a distintos almacenes como si fueran discos mediante **proveedores**:
 
@@ -600,6 +898,22 @@ Get-ChildItem Env:                                        # variables de entorno
 
 ### PS-3.3 · Usuarios y grupos locales
 
+:::facil
+**🧭 En pocas palabras.** Las **cuentas locales** solo existen **en ese equipo**. Las de **dominio** valen en todos los equipos de la organización.
+
+**Imagínatelo así:** una cuenta local es la **llave de un piso concreto**; una de dominio es la **llave maestra del edificio**.
+
+Cada cuenta tiene un **SID**, su DNI interno. Puedes cambiarle el nombre a la cuenta, pero el SID no cambia nunca. Por eso los permisos siguen funcionando aunque renombres al usuario.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **SID** = *Security IDentifier*, identificador de seguridad. **RID** = *Relative ID*, la última parte del SID.
+- *SecureString* = "cadena segura": texto que se guarda cifrado en memoria (por eso `-Password` no acepta un texto normal).
+- `lusrmgr.msc` = **L**ocal **US**e**R** **M**ana**G**e**R**, gestor de usuarios locales.
+- 🧠 Truco de números: **544 = Administradores, 545 = Usuarios** (uno más); **500 = el Administrador, 501 = el Invitado** (el siguiente).
+- 🧠 Truco: en un Windows en español el grupo se llama **Administradores**. Si dudas del idioma, usa el SID **S-1-5-32-544**, que es igual en todos los idiomas.
+:::
+
 Módulo `Microsoft.PowerShell.LocalAccounts` (Windows 10/Server 2016+).
 
 ```powershell
@@ -625,6 +939,23 @@ Clásico (cmd): `net user soporte P@ss123 /add`, `net user soporte /active:no`, 
 > 💡 Clave: SIDs conocidos: `S-1-5-32-544` Administradores, `S-1-5-32-545` Usuarios, `S-1-5-18` LocalSystem, RID `500` = Administrador integrado, RID `501` = Invitado, RID `512` = Domain Admins, `519` = Enterprise Admins, `518` = Schema Admins.
 
 ### PS-3.4 · Discos, volúmenes y sistema
+
+:::facil
+**🧭 En pocas palabras.** Para usar un disco nuevo hay **tres pasos, siempre en este orden**:
+1. **Inicializar**: decidir el "formato del mapa" del disco (MBR o GPT).
+2. **Particionar**: dividirlo en trozos.
+3. **Formatear**: dar a cada trozo un sistema de archivos (NTFS, ReFS) y una letra.
+
+**Imagínatelo así:** el disco es un **solar**. Inicializar = registrar el solar; particionar = **parcelarlo**; formatear = **construir** en cada parcela; la letra (E:) = la **dirección postal**.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- `Initialize-Disk` = inicializar disco. `New-Partition` = nueva partición. `Format-Volume` = formatear volumen.
+- *UseMaximumSize* = usar el tamaño máximo. *DriveLetter* = letra de unidad. *PartitionStyle* = estilo de partición. *NewFileSystemLabel* = etiqueta (nombre) del volumen.
+- `Rename-Computer` = renombrar equipo. `Add-Computer` = **añadir** el equipo (al dominio). `Get-HotFix` = "dame los parches" (*hotfix* = arreglo rápido).
+- `diskpart` = **disk part**ition; `chkdsk` = **ch**ec**k** **d**i**sk**.
+- 🧠 Truco del orden: **I-P-F → "Inicio, Parto, Fiesta"**: Inicializar, Particionar, Formatear.
+:::
 
 ```powershell
 Get-Disk                                         # discos físicos (número, estado, estilo de partición)
@@ -658,6 +989,22 @@ Clásico: `diskpart` (`list disk`, `select disk 1`, `clean`, `convert gpt`, `cre
 > ⚠️ Trampa: la zona horaria de España peninsular en Windows se llama **"Romance Standard Time"** (UTC+01:00 Bruselas, Copenhague, Madrid, París).
 
 ### PS-3.5 · Registros de eventos
+
+:::facil
+**🧭 En pocas palabras.** Los **registros de eventos** son la **caja negra** de Windows: todo lo importante queda anotado con un número (**Event ID**), una fecha y un nivel de gravedad. Cuando algo falla, lo primero es mirar aquí.
+- **Seguridad** (*Security*): inicios de sesión, bloqueos, cambios de cuentas.
+- **Sistema** (*System*): arranques, apagados, servicios que fallan.
+- **Aplicación** (*Application*): los programas.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- `Get-WinEvent` = "dame eventos de Windows". *LogName* = nombre del registro. *MaxEvents* = máximo de eventos. *FilterHashtable* = filtro en forma de "ficha" `@{ }` con lo que buscas.
+- *Level*: **1 Crítico, 2 Error, 3 Advertencia, 4 Información** → de peor a mejor.
+- 🧠 **4624 / 4625**: inicio de sesión **bien / mal** → **"el 5 falla"**.
+- 🧠 **4740** = cuenta **bloqueada**: el evento que más vas a buscar como técnica, y **siempre en el PDC emulador**.
+- 🧠 **1102** = alguien **borró el registro de auditoría** → "alguien ha borrado las huellas".
+- 🧠 Tipos de inicio de sesión: **2** delante de la pantalla, **3** por la red (carpeta compartida), **10** por Escritorio remoto → **"el 10 es el que viene de más lejos"**.
+:::
 
 ```powershell
 Get-WinEvent -ListLog *                                  # todos los registros
@@ -701,6 +1048,25 @@ wevtutil cl Application                                   # vaciar registro
 
 ### PS-4.1 · Estructuras de control
 
+:::facil
+**🧭 En pocas palabras.** Las estructuras de control le dicen al script **qué hacer según lo que pase**:
+- **if**: decide.
+- **switch**: elige entre muchas opciones.
+- **foreach / for / while / do**: repiten.
+
+**Imagínatelo así:**
+- *if* = "**si** llueve, coge paraguas; **si no**, gafas de sol".
+- *foreach* = "**para cada** servidor de la lista, hazle un ping".
+- *do-while* = "come **mientras** tengas hambre"; *do-until* = "come **hasta que** estés lleno". En los dos casos comes al menos un bocado.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *if / elseif / else* = si / si no, si / si no. *switch* = interruptor, conmutador (elige una rama).
+- *foreach* = para cada. *for* = para (con contador). *while* = mientras. *do … until* = haz … hasta que.
+- *break* = romper → **sale** del bucle. *continue* = continuar → **salta** a la siguiente vuelta.
+- 🧠 Truco: **break = me voy del todo; continue = paso de este y sigo con el siguiente**.
+:::
+
 ```powershell
 if ($espacio -lt 10GB) { "Poco espacio" } elseif ($espacio -lt 50GB) { "Aviso" } else { "OK" }
 
@@ -726,6 +1092,21 @@ break      # sale del bucle ; continue  # salta a la siguiente iteración
 > ⚠️ Trampa: `do { } while (cond)` repite **mientras** sea verdadera; `do { } until (cond)` repite **hasta** que sea verdadera. Ambos se ejecutan al menos una vez.
 
 ### PS-4.2 · Funciones, parámetros y scripts
+
+:::facil
+**🧭 En pocas palabras.** Una **función** es una **receta con nombre**: escribes los pasos una vez y la usas siempre que quieras con distintos ingredientes (**parámetros**). Un **script** (`.ps1`) es un fichero con comandos que también puede recibir parámetros.
+
+**Imagínatelo así:** "Tortilla" es la receta (función); "huevos = 4, patatas = 3" son los parámetros. No vuelves a pensar la receta cada vez: solo cambias las cantidades.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *function* = función. *param* = parámetros. *Mandatory* = obligatorio.
+- *ValidateSet* = validar contra un **conjunto** (lista cerrada). *ValidateRange* = validar un **rango** (de 1 a 100).
+- *CmdletBinding* = "enlace de cmdlet": convierte tu función en un cmdlet de verdad (con `-Verbose`, `-WhatIf`…).
+- *ValueFromPipeline* = el valor viene del pipeline.
+- *begin / process / end* = principio (una vez) / proceso (**una vez por cada objeto**) / fin (una vez).
+- 🧠 Truco: tu función se llama **igual que un cmdlet**: `MiFuncion -A 1 -B 2`. Nunca con paréntesis y comas.
+:::
 
 ```powershell
 function Get-EspacioLibre {
@@ -759,6 +1140,23 @@ Get-EspacioLibre -ComputerName SRV01 -Verbose
 
 ### PS-4.3 · Gestión de errores
 
+:::facil
+**🧭 En pocas palabras.** Hay dos tipos de error:
+- **No terminal**: un **tropiezo**. El comando avisa y sigue con lo demás (por ejemplo, de 10 carpetas falla una).
+- **Terminal**: una **caída**. Todo se para.
+
+`try/catch` solo **atrapa caídas**. Si quieres atrapar un tropiezo, tienes que convertirlo en caída con `-ErrorAction Stop`.
+
+**Imagínatelo así:** *try* = "intenta cruzar el río"; *catch* = "si te caes, aquí está la red"; *finally* = "pase lo que pase, sécate al salir".
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *try* = intentar. *catch* = atrapar. *finally* = finalmente (siempre se ejecuta). *throw* = lanzar (un error).
+- *ErrorAction* = acción ante error: *Stop* (parar), *Continue* (seguir avisando), *SilentlyContinue* (seguir en silencio), *Ignore* (ignorar del todo).
+- `$LASTEXITCODE` = "último código de salida" de un programa `.exe` (0 = todo bien).
+- 🧠 Truco: **"catch solo coge lo que se cae; para que un tropiezo se caiga, `-ErrorAction Stop`"**.
+:::
+
 - **Errores no terminales** (non-terminating): el cmdlet informa y **sigue** (p. ej. `Get-ChildItem` de 10 rutas, falla 1). Por defecto `try/catch` **no los captura**.
 - **Errores terminales**: detienen la ejecución (`throw`, errores de sintaxis, `-ErrorAction Stop`).
 
@@ -788,6 +1186,19 @@ finally {
 
 ### PS-4.4 · Módulos y galería
 
+:::facil
+**🧭 En pocas palabras.** Un **módulo** es una **caja de herramientas temática**: el de Active Directory trae los cmdlets de usuarios y grupos; el de DNS, los de DNS… Algunos vienen con Windows; otros se instalan con **RSAT** o se descargan de la **PowerShell Gallery**, que es la "tienda de aplicaciones" de PowerShell.
+
+**Imagínatelo así:** *Find* = buscar en la tienda; *Install* = descargarla; *Import* = abrir la caja para usarla ahora (suele hacerse sola).
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Module* = módulo. *Gallery* = galería. *ListAvailable* = "lista de los disponibles" (instalados aunque no estén cargados).
+- `Find-Module` = buscar en la galería. `Install-Module` = instalar. `Import-Module` = cargar.
+- **RSAT** = *Remote Server Administration Tools*, herramientas de administración remota de servidores.
+- 🧠 Truco de extensiones: **.ps1** = script; **.psm1** = **M**ódulo; **.psd1** = **D**atos del módulo (el manifiesto).
+:::
+
 ```powershell
 Get-Module                          # cargados
 Get-Module -ListAvailable           # instalados
@@ -810,6 +1221,22 @@ Get-InstalledModule ; Get-InstalledPSResource
 > ⚠️ Trampa: `ActiveDirectory` y `GroupPolicy` no vienen en un servidor miembro ni en un cliente: hay que instalar **RSAT** (`Install-WindowsFeature RSAT-AD-PowerShell` en servidor; en Windows 11, "Características opcionales" → RSAT).
 
 ### PS-4.5 · Trabajos, tareas programadas y paralelismo
+
+:::facil
+**🧭 En pocas palabras.**
+- Un **trabajo** (*job*) es una tarea que lanzas **en segundo plano** para seguir usando la consola mientras termina.
+- Una **tarea programada** es algo que Windows ejecuta **solo, a una hora o ante un suceso**: copia de seguridad cada noche, limpieza de logs…
+
+**Imagínatelo así:** un *job* es **poner la lavadora** y seguir con tus cosas. `Receive-Job` es **sacar la ropa**: una vez fuera ya no está en la lavadora, salvo que la saques "para mirarla" con `-Keep`.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Job* = trabajo. *Receive* = recibir. *Keep* = conservar. *Wait* = esperar.
+- *Scheduled Task* = tarea programada. *Action* = acción (**qué** se ejecuta). *Trigger* = disparador (**cuándo**). *Register* = registrar (darla de alta).
+- *Parallel* = en paralelo. *ThrottleLimit* = límite de cuántos a la vez (*throttle* = el regulador del acelerador).
+- cmd `schtasks`: `/tn` **t**ask **n**ame, `/tr` **t**ask **r**un (qué ejecuta), `/sc` **sc**hedule (frecuencia), `/st` **s**tart **t**ime, `/ru` **r**un as **u**ser.
+- 🧠 Truco: **Acción = QUÉ, Trigger = CUÁNDO**.
+:::
 
 ```powershell
 Start-Job -ScriptBlock { Get-ChildItem C:\ -Recurse } -Name inventario
@@ -835,6 +1262,23 @@ Clásico: `schtasks /create /tn "Backup" /tr "C:\backup.bat" /sc daily /st 02:00
 ## Nivel 5 — Administración remota y a escala
 
 ### PS-5.1 · PowerShell Remoting (WinRM / WS-Management)
+
+:::facil
+**🧭 En pocas palabras.** **PowerShell Remoting** te deja dar órdenes a otros equipos **sin ir hasta ellos** ni abrir Escritorio remoto. Funciona sobre el servicio **WinRM** (puertos 5985/5986).
+- `Enter-PSSession`: **entras** en un equipo y trabajas como si estuvieras sentada delante (el prompt cambia a `[SRV01]: PS>`).
+- `Invoke-Command`: **mando a distancia**. Envías la misma orden a 1, 10 o 200 equipos a la vez y te devuelven los resultados.
+
+**Imagínatelo así:** Enter-PSSession = **teletransportarte** a otra sala. Invoke-Command = **mandar el mismo mensaje por megafonía** a todas las salas.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **WinRM** = *Windows Remote Management*, administración remota de Windows. **WS-Man** = *Web Services for Management*.
+- *Enter / Exit* = entrar / salir. *Invoke* = ejecutar. *ScriptBlock* = bloque de código `{ }`. *Session* = sesión.
+- *TrustedHosts* = equipos de confianza. *Second hop* = segundo salto.
+- `$using:` = "**usando** la variable de aquí" dentro del bloque remoto.
+- 🧠 Truco de puertos: **5985 = HTTP, 5986 = HTTPS: el seguro es uno más**.
+- 🧠 Truco: **Enter = 1 a 1; Invoke = 1 a muchos**.
+:::
 
 - Usa el protocolo **WS-Management**, servicio **WinRM**. Puertos **5985/TCP (HTTP)** y **5986/TCP (HTTPS)**. Aunque sea HTTP, en dominio el tráfico va **cifrado por Kerberos**.
 - **Habilitado por defecto en Windows Server 2012 y posteriores** (en red de dominio/privada). En clientes: `Enable-PSRemoting -Force` (crea listener, regla de firewall y arranca WinRM). `winrm quickconfig` es la versión clásica.
@@ -869,6 +1313,24 @@ Copy-Item -Path C:\a.txt -Destination C:\ -ToSession $s                     # co
 
 ### PS-5.2 · CIM/WMI
 
+:::facil
+**🧭 En pocas palabras.** **WMI/CIM** es el **cuadro de mandos interno** de Windows: miles de "indicadores" organizados en **clases** (BIOS, sistema operativo, discos, servicios…). Lo usas para preguntar cosas del hardware y del sistema, también de equipos remotos: número de serie, modelo, último arranque, espacio libre…
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **WMI** = *Windows Management Instrumentation*, instrumentación de administración de Windows. **CIM** = *Common Information Model*, el estándar en el que se basa.
+- `Get-CimInstance` = "dame la instancia CIM" (los datos de una clase).
+- 🧠 Truco: las clases son **Win32_ + lo que buscas en inglés**:
+
+| Quiero saber… | En inglés | Clase |
+|---|---|---|
+| Número de serie | BIOS | `Win32_BIOS` |
+| Versión, último arranque | Operating System | `Win32_OperatingSystem` |
+| Modelo, fabricante, RAM | Computer System | `Win32_ComputerSystem` |
+| Espacio en disco | Logical Disk | `Win32_LogicalDisk` |
+| Cuenta de un servicio | Service | `Win32_Service` |
+:::
+
 **WMI** (Windows Management Instrumentation) es la implementación de Microsoft del estándar **CIM** (DMTF). Clases organizadas en espacios de nombres (`root\cimv2` por defecto).
 
 ```powershell
@@ -892,6 +1354,27 @@ Get-CimClass -ClassName *disk*
 > ⚠️ Trampa: `Win32_Product` consulta MSI y fuerza una validación/reparación de cada producto: no se usa para inventario. Mejor leer `HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall`.
 
 ### PS-5.3 · Seguridad en PowerShell
+
+:::facil
+**🧭 En pocas palabras.** PowerShell es tan potente que los atacantes también lo usan. Por eso hay que:
+- **Proteger las credenciales**: nunca contraseñas escritas en un script.
+- **Registrar lo que se ejecuta**: logging y transcripción.
+- **Dar solo el poder justo**: JEA.
+
+**Imagínatelo así:**
+- *Script Block Logging* (evento 4104) = la **cámara de seguridad**: graba lo que realmente se ejecutó.
+- *Transcript* = la **grabadora** de la sesión.
+- *JEA* = darle a alguien una **llave que solo abre un armario**, no la llave maestra.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- `Get-Credential` = "dame una credencial" (usuario + contraseña segura).
+- *Transcript* = transcripción. *Logging* = registro. *Script Block* = bloque de script.
+- **JEA** = *Just Enough Administration*, "administración justa y suficiente".
+- **AMSI** = *Antimalware Scan Interface*, interfaz para que el antivirus revise el script antes de ejecutarlo.
+- *Constrained Language* = lenguaje **restringido** (limitado).
+- 🧠 Truco: **"41-04: la cámara que lo graba todo"** (Script Block Logging).
+:::
 
 - **Credenciales**: `$cred = Get-Credential` (objeto `PSCredential` = usuario + SecureString). Nunca contraseñas en claro en scripts.
 - `ConvertTo-SecureString "P@ss" -AsPlainText -Force` (solo laboratorio). `ConvertFrom-SecureString` cifra con **DPAPI** (solo descifrable por el mismo usuario en el mismo equipo).
@@ -919,6 +1402,24 @@ Get-CimClass -ClassName *disk*
 ## Nivel 6 — Nivel profesional
 
 ### PS-6.1 · Automatización de altas masivas y scripts reales
+
+:::facil
+**🧭 En pocas palabras.** Un script profesional casi siempre sigue **el mismo esqueleto de 5 pasos**:
+1. **Leer** los datos (`Import-Csv`, `Get-Content`, `Get-ADUser`).
+2. **Recorrer** (`ForEach-Object`).
+3. **Comprobar** (`if`: ¿ya existe?, ¿responde?).
+4. **Actuar** (`New-ADUser`, `Disable-ADAccount`…).
+5. **Dejar constancia** (`Export-Csv`, `Write-Warning`).
+
+**Imagínatelo así:** como dar de alta a 50 personas en recepción. Coges la lista, vas uno por uno, miras si ya tenía tarjeta, si no se la haces, y lo anotas en el registro.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Splatting* = "salpicar": lanzas todos los parámetros de golpe desde un hashtable con `@params`.
+- *Search-ADAccount* = buscar cuentas de AD. *AccountInactive* = cuenta inactiva. *TimeSpan* = intervalo de tiempo (días.horas:minutos:segundos).
+- *Delimiter* = separador del CSV.
+- 🧠 Truco de oro: **la primera vez, siempre con `-WhatIf`**. Si la simulación sale bien, quitas el `-WhatIf`.
+:::
 
 **Alta masiva de usuarios desde CSV** (columnas: `Nombre;Apellido;Usuario;Departamento`):
 
@@ -976,6 +1477,23 @@ New-ADUser @params
 
 ### PS-6.2 · Configuración deseada (DSC), buenas prácticas y depuración
 
+:::facil
+**🧭 En pocas palabras.** En el nivel profesional se trata de **escribir scripts fiables y repetibles**:
+- **DSC** describe **cómo debe quedar** un servidor y lo mantiene así.
+- **Pester** prueba que tu código funciona.
+- **PSScriptAnalyzer** revisa que esté bien escrito.
+
+**Imagínatelo así:** DSC es darle al servidor **el plano de la casa terminada** en vez de la lista de pasos de obra. Si alguien cambia algo, DSC lo detecta y lo devuelve a como dice el plano.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **DSC** = *Desired State Configuration*, configuración del **estado deseado**.
+- *Pester*: *to pester* = **dar la lata**, insistir; prueba tu código una y otra vez.
+- *Script Analyzer* = analizador de scripts. *Strict Mode* = modo estricto. *Breakpoint* = punto de parada (depuración).
+- *ShouldProcess* = "¿debería procesarlo?", lo que hace que tu función admita `-WhatIf`.
+- 🧠 Operadores de PowerShell 7: `??` = "**¿es nulo? Entonces usa esto**"; `a ? b : c` = "**¿se cumple a? Si sí, b; si no, c**".
+:::
+
 - **DSC** (Desired State Configuration): configuración **declarativa** (se describe el estado, no los pasos). DSC v1.1 viene en **Windows PowerShell 5.1** (con el motor LCM; cmdlets como `Start-DscConfiguration` no existen en PowerShell 7); **DSC v3** es una herramienta independiente moderna. En Azure: **Azure Machine Configuration**.
   ```powershell
   Configuration ServidorWeb {
@@ -1003,6 +1521,27 @@ New-ADUser @params
 > ⚠️ Trampa: DSC **no es** un sistema de despliegue de software tipo SCCM; es gestión de configuración declarativa (como Ansible/Puppet).
 
 ### PS-6.3 · Chuleta de traducción cmd → PowerShell (supuesto práctico)
+
+:::facil
+**🧭 En pocas palabras.** En el supuesto práctico te pueden pedir el comando clásico (cmd) **o** su equivalente en PowerShell. La clave es saber **traducir**: piensa la acción en inglés y busca el **prefijo del módulo**.
+
+**Ejemplo:** "ver la configuración IP" → *Net* (red) + *IP Configuration* → `Get-NetIPConfiguration`.
+:::
+:::ingles
+**🔤 Para recordarlo: prefijos de los cmdlets de administración**
+
+| Prefijo | De dónde viene | Ejemplo |
+|---|---|---|
+| Net | Network, red | `Get-NetAdapter`, `Test-NetConnection` |
+| Dns / Dhcp | DNS / DHCP | `Resolve-DnsName`, `Get-DhcpServerv4Scope` |
+| AD | Active Directory | `Get-ADUser` |
+| GP | Group Policy | `New-GPO`, `Invoke-GPUpdate` |
+| Smb | Server Message Block (carpetas compartidas) | `New-SmbShare` |
+| VM | Virtual Machine | `New-VM`, `Checkpoint-VM` |
+| Mp | Malware Protection (Defender) | `Start-MpScan` |
+| Laps | Local Administrator Password Solution | `Get-LapsADPassword` |
+| Local | cuentas locales | `New-LocalUser` |
+:::
 
 | Tarea | cmd / clásico | PowerShell |
 |---|---|---|
@@ -1039,6 +1578,23 @@ New-ADUser @params
 ## Nivel 1 — Fundamentos
 
 ### WS-1.1 · Versiones, ediciones y licencias
+
+:::facil
+**🧭 En pocas palabras.** Un **servidor** es un ordenador que **da servicio a otros**: guarda los usuarios, reparte direcciones IP, aloja ficheros o webs. Windows Server es el Windows pensado para eso.
+- **Standard**: para servidores físicos o con pocas máquinas virtuales.
+- **Datacenter**: para centros de datos que virtualizan mucho.
+- **Server Core**: Windows Server **sin escritorio**, solo con consola. Es la instalación por defecto porque es más segura y necesita menos parches.
+
+**Imagínatelo así:** en un restaurante, los **servidores** son la cocina y los **clientes** son las mesas. Standard es una cocina con **2 fogones extra** (2 VM); Datacenter tiene **fogones ilimitados**.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Core* = núcleo: solo el motor, sin la "carrocería" gráfica. *Desktop Experience* = experiencia de escritorio (con ventanas).
+- **LTSC** = *Long-Term Servicing Channel*, canal de mantenimiento a largo plazo (10 años: 5 + 5).
+- **CAL** = *Client Access License*: la "entrada" que necesita cada usuario o dispositivo que se conecta.
+- *Hotpatch* = parche "en caliente": se aplica **sin apagar**, como cambiar una rueda en marcha.
+- 🧠 Truco: **Standard = 2, Datacenter = ∞**. Licencias: **mínimo 16 núcleos por servidor y 8 por procesador**.
+:::
 
 **Historia de versiones de servidor**: NT 4.0 → 2000 (aparece **Active Directory**) → 2003 → 2008 (Server Core, Hyper-V; **última versión con edición de 32 bits**) → 2008 R2 (primera **solo de 64 bits**) → 2012 / 2012 R2 → 2016 → 2019 → 2022 → **2025** (disponible desde noviembre de 2024).
 
@@ -1080,6 +1636,21 @@ New-ADUser @params
 > ⚠️ Trampa: no existe "nivel funcional 2019" ni "2022". Tras **2016** el siguiente es **2025**.
 
 ### WS-1.2 · Herramientas de administración
+
+:::facil
+**🧭 En pocas palabras.** Un servidor se administra con **consolas gráficas** (los `.msc`), con el **Administrador del servidor**, con **sconfig** (en Server Core), con la consola web **Windows Admin Center** y, sobre todo, con **PowerShell**. En examen preguntan mucho qué abre cada `.msc`.
+
+**Imagínatelo así:** la **MMC** es una **caja de herramientas vacía**; cada `.msc` es una herramienta ya metida en la caja (usuarios, DNS, discos…).
+:::
+:::ingles
+**🔤 Para recordarlo: los nombres de las consolas salen del inglés**
+- `mgmt` = *management*, gestión: `compmgmt` (computer), `diskmgmt` (disk), `devmgmt` (devices), `dnsmgmt`, `dhcpmgmt`, `fsmgmt` (file shares).
+- `dsa.msc` = **D**irectory **S**ervice **A**dministration → usuarios y equipos de AD. `dssite.msc` = directory service **sites** → sitios. `domain.msc` → dominios y confianzas.
+- `gpmc.msc` = **G**roup **P**olicy **M**anagement **C**onsole (GPO del dominio). `gpedit.msc` = group policy **edit** (solo la local).
+- `eventvwr` = event **viewer**. `lusrmgr` = local user manager. `wf.msc` = **W**indows **F**irewall. `perfmon` = **perf**ormance **mon**itor.
+- `ncpa.cpl` = **n**etwork **c**ontrol **p**anel **a**pplet. `appwiz.cpl` = **app**lication **wiz**ard. `mstsc` = **M**icro**s**oft **T**erminal **S**ervices **C**lient (Escritorio remoto).
+- `sconfig` = **s**erver **config**uration.
+:::
 
 | Herramienta | Uso |
 |---|---|
@@ -1129,6 +1700,22 @@ New-ADUser @params
 
 ### WS-1.3 · Roles y características
 
+:::facil
+**🧭 En pocas palabras.**
+- Un **rol** es el **oficio principal** del servidor: controlador de dominio, DNS, DHCP, servidor web…
+- Una **característica** es una **habilidad de apoyo**: copias de seguridad, clúster, BitLocker…
+- Un servidor puede tener varios roles, aunque en producción se separan.
+
+**Imagínatelo así:** rol = **profesión** (médica, profesora); característica = **carnet de conducir** o un idioma, cosas que ayudan pero no son tu oficio.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- `Install-WindowsFeature` = "instala una función de Windows" (sirve para roles y características).
+- *IncludeManagementTools* = incluir herramientas de administración. *IncludeAllSubFeature* = incluir todas las subfunciones. *Source* = origen de los ficheros. *Restart* = reiniciar si hace falta.
+- Nombres: `AD-Domain-Services` (**A**ctive **D**irectory **D**omain **S**ervices), `Web-Server` (IIS), `FS-` = **F**ile **S**ervices, `RSAT-` = herramientas remotas.
+- 🧠 Truco: sin `-IncludeManagementTools` **te dan el coche sin volante**: el rol funciona, pero no tienes consolas ni cmdlets para manejarlo.
+:::
+
 - **Rol**: función principal del servidor (AD DS, DNS, DHCP, IIS, Hyper-V, Servicios de archivos, ADCS, RDS, WSUS, NPS…).
 - **Característica** (feature): funcionalidad de apoyo (Clúster de conmutación por error, Copias de seguridad de Windows Server, BitLocker, .NET, RSAT, Telnet Client…).
 - **Servicio de rol**: componente dentro de un rol (p. ej. dentro de Servicios de archivos: Deduplicación, DFS, FSRM).
@@ -1176,6 +1763,26 @@ dism /online /get-features ; dism /online /enable-feature /featurename:TelnetCli
 
 ### WS-1.4 · Configuración inicial de un servidor (post-instalación)
 
+:::facil
+**🧭 En pocas palabras.** Antes de poner un servidor a trabajar hay que prepararlo **en orden**, porque algunos pasos dependen de otros:
+1. **Nombre**: luego cuesta cambiarlo.
+2. **IP fija**: los servidores no cambian de dirección.
+3. **DNS correcto**: para encontrar el dominio.
+4. **Hora correcta**: Kerberos la necesita.
+5. **Parches**.
+6. **Unirlo al dominio**.
+7. **Instalar los roles**.
+
+**Imagínatelo así:** es una **mudanza**: primero pones tu nombre en el buzón y tienes dirección fija; luego te apuntas en la agenda del barrio (DNS), te empadronas (dominio) y por último abres tu negocio (roles).
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *PrefixLength* = longitud del prefijo (el `/24`). *DefaultGateway* = puerta de enlace predeterminada (la "puerta del barrio" para salir a otras redes). *ServerAddresses* = direcciones de los servidores DNS.
+- `slmgr` = **S**oftware **L**icensing **M**ana**g**e**r**: `/ipk` **i**nstall **p**roduct **k**ey, `/ato` **a**c**t**ivate **o**nline, `/dlv` **d**isplay **l**icense **v**erbose (detallada), `/dli` (info básica), `/xpr` (e**xp**i**r**ation, caducidad).
+- **KMS** = *Key Management Service*, servidor de activación interno.
+- 🧠 Truco: **un DC nunca usa 8.8.8.8 como DNS**: Google no conoce tu dominio interno.
+:::
+
 Orden típico: **nombre → IP fija → DNS → zona horaria/hora → actualizaciones → unirse al dominio → roles**.
 
 ```powershell
@@ -1197,6 +1804,26 @@ slmgr /ipk XXXXX-XXXXX-XXXXX-XXXXX-XXXXX ; slmgr /ato ; slmgr /dlv   # clave, ac
 ## Nivel 2 — Archivos, almacenamiento y copias
 
 ### WS-2.1 · Permisos NTFS y de recurso compartido
+
+:::facil
+**🧭 En pocas palabras.** Una carpeta compartida tiene **dos capas de permisos**:
+- **Recurso compartido** (*share*): se aplica **solo al entrar por la red**.
+- **NTFS**: se aplica **siempre**, entres por la red o sentada delante del servidor.
+
+Desde la red, **gana la más restrictiva de las dos**.
+
+**Imagínatelo así:** para llegar a un despacho pasas **dos puertas**: la del edificio (compartido) y la del despacho (NTFS). Aunque tengas la llave maestra del despacho, si en la puerta del edificio solo te dejan *mirar*, solo podrás mirar. Si ya estás dentro del edificio (sesión local), solo te importa la puerta del despacho.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **NTFS** = *New Technology File System*. *Share* = recurso compartido. **ACL** = *Access Control List*, la lista de quién puede hacer qué.
+- Permisos NTFS en inglés: *Full control* (**F**), *Modify* (**M**), *Read & execute* (**RX**), *Read* (**R**), *Write* (**W**), *Delete* (**D**).
+- `icacls`: `/grant` = conceder, `/deny` = denegar, `/remove` = quitar, `/inheritance:` = herencia (**d** = desactivar copiando, **r** = desactivar quitando los heredados, **e** = activar), `/T` = **T**ree, todo el árbol de subcarpetas.
+- **(OI)** = *Object Inherit*, que lo hereden los **ficheros**. **(CI)** = *Container Inherit*, que lo hereden las **carpetas**.
+- 🧠 Truco: **Write escribe pero no borra; Modify sí borra**.
+- 🧠 Truco AGDLP: **"Ana Guarda Dulces Locos en el Plato"** → **A**ccounts (cuentas) → **G**lobal → **D**omain **L**ocal → **P**ermisos.
+- 🧠 Truco de prioridad: **"lo que te dicen a ti directamente pesa más que lo que heredas"**. Un permitir explícito gana a un denegar heredado.
+:::
 
 **Permisos NTFS estándar**: Control total, Modificar, Lectura y ejecución, Mostrar el contenido de la carpeta, Lectura, Escritura (+ permisos especiales).
 
@@ -1259,6 +1886,26 @@ cmd: `net share Datos=D:\Datos /grant:Todos,READ`, `net use Z: \\srv01\Datos /pe
 
 ### WS-2.2 · Discos, sistemas de archivos y Storage Spaces
 
+:::facil
+**🧭 En pocas palabras.**
+- **MBR** es el sistema de particiones antiguo: hasta 2 TB y 4 particiones.
+- **GPT** es el moderno: discos enormes, 128 particiones y arranque UEFI.
+- **NTFS** es el sistema de archivos de siempre.
+- **ReFS** es el "resistente", para datos y virtualización (no puede arrancar Windows).
+- **Storage Spaces** junta varios discos en una **piscina** y saca de ella discos virtuales protegidos.
+
+**Imagínatelo así:** Storage Spaces es como juntar varias huchas en **una sola cuenta** y pedir que guarde una **copia de seguridad** de cada moneda (espejo) o una **fórmula** para reconstruirla si se pierde una hucha (paridad).
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **MBR** = *Master Boot Record*, registro maestro de arranque. **GPT** = *GUID Partition Table*, tabla de particiones por identificadores únicos.
+- **ReFS** = *Resilient File System*, sistema de archivos **resiliente** (aguanta y se repara).
+- *Pool* = piscina, fondo común. *Mirror* = espejo (copia). *Parity* = paridad (fórmula de recuperación). *Thin* = fino (crece según se usa). *Fixed* = fijo (reserva todo desde el principio).
+- **VHDX** = *Virtual Hard Disk* versión X.
+- 🧠 RAID: **0 = cero seguridad**; **1 = uno es copia del otro**; **5 = paridad, aguanta 1 disco**; **6 = doble paridad, aguanta 2**; **10 = 1 + 0** (espejo + bandas).
+- 🧠 Truco: **"MBR = 2 TB y 4 particiones; GPT = sin límites prácticos"**.
+:::
+
 | | MBR | GPT |
 |---|---|---|
 | Particiones | 4 primarias (o 3 + extendida) | **128** en Windows |
@@ -1304,6 +1951,26 @@ New-VirtualDisk -StoragePoolFriendlyName Pool1 -FriendlyName VD1 -ResiliencySett
 
 ### WS-2.3 · Servicios de archivos avanzados: DFS, FSRM, desduplicación, VSS
 
+:::facil
+**🧭 En pocas palabras.**
+- **DFS** da **una dirección única** para carpetas repartidas en varios servidores y las **copia** entre sedes.
+- **FSRM** pone **límites** a las carpetas: cuotas y prohibición de ciertos tipos de fichero.
+- **VSS** hace **fotos** del disco para recuperar "versiones anteriores" de un fichero.
+
+**Imagínatelo así:**
+- *DFS Namespaces* = un **número de teléfono único** que te pasa con la oficina que toque.
+- *DFS Replication* = **fotocopiar** los documentos en todas las sedes.
+- *Cuota rígida* = un **muro** (no pasas); *cuota flexible* = un **cartel de aviso** (pasas, pero queda anotado).
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **DFS** = *Distributed File System*, sistema de archivos distribuido. *Namespace* = espacio de nombres. *Replication* = replicación.
+- **FSRM** = *File Server Resource Manager*, administrador de recursos del servidor de archivos. *Quota* = cuota. *Hard / Soft* = rígida / flexible. *File screening* = filtrado de archivos.
+- *Deduplication* = desduplicación (quitar lo repetido).
+- **VSS** = *Volume Shadow copy Service*: *shadow copy* = "copia sombra", la instantánea.
+- 🧠 Truco: **replicar no es hacer copia de seguridad**: si borras en una sede, el borrado viaja a todas.
+:::
+
 **DFS (Distributed File System)**
 - **DFS Namespaces (DFSN)**: ruta lógica única (`\\age.local\Publico`) que apunta a carpetas en distintos servidores. Tipos: **basado en dominio** (en AD, alta disponibilidad, ruta `\\dominio\raíz`) o **independiente** (`\\servidor\raíz`).
 - **DFS Replication (DFSR)**: replicación multimaestro de carpetas con **RDC** (Remote Differential Compression, solo cambios). Sustituye a **FRS**. Desde nivel funcional 2008, **SYSVOL** se replica con DFSR (FRS ya no es compatible desde 2019).
@@ -1324,6 +1991,27 @@ New-VirtualDisk -StoragePoolFriendlyName Pool1 -FriendlyName VD1 -ResiliencySett
 > ⚠️ Trampa: DFSR **no es una copia de seguridad**: si alguien borra un fichero, el borrado se replica.
 
 ### WS-2.4 · Copias de seguridad y recuperación
+
+:::facil
+**🧭 En pocas palabras.**
+- **Completa**: copia todo.
+- **Incremental**: copia lo cambiado desde la **última copia de cualquier tipo**.
+- **Diferencial**: copia lo cambiado desde la **última completa**.
+
+**Imagínatelo así:** escribes un **diario** y el domingo lo fotocopias entero (completa).
+- **Incremental**: cada día fotocopias **solo la página de ese día**. Para reconstruirlo necesitas el domingo **y todas** las páginas sueltas.
+- **Diferencial**: cada día fotocopias **todo lo escrito desde el domingo**. Para reconstruirlo necesitas el domingo **y solo la última** fotocopia.
+
+**RPO** = cuántos datos puedo **perder**; **RTO** = cuánto **tiempo** puedo estar caído.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Full* = completa. *Incremental* = que se va sumando. *Differential* = la diferencia respecto a la completa.
+- **RPO** = *Recovery **Point** Objective* → **un punto en el tiempo**: lo que pierdes. **RTO** = *Recovery **Time** Objective* → **el tiempo** que tardas en volver.
+- `wbadmin` = **W**indows **B**ackup **admin**. *System State* = estado del sistema. *allCritical* = todo lo crítico para arrancar.
+- **DSRM** = *Directory Services Restore Mode*, modo de restauración de AD. *Authoritative* = autoritativa ("**manda la mía**").
+- 🧠 Truco: **"RPO = Pérdida, RTO = Tiempo"**.
+:::
 
 - **Windows Server Backup** (característica `Windows-Server-Backup`), consola `wbadmin.msc`, línea de comandos **`wbadmin`**.
 ```cmd
@@ -1352,6 +2040,27 @@ wbadmin start systemstaterecovery -version:...       :: en modo DSRM para un DC
 ## Nivel 3 — Active Directory
 
 ### WS-3.1 · Conceptos de Active Directory
+
+:::facil
+**🧭 En pocas palabras.** **Active Directory** es la **gran base de datos de la organización**: usuarios, equipos, grupos y permisos. Además hace de **portero**: comprueba quién eres al iniciar sesión.
+- **Bosque**: la organización entera.
+- **Árbol**: dominios con nombres "familiares" (`age.local`, `madrid.age.local`).
+- **Dominio**: una unidad administrativa.
+- **OU**: carpetas para ordenar y delegar.
+- **DC**: los servidores que guardan una copia de la base de datos.
+
+**Imagínatelo así:** Kerberos funciona como un **festival**. En la entrada te ponen una **pulsera** (TGT) y con ella pides **tickets** para cada atracción (servidores). La pulsera lleva la hora: si tu reloj va más de **5 minutos** desfasado, el portero no te la acepta.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Forest* = bosque, *Tree* = árbol, *Domain* = dominio, **OU** = *Organizational Unit*, unidad organizativa.
+- **DC** = *Domain Controller*. **RODC** = *Read-Only DC*, de solo lectura. **GC** = *Global Catalog*, el **índice** de todo el bosque.
+- **LDAP** = *Lightweight Directory Access Protocol*. **DN** = *Distinguished Name* (la ruta completa del objeto). **UPN** = *User Principal Name* (parece un email: `ana@age.local`).
+- **NTDS** = *NT Directory Services* (`NTDS.dit` = la base de datos). **SYSVOL** = *System Volume* (GPO y scripts).
+- **TGT** = *Ticket Granting Ticket*, "el ticket que da tickets". **KDC** = *Key Distribution Center*.
+- 🧠 Truco: Kerberos es el **perro de tres cabezas** de la mitología: cliente, servidor y KDC.
+- 🧠 Truco: **el límite de seguridad es el bosque**: dentro del bosque todos se fían de todos.
+:::
 
 **Active Directory Domain Services (AD DS)**: servicio de directorio basado en **LDAP**, que usa **Kerberos** para autenticación y **DNS** para localizar servicios.
 
@@ -1392,6 +2101,28 @@ w32tm /config /manualpeerlist:"hora.roa.es" /syncfromflags:manual /reliable:yes 
 > ⚠️ Trampa: `CN=Users` es un contenedor: no se le puede vincular una GPO. Para aplicar directivas a usuarios hay que moverlos a una **OU** (o redirigir con `redirusr`/`redircmp`).
 
 ### WS-3.2 · Roles FSMO y niveles funcionales
+
+:::facil
+**🧭 En pocas palabras.** En AD casi todo lo puede hacer cualquier DC, pero **5 tareas solo puede hacerlas uno a la vez**: son los **roles FSMO**.
+- **Dos son del bosque entero**: esquema y nomenclatura.
+- **Tres son de cada dominio**: RID, PDC e infraestructura.
+
+**Imagínatelo así:**
+- **Esquema**: el **molde** de los objetos (qué campos tiene un usuario).
+- **Nomenclatura**: el que **bautiza** dominios nuevos.
+- **RID**: el que reparte **talonarios de números** para crear objetos.
+- **PDC**: **el jefe de guardia**: contraseñas, bloqueos y hora.
+- **Infraestructura**: el que **actualiza las referencias** a objetos de otros dominios.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **FSMO** = *Flexible Single Master Operations*, operaciones de maestro único (flexible porque se pueden mover).
+- *Schema* = esquema. *Domain Naming* = nomenclatura de dominios. **RID** = *Relative ID*. **PDC** = *Primary Domain Controller* (emulador). *Infrastructure* = infraestructura.
+- *Transfer* = transferir (traspaso amistoso, el titular está vivo). *Seize* = apropiarse, **embargar** (el titular ha muerto).
+- 🧠 Truco de los 5 roles: **"En Navidad Regalo Pijamas Iguales"** → **E**squema, **N**omenclatura (los dos del bosque), **R**ID, **P**DC, **I**nfraestructura (los tres de cada dominio).
+- 🧠 Truco de cálculo: **2 + 3 × número de dominios**.
+- 🧠 Niveles funcionales: como una **comunidad de vecinos**, el edificio funciona **al nivel del vecino más antiguo**. Y tras 2016 viene **2025** (no hay 2019 ni 2022).
+:::
 
 **5 roles FSMO** (Flexible Single Master Operations):
 
@@ -1435,6 +2166,26 @@ Números para `-OperationMasterRole`: 0 PDCEmulator, 1 RIDMaster, 2 Infrastructu
 
 ### WS-3.3 · Instalación y promoción de controladores de dominio
 
+:::facil
+**🧭 En pocas palabras.** "Promover" un servidor es **convertirlo en controlador de dominio**. Hay tres casos:
+- **Crear un bosque nuevo**: el primer DC de todo.
+- **Añadir un DC** a un dominio que ya existe.
+- **Crear un dominio nuevo** dentro de un bosque existente.
+
+**Imagínatelo así:**
+- Crear bosque = **fundar la empresa**.
+- Añadir DC = **abrir otra oficina** con copia de todos los archivos.
+- RODC = una oficina en un local poco seguro que solo tiene **fotocopias de consulta** y no guarda las llaves (contraseñas).
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **ADDS** = *Active Directory Domain Services*. `Install-ADDSForest` = instalar **bosque**. `Install-ADDSDomainController` = instalar **controlador** (en un dominio existente). `Install-ADDSDomain` = instalar **dominio** (nuevo, hijo o árbol).
+- *ReadOnlyReplica* = réplica de solo lectura. *SafeModeAdministratorPassword* = contraseña del administrador en modo seguro (DSRM).
+- *InstallDns* = instalar también el DNS. *SiteName* = nombre del sitio.
+- **IFM** = *Install From Media*, instalar desde un soporte (sin replicar todo por la red).
+- 🧠 Truco: **el nombre del cmdlet dice lo que creas**: Forest, DomainController o Domain.
+:::
+
 ```powershell
 Install-WindowsFeature AD-Domain-Services -IncludeManagementTools
 
@@ -1468,6 +2219,26 @@ Uninstall-ADDSDomainController -DemoteOperationMasterRole -RemoveApplicationPart
 > ⚠️ Trampa: `Install-ADDSForest` crea un **bosque** nuevo; `Install-ADDSDomainController` añade un DC a un dominio **existente**; `Install-ADDSDomain` crea un dominio **nuevo** (hijo o árbol) en un bosque existente.
 
 ### WS-3.4 · Usuarios, grupos, equipos y OU
+
+:::facil
+**🧭 En pocas palabras.** Esto es el **día a día del técnico**: dar de alta usuarios, desbloquearlos, cambiarles la contraseña, meterlos en grupos y moverlos de OU.
+
+Los **grupos** sirven para no dar permisos usuario a usuario.
+- **Globales**: reúnen gente **de mi dominio** (por departamento o función).
+- **Dominio local**: reciben los **permisos** sobre un recurso.
+- **Universales**: mezclan gente **de todo el bosque**.
+
+**Imagínatelo así:** grupo global = **el equipo de Contabilidad**; grupo de dominio local = **la lista de invitados de la sala de archivos**. Metes al equipo en la lista, y cuando entra alguien nuevo en Contabilidad, ya tiene acceso.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- `Search-ADAccount` = buscar cuentas: *LockedOut* (cerrada fuera, **bloqueada**), *AccountDisabled* (deshabilitada), *AccountInactive* (inactiva), *PasswordExpired* (contraseña caducada).
+- `Unlock-ADAccount` = **desbloquear** (quitar el cerrojo tras muchos intentos fallidos). `Enable-ADAccount` = **habilitar** (encender una cuenta apagada). No son lo mismo.
+- *ChangePasswordAtLogon* = cambiar la contraseña al iniciar sesión. *Reset* = restablecer. *Members* = miembros. *Recursive* = recursivo (incluye grupos dentro de grupos).
+- `Get-ADPrincipalGroupMembership` = "pertenencia a grupos del principal" (*principal* = usuario, equipo o grupo).
+- 🧠 Truco: **Get-ADUser es tímido**: si no le pides `-Properties`, solo enseña lo básico.
+- 🧠 Truco: **`dsquery -inactive` cuenta semanas**, no días.
+:::
 
 **Usuarios**
 ```powershell
@@ -1561,6 +2332,23 @@ whoami /all ; whoami /groups ; whoami /upn ; whoami /priv
 
 ### WS-3.5 · Directivas de contraseñas, cuentas de servicio y papelera de reciclaje
 
+:::facil
+**🧭 En pocas palabras.**
+- **Directiva de contraseñas**: hay **una por dominio**. Si un grupo necesita otra (los administradores, más estricta), se usan **PSO**.
+- **gMSA**: cuentas de servicio cuya contraseña **la cambia AD solo**.
+- **Papelera de reciclaje de AD**: permite **recuperar** un usuario borrado con todos sus grupos.
+
+**Imagínatelo así:** una gMSA es una **cerradura que cambia de llave cada mes** y reparte las copias automáticamente solo a los servidores autorizados. Nadie tiene que acordarse de cambiarla.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **FGPP** = *Fine-Grained Password Policy*, directiva de contraseñas "de grano fino" (personalizada). **PSO** = *Password Settings Object*.
+- *Precedence* = precedencia: **el número más bajo gana, como en un podio** (el 1.º manda).
+- **gMSA** = *group Managed Service Account*, cuenta de servicio administrada (de grupo). **KDS** = *Key Distribution Service* (la clave raíz que necesita).
+- *Recycle Bin* = papelera de reciclaje. *Tombstone* = **lápida**: 180 días antes de desaparecer del todo.
+- 🧠 Truco: **las PSO se aplican a personas y grupos, nunca a OU**.
+:::
+
 **Directiva de contraseñas del dominio**: se define **solo** a nivel de dominio (normalmente en *Default Domain Policy*): longitud mínima, historial, vigencia máxima/mínima, complejidad, umbral de bloqueo, duración del bloqueo, restablecer contador.
 
 **Directivas de contraseña específicas (FGPP / PSO)** — nivel funcional ≥ 2008:
@@ -1603,6 +2391,23 @@ Get-ADObject -Filter 'samaccountname -eq "alopez"' -IncludeDeletedObjects | Rest
 > ⚠️ Trampa: varias GPO con directivas de contraseña en distintas OU **no** cambian la contraseña de los usuarios de dominio: solo cuenta la vinculada al **dominio**. En una OU afectarían a las cuentas **locales** de los equipos de esa OU.
 
 ### WS-3.6 · Directivas de grupo (GPO)
+
+:::facil
+**🧭 En pocas palabras.** Una **GPO** es un paquete de **normas automáticas**: fondo de pantalla, contraseñas, bloquear el USB, instalar software, mapear unidades… Se **vinculan** a un sitio, un dominio o una OU y se aplican solas a los usuarios y equipos que hay dentro.
+
+**Imagínatelo así:** las GPO son **capas de pintura**. Se aplican en orden **Local → Sitio → Dominio → OU**, y **la última capa es la que se ve**.
+- **Exigida** (*Enforced*): una capa de **pintura indeleble**; ninguna capa de abajo la tapa.
+- **Bloquear herencia**: la OU dice "**no quiero la pintura de arriba**", salvo la indeleble.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **GPO** = *Group Policy Object*, objeto de directiva de grupo. *Link* = vínculo.
+- *Enforced* = exigida, impuesta. *Block Inheritance* = bloquear la herencia. *Security Filtering* = filtrado de seguridad. *Loopback* = bucle de vuelta (manda **dónde te sientas**, el equipo, y no quién eres).
+- `gpupdate` = **g**roup **p**olicy **update** (actualizar); `/force` = forzar.
+- `gpresult` = **g**roup **p**olicy **result** (resultado); `/r` = resumen, `/h` = **h**tml, `/v` = **v**erbose (detallado).
+- 🧠 Truco del orden: **L-S-D-OU, "de la máquina hacia el usuario"**. Gana la más cercana al objeto (la OU).
+- 🧠 Truco: actualización cada **hora y media ± media hora** (90 ± 30 min); los **DC cada 5 minutos**.
+:::
 
 - Una GPO tiene dos partes: **Configuración del equipo** (al arrancar y cada intervalo) y **Configuración del usuario** (al iniciar sesión y cada intervalo). Cada una con *Directivas* (Software, Windows, Plantillas administrativas) y *Preferencias*.
 - Se almacena en dos sitios: **GPC** (contenedor en AD) y **GPT** (plantilla en `\\dominio\SYSVOL\dominio\Policies\{GUID}`).
@@ -1651,6 +2456,23 @@ Invoke-GPUpdate -Computer PC-0001 -Force -RandomDelayInMinutes 0
 
 ### WS-3.7 · Confianzas, sitios y replicación
 
+:::facil
+**🧭 En pocas palabras.**
+- Las **confianzas** permiten que usuarios de un dominio entren en recursos de otro.
+- Los **sitios** le dicen a AD **dónde está cada oficina física**, para replicar con cabeza y que cada PC use su DC cercano.
+- **repadmin** y **dcdiag** son las herramientas para comprobar que todo se replica y funciona.
+
+**Imagínatelo así:** "A **confía en** B" significa que A deja entrar en su casa a la gente de B. **Confías en quien dejas entrar.** Una confianza **transitiva** es "los amigos de mis amigos también son mis amigos".
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Trust* = confianza. *Transitive* = transitiva. *External* = externa. *Forest trust* = confianza de bosque. *Shortcut* = atajo.
+- *Site* = sitio. *Subnet* = subred. *Site link* = vínculo entre sitios. **KCC** = *Knowledge Consistency Checker*, el que dibuja solo la topología.
+- `repadmin` = **rep**lication **admin**: `/replsummary` (resumen), `/showrepl` (mostrar replicación), `/syncall` (sincronizar todo).
+- `dcdiag` = **DC diag**nostics. `nltest` = **N**et**L**ogon **test**: `/dsgetdc` ("dame el DC"), `/sc_verify` (verificar el **s**ecure **c**hannel, canal seguro).
+- *Secure channel* = canal seguro: la "relación de confianza" de cada PC con su dominio.
+:::
+
 **Relaciones de confianza**
 | Tipo | Transitiva | Dirección | Uso |
 |---|---|---|---|
@@ -1696,6 +2518,33 @@ Reset-ComputerMachinePassword -Credential AGE\admin                    # tambié
 ## Nivel 4 — Servicios de infraestructura
 
 ### WS-4.1 · DNS en Windows Server
+
+:::facil
+**🧭 En pocas palabras.** El **DNS** es la **agenda** de la red: traduce **nombres** (`intranet.age.local`) a **direcciones IP** (`192.168.10.50`) y al revés. Sin DNS no funciona Active Directory, porque los PC encuentran los controladores de dominio preguntando al DNS.
+- **Zona**: la parte de la agenda de la que eres responsable.
+- **Principal**: el original que se puede editar.
+- **Secundaria**: una **fotocopia de solo lectura**.
+- **Stub** (código auxiliar): solo la **página de contactos** (quién lleva esa zona).
+:::
+:::ingles
+**🔤 Para recordarlo: los registros DNS**
+
+| Registro | Viene de | Para qué |
+|---|---|---|
+| A | **A**ddress | nombre → IPv4 |
+| AAAA | "cuatro A": IPv6 es 4 veces más larga | nombre → IPv6 |
+| CNAME | **C**anonical **NAME** | alias de otro nombre |
+| MX | **M**ail e**X**changer | servidor de correo |
+| NS | **N**ame **S**erver | quién manda en la zona |
+| SOA | **S**tart **O**f **A**uthority | datos de la zona (con el nº de serie) |
+| PTR | **P**oin**T**e**R** | IP → nombre (inversa) |
+| SRV | **S**e**RV**ice | dónde está un servicio (los DC) |
+| TXT | **T**e**XT** | texto (SPF, DKIM…) |
+
+- *Forwarder* = reenviador ("si no lo sé, se lo pregunto a otro"). *Conditional* = condicional ("para socio.es, pregunta siempre a este").
+- *Scavenging* = **rebuscar basura**: borrar registros viejos. *Aging* = envejecimiento.
+- 🧠 Truco: **consultas por UDP 53 (rápidas); transferencias de zona por TCP 53 (largas y fiables)**.
+:::
 
 **Zonas**
 | Tipo | Descripción |
@@ -1756,6 +2605,29 @@ Clásico: `dnscmd /zoneadd`, `dnscmd /recordadd age.local intranet A 192.168.10.
 
 ### WS-4.2 · DHCP en Windows Server
 
+:::facil
+**🧭 En pocas palabras.** El **DHCP** reparte **automáticamente** a cada equipo su IP, máscara, puerta de enlace y DNS, **en alquiler** durante un tiempo (la concesión).
+
+**Imagínatelo así:** es la **recepción de un hotel** que asigna habitaciones (IP). El proceso tiene cuatro mensajes: **DORA**.
+1. **D**iscover: el cliente grita "¿hay algún recepcionista?".
+2. **O**ffer: "te ofrezco la 105".
+3. **R**equest: "me quedo la 105".
+4. **A**ck: "confirmado, es tuya 8 días".
+
+Las **reservas** son habitaciones que siempre se dan al mismo cliente (por su MAC); las **exclusiones**, habitaciones que no se alquilan.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **DHCP** = *Dynamic Host Configuration Protocol*, configuración dinámica de equipos.
+- *Lease* = concesión, alquiler. *Scope* = ámbito (el rango de habitaciones). *Exclusion* = exclusión. *Reservation* = reserva. *ClientId* = identificador del cliente = **su MAC**.
+- *Relay* = retransmisión. En Cisco, `ip helper-address` = "dirección del **ayudante**" que lleva el grito al otro edificio.
+- **APIPA** = *Automatic Private IP Addressing*.
+- 🧠 Truco: **DORA la exploradora pide IP**.
+- 🧠 Truco de opciones: **003 = la puerta (router), 006 = DNS, 015 = el nombre del dominio**.
+- 🧠 Truco: **169.254 = "no me ha contestado nadie"**.
+- 🧠 Renovación: **a la mitad (50 %) le pregunto a mi recepcionista; casi al final (87,5 %), a cualquiera**.
+:::
+
 **Proceso DORA** (UDP **67** servidor / **68** cliente):
 1. **D**HCPDISCOVER (cliente → **difusión** 255.255.255.255, origen 0.0.0.0)
 2. **O**FFER (servidor ofrece IP)
@@ -1815,6 +2687,20 @@ Export-DhcpServer -File C:\dhcp.xml -Leases ; Import-DhcpServer ; Backup-DhcpSer
 
 ### WS-4.3 · IIS (servidor web)
 
+:::facil
+**🧭 En pocas palabras.** **IIS** es el **servidor web de Microsoft**, como Apache o Nginx en Linux. Aloja **sitios** (webs) y cada sitio se ejecuta dentro de un **grupo de aplicaciones**, un proceso aislado.
+
+**Imagínatelo así:** cada grupo de aplicaciones es una **habitación con paredes**: si una web se cuelga, no tumba a las de las otras habitaciones. Varios sitios pueden compartir el mismo edificio (IP) y la misma puerta (puerto 80) si cada uno tiene **su nombre en el buzón** (encabezado de host).
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **IIS** = *Internet Information Services*.
+- *Site* = sitio. *Binding* = enlace (protocolo + IP + puerto + nombre). *Host header* = encabezado de host (el nombre en el buzón). *Application pool* = grupo de aplicaciones.
+- `w3wp.exe` = **W**orld **W**ide **W**eb **W**orker **P**rocess (las 3 W + worker process).
+- `iisreset` = reiniciar IIS.
+- 🧠 Truco: **`wwwroot` = la raíz (root) de la web (www)** → `C:\inetpub\wwwroot`.
+:::
+
 - Rol `Web-Server`. Raíz por defecto **`C:\inetpub\wwwroot`**, logs en **`C:\inetpub\logs\LogFiles`** (formato W3C). Sitio por defecto *Default Web Site* en el puerto 80.
 - **Sitio** = enlaces (*bindings*: protocolo + IP + puerto + nombre de host). Varios sitios en la misma IP/puerto se diferencian por **encabezado de host**; en HTTPS por **SNI**.
 - **Grupo de aplicaciones** (application pool): proceso de trabajo **w3wp.exe** aislado. Identidad por defecto **ApplicationPoolIdentity** (cuenta virtual `IIS AppPool\NombreDelPool`). Reciclaje periódico (por defecto cada 1740 min = 29 h).
@@ -1838,6 +2724,25 @@ cmd: `iisreset` (reinicia IIS completo), `iisreset /stop`, `%windir%\system32\in
 > ⚠️ Trampa: el proceso de los sitios es **w3wp.exe**; el servicio que recibe HTTP en modo kernel es **HTTP.sys**; el servicio de publicación WWW es **W3SVC**.
 
 ### WS-4.4 · Otros servicios: certificados, WSUS, impresión, Escritorio Remoto, NPS
+
+:::facil
+**🧭 En pocas palabras.** Otros servicios típicos de la AGE:
+- **AD CS**: la **fábrica de certificados** (DNI digitales internos).
+- **WSUS**: el **almacén de parches** de la casa, para no descargar las actualizaciones 500 veces de Internet.
+- **RDS**: Escritorio remoto para muchos usuarios a la vez.
+- **NPS**: el servidor **RADIUS** que autentica la Wi-Fi corporativa o la VPN.
+
+**Imagínatelo así:** la **CRL** es la **lista negra de DNI anulados** que se publica cada cierto tiempo; **OCSP** es **llamar por teléfono** y preguntar "¿este DNI concreto sigue valiendo?".
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **AD CS** = *Active Directory Certificate Services*. **CA** = *Certification Authority*. **CRL** = *Certificate Revocation List*, lista de revocación. **OCSP** = *Online Certificate Status Protocol*, estado en línea.
+- **WSUS** = *Windows Server Update Services*.
+- **RDS** = *Remote Desktop Services*: *Session Host* (donde se trabaja), *Connection Broker* (el **intermediario** que reparte sesiones), *Gateway* (la **pasarela** por 443), *Licensing* (licencias).
+- **NPS** = *Network Policy Server*. **RADIUS** = *Remote Authentication Dial-In User Service*.
+- 🧠 Truco: **RD Gateway = RDP disfrazado de HTTPS (443)**.
+- 🧠 Truco: **sin RDS, solo 2 administradores a la vez por Escritorio remoto**.
+:::
 
 **AD CS (Servicios de certificados)**
 - CA **empresarial** (integrada en AD, usa **plantillas** y autoinscripción por GPO) vs **independiente** (standalone, sin AD, aprobación manual).
@@ -1869,6 +2774,24 @@ cmd: `iisreset` (reinicia IIS completo), `iisreset /stop`, `%windir%\system32\in
 ## Nivel 5 — Virtualización, alta disponibilidad y monitorización
 
 ### WS-5.1 · Hyper-V
+
+:::facil
+**🧭 En pocas palabras.** **Hyper-V** es el **hipervisor** de Microsoft: permite tener muchas **máquinas virtuales** (VM) dentro de un servidor físico, cada una con su propio sistema operativo.
+
+**Imagínatelo así:** el hipervisor es el **casero** que reparte el edificio (CPU, RAM, disco) entre los **inquilinos** (VM). Los **conmutadores virtuales** son los pasillos:
+- **Externo**: sale a **la calle** (la red real).
+- **Interno**: comunica a los inquilinos **entre ellos y con el casero** (el host).
+- **Privado**: solo **entre inquilinos**, el casero no entra.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Hypervisor* = hipervisor. **Tipo 1** = vive directamente en el hardware (Hyper-V, ESXi). **Tipo 2** = vive dentro de otro sistema (VirtualBox).
+- *Generation 1 / 2* = BIOS + IDE / **UEFI + arranque seguro + SCSI**.
+- *Checkpoint* = punto de control (una **foto** para volver atrás). *Live Migration* = migración en vivo (mudarse **sin apagar**). *Replica* = copia en otra sede.
+- `Stop-VM` = apagado ordenado. `Stop-VM -TurnOff` = **tirar del cable**.
+- *ExposeVirtualizationExtensions* = exponer las extensiones de virtualización (virtualización anidada).
+- 🧠 Truco: **INterno INcluye al host; PRivado es privado incluso para el host**.
+:::
 
 - Hipervisor de **tipo 1** (bare-metal). Requiere CPU de 64 bits con **SLAT** y virtualización por hardware (Intel VT-x / AMD-V) + DEP.
 - Partición **primaria/padre** (el Windows de gestión) y particiones **secundarias/hijas** (VM).
@@ -1928,6 +2851,19 @@ Enable-VMReplication ...                               # réplica de Hyper-V (DR
 
 ### WS-5.2 · Clústeres y alta disponibilidad
 
+:::facil
+**🧭 En pocas palabras.** Un **clúster de conmutación por error** son varios servidores (**nodos**) trabajando como uno: si uno cae, sus servicios **arrancan solos en otro**. El **quórum** evita que, si se corta la comunicación, cada mitad crea que es la buena y trabajen a la vez (*split-brain*).
+
+**Imagínatelo así:** el quórum es como una **junta de vecinos**: solo se pueden tomar decisiones si hay **mayoría**. Si los vecinos son pares, se nombra un **testigo** que desempata.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Failover* = conmutación por error ("**el suplente sale al campo**"). *Node* = nodo. *Quorum* = quórum. *Witness* = testigo (de disco, de recurso compartido o en la nube).
+- **CSV** = *Cluster Shared Volume*, volumen compartido por todos los nodos.
+- **HA** = *High Availability*, alta disponibilidad (mismo sitio, automático). **DR** = *Disaster Recovery*, recuperación ante desastres (otro sitio).
+- 🧠 Truco de los nueves: **3 nueves (99,9 %) ≈ 9 horas al año; 4 nueves ≈ casi 1 hora (52 min); 5 nueves ≈ 5 minutos**.
+:::
+
 - **Clúster de conmutación por error** (*Failover Clustering*): varios nodos (hasta **64**) que ejecutan **roles** (VM, servidor de archivos, SQL); si un nodo cae, el rol arranca en otro (alta disponibilidad, no balanceo).
 - **Quórum** (evita *split-brain*): mayoría de votos. Testigos: **disco**, **recurso compartido de archivos** (FSW), **nube** (Azure Storage, *Cloud Witness*), USB (2019+). Con **quórum dinámico** el clúster ajusta los votos.
 - **CSV** (Cluster Shared Volumes): volumen accesible por todos los nodos a la vez (`C:\ClusterStorage\Volume1`).
@@ -1949,6 +2885,21 @@ Add-ClusterSharedVolume -Name "Cluster Disk 1"
 > ⚠️ Trampa: con número **par** de nodos hace falta un **testigo** para desempatar.
 
 ### WS-5.3 · Monitorización del rendimiento
+
+:::facil
+**🧭 En pocas palabras.** Para saber por qué va lento un servidor se miran los **contadores**: CPU, memoria, disco y red. Lo importante es encontrar el **cuello de botella**, el recurso que frena a los demás.
+
+**Imagínatelo así:** los contadores son el **salpicadero del coche** (velocímetro, temperatura, gasolina). La **línea base** es tu **analítica de cuando estás sana**: sin ella no sabes si un valor es raro.
+
+**Ojo:** si falta memoria, Windows usa el disco como si fuera RAM (**paginación**). Entonces parece que el disco o la CPU van mal, pero el culpable real es **la memoria**.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- `perfmon` = **perf**ormance **mon**itor. `resmon` = **res**ource **mon**itor. `Get-Counter` = "dame el contador".
+- *Counter* = contador. *Baseline* = línea base. *Bottleneck* = cuello de botella. *Pages/sec* = páginas por segundo (paginación). *Queue Length* = longitud de la cola. *Available MBytes* = megas disponibles.
+- *SampleInterval* = intervalo entre muestras. *MaxSamples* = número máximo de muestras.
+- 🧠 Truco de umbrales: **CPU > 80 %, disco > 20 ms por lectura, memoria libre < 10 %**.
+:::
 
 **Monitor de rendimiento** (`perfmon.msc`): contadores en tiempo real, **Conjuntos de recopiladores de datos** (Data Collector Sets) e informes. **Monitor de confiabilidad**: `perfmon /rel`. **Monitor de recursos**: `resmon`.
 
@@ -1980,6 +2931,27 @@ cmd: `typeperf "\Processor(_Total)\% Processor Time" -sc 5`, `logman` (recopilad
 > ⚠️ Trampa: CPU alta + `Pages/sec` alto + poca memoria disponible → el cuello de botella real es la **memoria** (paginación), no la CPU.
 
 ### WS-5.4 · Resolución de problemas (troubleshooting)
+
+:::facil
+**🧭 En pocas palabras.** Resolver problemas es aplicar **método**, como un médico: síntomas → hipótesis → prueba → tratamiento → comprobar → anotarlo.
+
+Para un Windows dañado hay herramientas de reparación con **un orden lógico**:
+1. **DISM** repara el **almacén de piezas de repuesto** del sistema.
+2. **SFC** cambia los ficheros dañados usando ese almacén.
+
+Si el almacén está roto, SFC no puede arreglar nada.
+
+**Imagínatelo así:** DISM **llena la caja de recambios**; SFC **cambia las piezas rotas** del coche. Primero la caja, luego el taller.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- `sfc` = **S**ystem **F**ile **C**hecker; `/scannow` = escanear ahora.
+- `DISM` = **D**eployment **I**mage **S**ervicing and **M**anagement; `/RestoreHealth` = restaurar la salud; `/CheckHealth` y `/ScanHealth` = comprobar.
+- `chkdsk` = **ch**ec**k** **d**i**sk**: `/f` = **f**ix (arreglar), `/r` = **r**ecover (recuperar sectores dañados).
+- `bootrec` = **boot rec**overy; `bcdedit` = **B**oot **C**onfiguration **D**ata **edit**or; `bcdboot` = recrear el arranque.
+- `w32tm` = **W**indows (**32**) **t**i**m**e, la hora.
+- 🧠 Truco: **"Primero DISM, luego SFC: primero la caja de recambios, luego el taller"**.
+:::
 
 **Arranque y sistema**
 ```cmd
@@ -2017,6 +2989,27 @@ msconfig ; msinfo32
 ## Nivel 6 — Seguridad y administración profesional en la AGE
 
 ### WS-6.1 · Bastionado (hardening) de Windows Server
+
+:::facil
+**🧭 En pocas palabras.** **Bastionar** es convertir el servidor en una **fortaleza**: quitar lo que sobra, cerrar puertas y vigilar.
+- **Modelo de niveles**: separa las cuentas poderosas para que no se puedan robar en un PC cualquiera.
+- **LAPS**: da a cada PC una contraseña de administrador local distinta.
+- **BitLocker**: cifra el disco.
+- **El firewall** solo deja pasar lo necesario.
+- Y además: desactivar lo viejo y peligroso (SMBv1, NTLMv1, LLMNR).
+
+**Imagínatelo así:** el jefe de seguridad (**Tier 0**, admin del dominio) **nunca** usa su llave maestra en el ordenador de recepción (**Tier 2**). Si ese PC tuviera un virus, le robarían la llave de todo el edificio.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Hardening* = endurecimiento, bastionado. *Tier* = nivel. **PAW** = *Privileged Access Workstation*, puesto de administración privilegiado.
+- **LAPS** = *Local Administrator Password Solution*, la "solución para la contraseña del administrador local".
+- **BitLocker** = "candado de bits". `manage-bde` = gestionar **B**itLocker **D**rive **E**ncryption.
+- Cmdlets de Defender con **Mp** = *Malware Protection*: `Get-MpComputerStatus`, `Start-MpScan`, `Update-MpSignature` (actualizar firmas).
+- **WDAC** = *Windows Defender Application Control*. *AppLocker* = bloqueo de aplicaciones.
+- `auditpol` = **audit pol**icy, directiva de auditoría.
+- Perfiles del firewall: *Domain* (en la oficina), *Private* (red de confianza), *Public* (cafetería).
+:::
 
 **Principios**: mínimo privilegio, mínima funcionalidad (Server Core, solo roles necesarios), defensa en profundidad, segregación de funciones, parches al día.
 
@@ -2071,6 +3064,20 @@ Reset-LapsPassword                                                      # rotar 
 
 ### WS-6.2 · Identidad híbrida y nube
 
+:::facil
+**🧭 En pocas palabras.** Muchas organizaciones tienen **AD en sus servidores** y **Entra ID en la nube** (Microsoft 365). Se conectan con **Entra Connect**, que copia los usuarios para que tengan **una sola identidad** en los dos sitios.
+
+**Imagínatelo así:** AD local habla "idioma de oficina" (LDAP, Kerberos, GPO); Entra ID habla "idioma de Internet" (OAuth, SAML, OpenID). Entra Connect es el **traductor** que mantiene las dos agendas iguales.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **Entra ID** = el nuevo nombre (2023) de **Azure AD**.
+- *Connect* = conectar. **PHS** = *Password Hash Sync*, sincronizar el hash de la contraseña. **PTA** = *Pass-Through Authentication*, autenticación "que pasa a través" hasta el AD local.
+- **Azure Arc** = *arc*, arco: el "brazo" de Azure que alcanza tus servidores locales.
+- **Intune** = gestión de dispositivos desde la nube (la alternativa a las GPO).
+- 🧠 Truco: **Entra ID no tiene OU ni GPO**: no es "un AD en la nube".
+:::
+
 - **Microsoft Entra ID** (antes **Azure AD**, renombrado en 2023): identidad en la nube (OAuth 2.0, OpenID Connect, SAML; no usa LDAP/Kerberos/GPO de forma nativa).
 - **Microsoft Entra Connect Sync** / **Entra Cloud Sync**: sincronizan usuarios de AD local a Entra ID. Métodos: **sincronización de hash de contraseña (PHS)**, **autenticación de paso a través (PTA)** o **federación (AD FS)**.
 - **Entra ID Domain Services**: dominio administrado (LDAP/Kerberos) en Azure.
@@ -2081,6 +3088,20 @@ Reset-LapsPassword                                                      # rotar 
 > ⚠️ Trampa: Entra ID **no** es "AD en la nube": no tiene OU ni GPO ni LDAP de forma nativa.
 
 ### WS-6.3 · Marco AGE: ENS, CCN y buenas prácticas
+
+:::facil
+**🧭 En pocas palabras.** El **ENS** (Esquema Nacional de Seguridad) es la **norma obligatoria de seguridad** para toda la Administración Pública española y sus proveedores. Clasifica los sistemas en categoría **BÁSICA, MEDIA o ALTA** y dice qué medidas aplicar en cada caso. El **CCN-CERT** es quien ayuda y responde a los incidentes del sector público, con guías y herramientas propias.
+
+**Imagínatelo así:** el ENS es la **normativa contra incendios** de los edificios públicos: según el tamaño y el riesgo del edificio (categoría) exige más o menos medidas, y cada pocos años pasa una **inspección** (auditoría cada 2 años).
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **ENS** = Esquema Nacional de Seguridad (**RD 311/2022**). **ENI** = Esquema Nacional de Interoperabilidad (**RD 4/2010**).
+- **CCN** = Centro Criptológico Nacional (dentro del CNI). **CERT** = *Computer Emergency Response Team*, equipo de respuesta a incidentes.
+- 🧠 Dimensiones **C-I-T-A-D**: **C**onfidencialidad, **I**ntegridad, **T**razabilidad, **A**utenticidad, **D**isponibilidad. Piensa en **"CITA D"**.
+- 🧠 Truco: **las herramientas del CCN tienen nombre de persona**: **PILAR** = riesgos (el *pilar* del análisis), **LUCÍA** = incidentes, **CARMEN** = detección de amenazas en la red, **microCLAUDIA** = vacuna anti-ransomware, **INES** = informe del estado del ENS, **GLORIA** = gestión de eventos (SIEM), **REYES** = intercambio de información de amenazas.
+- 🧠 Truco: **categorías BÁSICA-MEDIA-ALTA (nunca "baja")**.
+:::
 
 - **Esquema Nacional de Seguridad (ENS)**: **Real Decreto 311/2022**, de 3 de mayo (sustituye al RD 3/2010). Obligatorio para el sector público y sus proveedores TIC.
   - **Categorías** del sistema: **BÁSICA**, **MEDIA**, **ALTA** (según el impacto en las dimensiones de seguridad).
@@ -2107,6 +3128,26 @@ Reset-LapsPassword                                                      # rotar 
 ## Nivel 1 — Fundamentos
 
 ### NET-1.1 · Modelos OSI y TCP/IP
+
+:::facil
+**🧭 En pocas palabras.** El modelo **OSI** divide la comunicación en **7 capas**, cada una con un trabajo. Sirve para **ordenar la cabeza** y para diagnosticar: "¿el problema es del cable (capa 1), de la IP (capa 3) o de la aplicación (capa 7)?".
+
+**Imagínatelo así:** enviar un mensaje es como **mandar una carta**:
+- **7 Aplicación**: escribes la carta.
+- **6 Presentación**: la traduces o la cifras.
+- **5 Sesión**: abres la conversación.
+- **4 Transporte**: la partes en sobres numerados y pides acuse de recibo.
+- **3 Red**: pones la **dirección postal** (IP).
+- **2 Enlace**: el cartero del barrio la lleva al siguiente punto (MAC).
+- **1 Física**: la carretera y el camión.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- 🧠 Capas de abajo arriba: **"Física Enlaza Redes Transportando Sesiones Para Aplicaciones"** (el mismo truco de tu curso de Linux).
+- 🧠 Nombre del "paquete" en cada capa, de abajo arriba: **"Bebe Té Para Seguir Despierto"** → **B**its, **T**ramas, **P**aquetes, **S**egmentos, **D**atos.
+- 🧠 Aparatos: **hub = 1, switch = 2, router = 3** (cuanto más listo, más alta la capa).
+- **OSI** = *Open Systems Interconnection*. *Frame* = trama. *Packet* = paquete. *Segment* = segmento.
+:::
 
 **Modelo OSI** (ISO 7498, 7 capas). Regla para recordarlo de abajo arriba: **F**ísica, **E**nlace, **R**ed, **T**ransporte, **S**esión, **P**resentación, **A**plicación.
 
@@ -2135,6 +3176,24 @@ Reset-LapsPassword                                                      # rotar 
 > 💡 Clave: dominios — un **hub** = 1 dominio de colisión; un **switch** = 1 dominio de colisión **por puerto** y 1 de difusión (por VLAN); un **router** separa dominios de **difusión**.
 
 ### NET-1.2 · Medios de transmisión y cableado
+
+:::facil
+**🧭 En pocas palabras.** Los datos viajan por **cobre** (cable de red con pares trenzados) o por **fibra óptica** (luz).
+- **Cobre**: barato, hasta **100 metros**.
+- **Fibra**: no le afectan las interferencias y llega mucho más lejos.
+
+**Imagínatelo así:** en la fibra la luz es una **pelota rebotando por un tubo**.
+- **Multimodo**: tubo ancho, muchas pelotas rebotando por caminos distintos; llegan desordenadas, así que **sirve para distancias cortas**.
+- **Monomodo**: tubo finísimo, **un solo camino recto**, así que **llega lejísimos**.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **UTP** = *Unshielded Twisted Pair*, par trenzado sin apantallar. **STP/FTP** = apantallado (*shielded*/*foiled*). *Twisted* = trenzado (el trenzado anula interferencias).
+- `1000BASE-T` = **1000** Mbps, **BASE** banda base, **T** de *twisted pair*.
+- **SFP** = *Small Form-factor Pluggable*, el módulo enchufable para fibra. **PoE** = *Power over Ethernet*, corriente por el cable de red.
+- 🧠 Truco: **"MONO = uno = lejos; MULTI = muchos = cerca"**.
+- 🧠 Truco: **Cat 6A, la "A" de Aumentada: 10 Gbps a 100 m**.
+:::
 
 **Par trenzado** (UTP sin apantallar, STP/FTP apantallado). Conector **RJ-45** (8P8C). Distancia máxima por segmento Ethernet: **100 m** (90 m enlace permanente + latiguillos).
 
@@ -2172,6 +3231,20 @@ Reset-LapsPassword                                                      # rotar 
 
 ### NET-1.3 · Ethernet, direcciones MAC y switching básico
 
+:::facil
+**🧭 En pocas palabras.** Cada tarjeta de red tiene una **dirección MAC**, grabada de fábrica, que sirve **dentro de la red local**. La **IP** sirve para llegar a **otras redes**. El **switch** aprende en qué puerto está cada MAC y envía cada trama **solo** a quien debe.
+
+**Imagínatelo así:** la MAC es tu **DNI** (no cambia aunque te mudes) y la IP es tu **dirección postal** (cambia si te mudas). El switch es un **conserje** que apunta en qué puerta vive cada vecino **al verle salir** (aprende de la MAC de **origen**). Si llega una carta para alguien que no conoce, **la grita por todo el pasillo** (inundación).
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **MAC** = *Media Access Control*. **OUI** = *Organizationally Unique Identifier*, la parte del fabricante.
+- **CAM** = *Content Addressable Memory*, la tabla de MAC del switch. *Flooding* = inundación.
+- **MTU** = *Maximum Transmission Unit*, tamaño máximo de carga (1500). **FCS** = *Frame Check Sequence*, la comprobación de errores del final.
+- **CSMA/CD** = "escucho antes de hablar (*Carrier Sense*), somos muchos (*Multiple Access*) y si chocamos lo **detecto** (*Collision Detection*)". En Wi-Fi, **/CA** = lo **evito** (*Avoidance*).
+- *Half duplex* = **walkie-talkie** (habla uno y luego otro). *Full duplex* = **teléfono** (los dos a la vez).
+:::
+
 - **Ethernet** = IEEE **802.3**. Acceso al medio **CSMA/CD** (solo relevante en half-duplex; en full-duplex no hay colisiones). Wi-Fi usa **CSMA/CA** (evita colisiones).
 - **Trama Ethernet II**: Preámbulo (7) + SFD (1) | **MAC destino (6)** | **MAC origen (6)** | **EtherType (2)** (0x0800 IPv4, **0x86DD IPv6**, **0x0806 ARP**, 0x8100 VLAN) | Datos **46-1500** | **FCS (4)** (CRC-32).
 - Tamaño de trama: mínimo **64 bytes**, máximo **1518** (**1522** con etiqueta 802.1Q). **MTU** estándar = **1500 bytes** de carga. **Jumbo frames** ~9000 bytes.
@@ -2185,6 +3258,23 @@ Reset-LapsPassword                                                      # rotar 
 > ⚠️ Trampa: el switch **no** aprende de la MAC destino, aprende de la **MAC origen**.
 
 ### NET-1.4 · Tipos de redes, topologías y redes inalámbricas
+
+:::facil
+**🧭 En pocas palabras.** Las redes se clasifican por tamaño (**PAN, LAN, MAN, WAN**) y por forma (**topología**: hoy casi todo es en **estrella**, con los equipos conectados a un switch). El **Wi-Fi** tiene generaciones (4, 5, 6, 7) y bandas:
+- **2,4 GHz**: llega más lejos y atraviesa mejor las paredes, pero va más lenta y con más interferencias.
+- **5 y 6 GHz**: más rápidas pero con menos alcance.
+
+**Imagínatelo así:** 2,4 GHz es una **voz grave** que se oye desde la otra habitación; 5 GHz es una **voz aguda**, más clara pero que se pierde con las paredes.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **LAN** = *Local*, **MAN** = *Metropolitan*, **WAN** = *Wide* (amplia), **PAN** = *Personal* (Bluetooth). Todas son *Area Network*.
+- **SSID** = *Service Set Identifier* (el nombre de la Wi-Fi). **BSSID** = la MAC del punto de acceso.
+- **WPA** = *Wi-Fi Protected Access*. **SAE** = *Simultaneous Authentication of Equals* (WPA3). **WPS** = *Wi-Fi Protected Setup* (el botón con PIN: desactivarlo).
+- 🧠 Truco de generaciones: **"n - ac - ax - be" = Wi-Fi 4, 5, 6, 7**.
+- 🧠 Truco: **Wi-Fi 5 (ac) solo en 5 GHz**: "el 5 solo en 5".
+- 🧠 Canales que no se pisan en 2,4 GHz: **1, 6 y 11**.
+:::
 
 **Por alcance**: PAN (Bluetooth), **LAN**, **MAN**, **WAN**, WLAN, SAN (almacenamiento: Fibre Channel, iSCSI puerto **3260**).
 **Topologías**: bus, anillo, **estrella** (la de Ethernet actual), estrella extendida/jerárquica, malla (completa o parcial), árbol. Diseño jerárquico de 3 capas: **núcleo** (core), **distribución**, **acceso**. En centros de datos: **spine-leaf**.
@@ -2214,6 +3304,24 @@ Reset-LapsPassword                                                      # rotar 
 ## Nivel 2 — Direccionamiento IP
 
 ### NET-2.1 · IPv4: clases, rangos especiales y cabecera
+
+:::facil
+**🧭 En pocas palabras.** Una dirección IPv4 son **4 números del 0 al 255** (`192.168.10.50`). Una parte indica la **red** (la calle) y otra el **equipo** (el portal). La **máscara** dice dónde acaba la calle y empieza el portal: `/24` (`255.255.255.0`) significa "los 3 primeros números son la calle".
+
+Hay rangos con significado especial:
+- **Privadas**: se usan dentro de las organizaciones y no salen a Internet tal cual.
+- **127.x**: el equipo hablando consigo mismo.
+- **169.254.x**: "no he conseguido IP del DHCP".
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **TTL** = *Time To Live*, "tiempo de vida": cada router le quita **una vida** al paquete; con 0 vidas, muere.
+- *Loopback* = bucle de vuelta (127.0.0.1, *localhost*). **APIPA** = IP automática cuando falla el DHCP.
+- 🧠 Truco de privadas: **"10 entero, 172 del 16 al 31, 192.168"**. Cuidado: **172.32 ya no es privada**.
+- 🧠 Truco de clases por el primer número: **A hasta 126, B hasta 191, C hasta 223, D (multicast) hasta 239**.
+- 🧠 Truco de TTL: **Windows sale con 128, Linux con 64**. Si haces ping y ves TTL=127, casi seguro es un Windows a un salto.
+- 🧠 Protocolos en la cabecera IP: **1 ICMP, 6 TCP, 17 UDP** ("el 6 es fiable, el 17 va a su aire").
+:::
 
 - Dirección de **32 bits** en 4 octetos decimales (notación decimal con puntos). Parte de **red** + parte de **host**, separadas por la **máscara** (`255.255.255.0` = `/24`).
 
@@ -2252,6 +3360,25 @@ Reset-LapsPassword                                                      # rotar 
 > ⚠️ Trampa: **169.254.x.x** no es privada RFC 1918: es **APIPA/enlace local** (no se enruta).
 
 ### NET-2.2 · Subnetting (subredes) y VLSM
+
+:::facil
+**🧭 En pocas palabras.** Hacer **subredes** es **partir una red grande en trozos** más pequeños (por planta, por departamento). Todo se basa en que cada número de la IP son **8 bits**, que valen **128, 64, 32, 16, 8, 4, 2 y 1**.
+
+**Método en 3 pasos**, por ejemplo con `192.168.10.77/27`:
+1. **¿Cuántos bits de red hay en el octeto que cambia?** /27 = 24 + **3**: los tres primeros bits del último número → 128 + 64 + 32 = **224** (la máscara es 255.255.255.224).
+2. **Número mágico** = 256 − 224 = **32**. Las subredes van de 32 en 32: 0, 32, **64**, 96…
+3. **¿En cuál cae el 77?** En la que empieza en **64**. Red = **.64**; difusión = la siguiente menos 1 = **.95**; equipos de **.65 a .94** (**30**).
+
+**Imagínatelo así:** cada subred es una **calle**. El primer número es el **nombre de la calle** (red) y el último es el **megáfono** que avisa a todos (difusión). **Ninguno de los dos puede ser una casa**: por eso siempre se restan 2.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Subnet* = subred. *Mask* = máscara. *Broadcast* = difusión (megáfono). *Host* = equipo. **CIDR** = *Classless Inter-Domain Routing* (la notación `/24`). **VLSM** = *Variable Length Subnet Mask*, máscaras de distinto tamaño.
+- 🧠 Valores de máscara: **128, 192, 224, 240, 248, 252, 254, 255**. Es ir sumando 128 + 64 + 32 + 16 + 8 + 4 + 2 + 1.
+- 🧠 Equipos útiles = **2^(bits de equipo) − 2**: /24 → 254, /25 → 126, /26 → 62, /27 → 30, /28 → 14, /29 → 6, /30 → 2.
+- 🧠 Truco: **/30 = enlaces entre dos routers** (solo caben 2).
+- 🧠 Con VLSM, **reparte de mayor a menor**: primero la subred más grande.
+:::
 
 **Fórmulas**
 - Nº de **subredes** = 2^(bits prestados).
@@ -2304,6 +3431,31 @@ Reset-LapsPassword                                                      # rotar 
 
 ### NET-2.3 · IPv6
 
+:::facil
+**🧭 En pocas palabras.** IPv4 tiene unos 4.300 millones de direcciones y **se agotaron**. **IPv6** tiene tantas que se podría dar una a cada grano de arena. Son **128 bits** escritos en hexadecimal, en 8 grupos separados por `:`.
+
+Para escribirlas más cortas:
+1. **Quita los ceros a la izquierda** de cada grupo.
+2. **Cambia UNA sola tira de grupos de ceros por `::`**.
+
+IPv6 **no tiene difusión** y **no usa ARP**: lo sustituye **NDP**, mensajes ICMPv6 entre vecinos.
+
+**Imagínatelo así:** `::` es un **"etcétera"**. Si pusieras dos etcéteras en la misma frase, nadie sabría cuánto ocupa cada uno. Por eso solo se puede usar una vez.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **NDP** = *Neighbor Discovery Protocol*, descubrimiento de vecinos. **RS** = *Router Solicitation* ("¿hay algún router?"). **RA** = *Router Advertisement* ("¡aquí estoy, este es el prefijo!").
+- **SLAAC** = *Stateless Address Autoconfiguration*: el equipo **se pone la IP él solo** con el prefijo del router.
+- **EUI-64** = *Extended Unique Identifier*: fabricar la parte del equipo a partir de la MAC.
+- 🧠 Truco de prefijos:
+  - **Empieza por 2 o 3** → pública (global).
+  - **fe80** → local del enlace (siempre existe).
+  - **fd** → privada (ULA).
+  - **ff** → multicast.
+  - **::1** → yo mismo (loopback).
+- 🧠 Truco: **cabecera IPv6 = 40 bytes fijos**, el doble que la mínima de IPv4 (20).
+:::
+
 - **128 bits**, 8 grupos de 16 bits (hextetos) en hexadecimal separados por `:`. Ej. `2001:0db8:0000:0000:0000:ff00:0042:8329`.
 - **Abreviación**: (1) quitar **ceros a la izquierda** de cada grupo; (2) sustituir **una sola** secuencia de grupos de ceros consecutivos por `::` → `2001:db8::ff00:42:8329`.
 - Prefijo: `/64` para una subred LAN (64 bits de red + 64 de **identificador de interfaz**); a un sitio se le suele asignar un **/48** (65.536 subredes /64) o /56.
@@ -2342,6 +3494,39 @@ Reset-LapsPassword                                                      # rotar 
 ## Nivel 3 — Protocolos y servicios
 
 ### NET-3.1 · TCP, UDP y puertos
+
+:::facil
+**🧭 En pocas palabras.** En la capa de transporte hay dos opciones:
+- **TCP**: **fiable**. Abre conversación, numera los trozos, confirma que llegan y reenvía los perdidos. Lo usan la web, el correo, SSH, SMB…
+- **UDP**: **rápido y sin garantías**. Lo usan DNS, DHCP, la voz o el vídeo, donde importa más la velocidad.
+
+El **puerto** indica **a qué servicio** del equipo va el mensaje.
+
+**Imagínatelo así:** TCP es una **carta certificada con acuse de recibo**; UDP es una **postal**. La IP es la dirección del edificio y el puerto es la **ventanilla** (80 la web, 25 el correo…).
+
+El saludo de TCP: **"¿Me oyes?"** (SYN) → **"Sí, ¿y tú a mí?"** (SYN-ACK) → **"Sí"** (ACK).
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **TCP** = *Transmission Control Protocol*. **UDP** = *User Datagram Protocol*.
+- Flags: **SYN** = *synchronize* (sincronizar), **ACK** = *acknowledge* (acusar recibo), **FIN** = *finish* (terminar), **RST** = *reset* (cortar de golpe).
+- 🧠 Puertos imprescindibles:
+
+| Puerto | Servicio | Truco |
+|---|---|---|
+| 20/21 | FTP | "21, el de las ventanillas de antes" |
+| 22 | SSH | "2 patitos que susurran en secreto" |
+| 23 | Telnet | "el hermano inseguro del 22" |
+| 25 | SMTP | enviar correo entre servidores |
+| 53 | DNS | la agenda |
+| 67/68 | DHCP | servidor 67, cliente 68 |
+| 80 / 443 | HTTP / HTTPS | la web normal / con candado |
+| 110 / 143 | POP3 / IMAP | recoger correo |
+| 445 | SMB | carpetas compartidas de Windows |
+| 3389 | RDP | Escritorio remoto |
+
+- 🧠 Truco: **las versiones seguras del correo acaban en 99x**: IMAP 143 → **993**, POP3 110 → **995**.
+:::
 
 | | **TCP** | **UDP** |
 |---|---|---|
@@ -2392,6 +3577,27 @@ Reset-LapsPassword                                                      # rotar 
 
 ### NET-3.2 · ARP, ICMP, NAT y protocolos de soporte
 
+:::facil
+**🧭 En pocas palabras.**
+- **ARP**: averigua la **MAC** de una IP de tu red.
+- **ICMP**: los **mensajes de servicio** de la red (ping, "destino inalcanzable", "tiempo agotado").
+- **NAT**: deja que muchos equipos con IP privada salgan a Internet con **una sola IP pública**.
+- **NTP**: sincroniza la hora. **SNMP**: vigila los equipos. **Syslog**: centraliza los logs.
+
+**Imagínatelo así:**
+- ARP = gritar en la oficina **"¿quién tiene la IP 192.168.1.1? ¡Que me diga su DNI (MAC)!"**.
+- NAT = la **centralita** de una empresa: todos llaman hacia fuera y en el teléfono del otro aparece **el mismo número**.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **ARP** = *Address Resolution Protocol*, resolución de direcciones. **ICMP** = *Internet Control Message Protocol*, mensajes de control.
+- **NAT** = *Network Address Translation*, traducción de direcciones. **PAT** = *Port Address Translation*, la versión que distingue por **puerto**.
+- **NTP** = *Network Time Protocol*. *Stratum* = **estrato**: lo lejos que estás del reloj atómico (0 = el reloj, 16 = "no sé la hora").
+- **SNMP** = *Simple Network Management Protocol*. *Get* = preguntar. *Trap* = **trampa**: aviso que el equipo manda **por su cuenta** cuando pasa algo. **MIB** = la "lista de preguntas posibles".
+- 🧠 Ping: **8 sale, 0 vuelve** (Echo Request = 8, Echo Reply = 0).
+- 🧠 Syslog, de 0 a 7: **"Every Awesome Cisco Engineer Will Need Ice cream Daily"** → **E**mergency, **A**lert, **C**ritical, **E**rror, **W**arning, **N**otice, **I**nformational, **D**ebug. **El 0 es lo peor**.
+:::
+
 **ARP** (Address Resolution Protocol, RFC 826): IP → MAC dentro de la misma red. **Solicitud por difusión** ("¿quién tiene 192.168.1.1?") y **respuesta unicast**. Caché ARP (`arp -a`). **ARP gratuito**: anuncio de la propia IP (detectar duplicados, failover). **RARP** (obsoleto, MAC → IP). **Proxy ARP**.
 - Para destinos de **otra red**, el equipo pide por ARP la MAC de su **puerta de enlace**, no la del destino final.
 
@@ -2424,6 +3630,31 @@ Reset-LapsPassword                                                      # rotar 
 > ⚠️ Trampa: `ping` usa **ICMP**, no TCP ni UDP: por eso "ping funciona" no significa que el puerto del servicio esté abierto.
 
 ### NET-3.3 · Protocolos de aplicación: HTTP, TLS, correo y transferencia de ficheros
+
+:::facil
+**🧭 En pocas palabras.** Son los protocolos "que ve el usuario": la **web** (HTTP/HTTPS), el **correo** (SMTP, POP3, IMAP) y la **transferencia de ficheros** (FTP, SFTP). **TLS** es el candado que cifra casi todos.
+
+Los **códigos de estado** de HTTP se entienden por la primera cifra:
+- **2xx**: todo bien.
+- **3xx**: vete a otra dirección.
+- **4xx**: **la culpa es tuya** (cliente).
+- **5xx**: **la culpa es mía** (servidor).
+
+**Imagínatelo así:**
+- **401** = "no te conozco, **enséñame el DNI**".
+- **403** = "te conozco, **pero no puedes pasar**".
+- **POP3** = vas a Correos, **recoges las cartas y te las llevas**.
+- **IMAP** = las cartas **se quedan en el buzón** y las lees desde cualquier sitio.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **HTTP** = *HyperText Transfer Protocol*. Verbos: *GET* (obtener), *POST* (enviar, publicar), *PUT* (poner, reemplazar), *PATCH* (parchear, cambio parcial), *DELETE* (borrar), *HEAD* (solo la cabecera).
+- **TLS** = *Transport Layer Security*. **SNI** = *Server Name Indication* (decir a qué web vas). **HSTS** = *HTTP Strict Transport Security* (obliga a usar HTTPS).
+- **SMTP** = *Simple Mail Transfer Protocol* (enviar). **POP** = *Post Office Protocol* (oficina de correos). **IMAP** = *Internet Message Access Protocol*.
+- **SPF** = *Sender Policy Framework* (quién puede enviar). **DKIM** = *DomainKeys Identified Mail* (la firma, el lacre). **DMARC** = qué hacer si fallan.
+- 🧠 Truco: **SFTP, la S delante = SSH delante (puerto 22); FTPS, la S detrás = TLS añadido detrás**.
+- 🧠 Truco: **POST no es idempotente**: si lo repites, publicas dos veces.
+:::
 
 **HTTP**
 - Métodos: **GET** (obtener), **POST** (enviar/crear), **PUT** (reemplazar), **PATCH** (modificar parcialmente), **DELETE**, **HEAD** (solo cabeceras), **OPTIONS** (métodos permitidos, CORS preflight), TRACE, CONNECT (túnel por proxy).
@@ -2466,6 +3697,32 @@ Reset-LapsPassword                                                      # rotar 
 ## Nivel 4 — Comandos de red (Windows, Linux y PowerShell)
 
 ### NET-4.1 · Comandos clásicos de Windows (cmd)
+
+:::facil
+**🧭 En pocas palabras.** Son los **comandos de toda la vida** de la consola de Windows (cmd). En el supuesto práctico caen muchísimo. Casi todos los nombres son **palabras inglesas abreviadas** y las opciones suelen ser **la inicial de una palabra**, así que si entiendes el inglés no hace falta memorizar.
+
+**Imagínatelo así:** `ping` es el **sonar de un submarino**: lanza un "ping" y espera el eco. `tracert` es seguir **las migas de pan** del paquete, router a router.
+:::
+:::ingles
+**🔤 Para recordarlo: nombres y opciones en inglés**
+
+| Comando | Viene de | Opciones clave |
+|---|---|---|
+| `ipconfig` | **IP config**uration | `/all` todo, `/release` liberar, `/renew` renovar, `/flushdns` vaciar la caché DNS (*flush* = tirar de la cadena), `/displaydns` mostrar, `/registerdns` registrar |
+| `ping` | sonido del sonar | `-t` hasta que pares, `-n` **n**úmero, `-l` **l**ength (tamaño), `-f` don't **f**ragment, `-a` resolver el nombre de la **a**ddress |
+| `tracert` | **trace route**, rastrear la ruta | `-d` sin resolver nombres (no **D**NS), `-h` máximo de **h**ops (saltos) |
+| `pathping` | **path** + **ping** | ruta con estadísticas de pérdida |
+| `nslookup` | **n**ame **s**erver **lookup**, consultar al servidor de nombres | `-type=mx` tipo de registro |
+| `netstat` | **net**work **stat**istics | `-a` **a**ll, `-n` **n**umérico, `-o` **o**wner (PID), `-b` **b**inario (el .exe), `-r` **r**outes, `-s` **s**tatistics |
+| `arp` | Address Resolution Protocol | `-a` **a**ll, `-d` **d**elete, `-s` **s**tatic |
+| `route` | ruta | `print` mostrar, `add`, `delete`, `-p` **p**ersistente |
+| `netsh` | **net**work **sh**ell | `interface`, `advfirewall`, `wlan`, `winsock reset` |
+| `nbtstat` | **N**et**B**IOS over **T**CP **stat**istics | `-n` nombres locales, `-A` remoto por IP |
+| `getmac` | **get MAC** | `/v` **v**erbose |
+
+- 🧠 Truco del puerto: **`netstat -ano` → "a-n-o": todos, numérico, con dueño**.
+- 🧠 Truco: **en Windows `ping` envía 4; en Linux no para** hasta Ctrl+C (`-c 4` = **c**ount).
+:::
 
 ```cmd
 ipconfig                       :: IP, máscara y puerta de enlace
@@ -2545,6 +3802,21 @@ netsh interface portproxy add v4tov4 listenport=8080 connectaddress=10.0.0.5 con
 
 ### NET-4.2 · Comandos de red en PowerShell
 
+:::facil
+**🧭 En pocas palabras.** Todo lo que hace cmd con la red, PowerShell lo hace con cmdlets del prefijo **Net**, **Dns**… que devuelven **objetos**, más fáciles de filtrar y de usar en scripts. El rey es `Test-NetConnection`: hace ping **y además** comprueba si un **puerto** está abierto, algo que `ping` no puede hacer.
+
+**Imagínatelo así:** `ping` solo comprueba que **el edificio existe**; `Test-NetConnection -Port 443` comprueba que **la ventanilla de la web está abierta**.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- `Test-NetConnection` = probar la conexión de red. *Port* = puerto. *CommonTCPPort* = puerto TCP común (HTTP, RDP, SMB, WINRM). *TcpTestSucceeded* = "la prueba TCP ha salido bien".
+- `Resolve-DnsName` = resolver el nombre en DNS. `Get-NetTCPConnection` = conexiones TCP. *Listen* = escuchando.
+- `Get-NetNeighbor` = "dame los **vecinos**" (la tabla ARP: los equipos de tu red).
+- `New-NetRoute`: *DestinationPrefix* = prefijo de destino, *NextHop* = **siguiente salto**, *InterfaceAlias* = el nombre de la tarjeta.
+- 🧠 Truco: **DnsClient = mi tarjeta como cliente; DnsServer = el servidor DNS**. `Clear-DnsClientCache` = `ipconfig /flushdns`.
+- 🧠 Truco: **Test-Connection = solo ping; Test-NetConnection = ping + puerto**.
+:::
+
 ```powershell
 # Adaptadores
 Get-NetAdapter                                         # nombre, estado, MAC, velocidad
@@ -2620,6 +3892,21 @@ Invoke-RestMethod https://api.ejemplo.es/datos         # convierte JSON a objeto
 
 ### NET-4.3 · Comandos de red en Linux
 
+:::facil
+**🧭 En pocas palabras.** En Linux los comandos de red modernos son del paquete **iproute2** (`ip` y `ss`). Los antiguos (`ifconfig`, `netstat`, `route`, `arp`) están obsoletos, aunque todavía aparecen en preguntas. Casi todo se hace con **`ip` + lo que quieres ver**.
+
+**Imagínatelo así:** `ip` es una **navaja suiza**: `ip a` (direcciones), `ip r` (rutas), `ip n` (vecinos).
+:::
+:::ingles
+**🔤 Para recordarlo**
+- `ip a` = **a**ddress. `ip r` = **r**oute. `ip n` = **n**eighbor (vecinos, la tabla ARP). `ip link` = el enlace (la tarjeta).
+- `ss` = **s**ocket **s**tatistics. Opciones: `-t` **t**cp, `-u` **u**dp, `-l` **l**istening, `-p` **p**rocess, `-n` **n**umeric.
+- 🧠 Truco: **`ss -tulpn` se lee "tulipán"** 🌷.
+- `dig` = **d**omain **i**nformation **g**roper. `nmap` = **n**etwork **map**per. `tcpdump` = volcar (*dump*) el tráfico. `nc` = **n**et**c**at. `mtr` = **m**y **tr**aceroute. `nmcli` = **N**etwork**M**anager **CLI**.
+- nmap: `-sn` sin escanear puertos (solo ver quién está), `-sS` escaneo **S**YN, `-sV` **V**ersiones, `-O` sistema **O**perativo.
+- tcpdump: `-i` **i**nterfaz, `-n` sin nombres, `-w` **w**rite (grabar a fichero).
+:::
+
 ```bash
 ip a                     # (ip addr show) direcciones de todas las interfaces  — sustituye a ifconfig
 ip -4 a show dev eth0
@@ -2656,6 +3943,25 @@ iptables -L -n -v ; nft list ruleset ; ufw status ; firewall-cmd --list-all
 > ⚠️ Trampa: `ifconfig`, `route`, `arp` y `netstat` pertenecen a **net-tools**, **obsoleto**; sus sustitutos son `ip a`, `ip route`, `ip neigh` y `ss` (paquete **iproute2**).
 
 ### NET-4.4 · Comandos de Cisco IOS (lo básico para el supuesto)
+
+:::facil
+**🧭 En pocas palabras.** Los switches y routers Cisco se configuran por consola con **IOS**, que tiene **modos**, como niveles de acceso a un edificio:
+1. **Usuario** `>`: la recepción, solo mirar.
+2. **Privilegiado** `#`: tras `enable`, ves todo.
+3. **Configuración global** `(config)#`: tras `configure terminal`, cambias cosas.
+4. **Interfaz** `(config-if)#`: un puerto concreto.
+
+Los cambios se hacen sobre la **running-config** (en RAM). **Si no la copias a la startup-config, se pierden al reiniciar.**
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *enable* = habilitar (modo privilegiado). *configure terminal* = configurar desde el terminal. *exit* = salir un nivel; *end* = volver a privilegiado.
+- *running-config* = la configuración **en marcha**. *startup-config* = la configuración **de arranque**.
+- 🧠 Truco: **`copy run start` = "copia lo que corre al arranque"**.
+- `show ip interface brief` = "muestra las IP de las interfaces, en **breve**". *shutdown* = apagar; `no shutdown` = "no apagar", encender.
+- *switchport mode access / trunk* = puerto de acceso / troncal. `ip helper-address` = la dirección del **ayudante** (relay DHCP).
+- 🧠 Abreviaturas: IOS acepta lo mínimo que no sea ambiguo: `sh ip int br`, `conf t`, `wr`.
+:::
 
 **Modos**: usuario `Router>` → `enable` → privilegiado `Router#` → `configure terminal` → configuración global `Router(config)#` → `interface g0/0` → `Router(config-if)#`. `exit` sube un nivel; `end` / Ctrl+Z vuelve a privilegiado.
 
@@ -2735,6 +4041,21 @@ interface g0/0.10
 
 ### NET-5.1 · VLAN, troncales y enrutamiento entre VLAN
 
+:::facil
+**🧭 En pocas palabras.** Una **VLAN** divide **un switch físico en varios switches lógicos**. Los equipos de VLAN distintas **no se ven** aunque estén en el mismo switch: para hablar entre ellas hace falta **un router o un switch de capa 3**.
+
+**Imagínatelo así:** una oficina diáfana dividida con **mamparas de colores**: Contabilidad (azul), RRHH (verde)… El **troncal** es el **pasillo central** por el que pasa gente de todos los colores, cada uno con su **pegatina de color** (la etiqueta 802.1Q). La **VLAN nativa** es la que va **sin pegatina**.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **VLAN** = *Virtual LAN*. *Access port* = puerto de acceso (una VLAN, sin etiqueta: para PCs). *Trunk* = **tronco**, troncal (lleva todas las ramas, etiquetadas).
+- **802.1Q** = el estándar de las etiquetas ("dot1q"). *Native VLAN* = VLAN nativa (sin etiqueta).
+- **SVI** = *Switched Virtual Interface*, la IP de la VLAN en un switch de capa 3.
+- *Router-on-a-stick* = "router en un palo": un solo cable troncal con subinterfaces.
+- **DTP** = *Dynamic Trunking Protocol* (negociar troncal: desactivar). **VTP** = *VLAN Trunking Protocol* (repartir las VLAN entre switches).
+- 🧠 Truco: **12 bits de VLAN → 4096 valores, 4094 utilizables (del 1 al 4094)**.
+:::
+
 - **VLAN** (802.1Q): segmenta un switch en varios **dominios de difusión** lógicos. Ventajas: seguridad, rendimiento (menos difusión), gestión.
 - **Etiqueta 802.1Q**: **4 bytes** insertados en la trama (TPID 0x8100 + PCP 3 bits de prioridad 802.1p + DEI 1 bit + **VID de 12 bits**). VLAN válidas **1-4094** (0 y 4095 reservadas). Rango normal 1-1005, extendido 1006-4094.
 - Puerto de **acceso** (una VLAN, tramas sin etiqueta: equipos finales) vs puerto **troncal** (varias VLAN etiquetadas: entre switches, hacia routers/hipervisores).
@@ -2749,6 +4070,25 @@ interface g0/0.10
 > ⚠️ Trampa: el ID de VLAN tiene **12 bits** → 4096 valores, **4094 utilizables**.
 
 ### NET-5.2 · STP, agregación de enlaces y alta disponibilidad de capa 2/3
+
+:::facil
+**🧭 En pocas palabras.** Poner **cables redundantes** entre switches es bueno por si uno se rompe, pero crea **bucles**: las tramas de difusión dan vueltas sin fin y colapsan la red (**tormenta de difusión**). **STP** lo evita **bloqueando** los enlaces sobrantes y activándolos si falla el principal.
+
+**Imagínatelo así:** una **rotonda sin salida** donde los coches dan vueltas eternamente. STP **cierra con conos** algunas entradas, y si se corta la calle principal quita los conos.
+
+Además:
+- **LACP** junta varios cables en uno solo, **como una autopista de varios carriles**.
+- **HSRP/VRRP** crean una **puerta de enlace de reserva** por si cae el router.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **STP** = *Spanning Tree Protocol*, protocolo de árbol de expansión. **RSTP** = *Rapid* STP. **BPDU** = *Bridge Protocol Data Unit* (los mensajes de STP).
+- *Root bridge* = puente raíz. *PortFast* = puerto rápido (para PCs). *BPDU Guard* = guardián de BPDU (si en un puerto de PC aparece un switch, lo apaga).
+- **LACP** = *Link Aggregation Control Protocol*, agregación de enlaces.
+- **HSRP** = *Hot Standby Router Protocol* (router de reserva "en caliente", Cisco). **VRRP** = *Virtual Router Redundancy Protocol* (estándar). **GLBP** = *Gateway Load Balancing Protocol* (Cisco, reparte la carga).
+- 🧠 Truco: **en STP gana el más pequeño**: menor prioridad y, si empatan, menor MAC. **Como en una carrera: el número 1 es el jefe.**
+- 🧠 Truco: **VRRP es el estándar**; **HSRP y GLBP son de Cisco**.
+:::
 
 **STP — Spanning Tree Protocol (IEEE 802.1D)**: evita **bucles** de capa 2 (tormentas de difusión, inestabilidad de la tabla MAC) bloqueando enlaces redundantes.
 1. Se elige el **puente raíz**: el de **menor Bridge ID** = prioridad (**32768** por defecto, múltiplos de 4096) + MAC (desempata la **menor MAC**).
@@ -2774,6 +4114,25 @@ interface g0/0.10
 > ⚠️ Trampa: **PortFast** se pone en puertos de **acceso** con equipos finales, **nunca** entre switches.
 
 ### NET-5.3 · Enrutamiento
+
+:::facil
+**🧭 En pocas palabras.** Un **router** mira la IP de destino de cada paquete y decide **por dónde enviarlo** según su **tabla de rutas**. Las rutas se añaden a mano (**estáticas**) o las aprende hablando con otros routers (**dinámicas**: RIP, OSPF, BGP…).
+
+**Dos reglas de oro, en este orden:**
+1. **Gana la ruta más concreta** (el prefijo más largo).
+2. Si hay empate de prefijo, gana la fuente **más fiable** (menor distancia administrativa).
+
+**Imagínatelo así:** si te dicen "Madrid" y "calle Mayor 5, 3.º B", **sigues la más precisa**. Y si dos personas te dan la misma dirección, **te fías más de lo que ves con tus ojos** (conectada, 0) que de lo que te dijo el jefe (estática, 1) o de un rumor (RIP, 120).
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **RIP** = *Routing Information Protocol*: cuenta **saltos**, como paradas de metro (máximo 15).
+- **OSPF** = *Open Shortest Path First*, "el camino más corto primero": cada router tiene el **mapa completo** (Dijkstra) y usa áreas, con el **área 0** en el centro.
+- **EIGRP** = *Enhanced Interior Gateway Routing Protocol* (Cisco). **BGP** = *Border Gateway Protocol*: el protocolo de la **frontera**, entre organizaciones y operadores (Internet).
+- **IGP** = *Interior Gateway Protocol* (dentro de casa). **EGP** = *Exterior* (entre casas).
+- 🧠 Distancias administrativas: **Conectada 0, Estática 1, EIGRP 90, OSPF 110, RIP 120** → "**cuanto más bajo, más me fío**".
+- 🧠 Truco: **la ruta por defecto 0.0.0.0/0 es "para todo lo demás, por aquí"**.
+:::
 
 - Un router decide por la **coincidencia de prefijo más larga** (*longest prefix match*): para 10.1.1.5, una ruta 10.1.1.0/24 gana a 10.0.0.0/8 aunque la /8 tenga mejor métrica.
 - Si hay varias fuentes para el **mismo prefijo**, gana la de menor **distancia administrativa** (AD, fiabilidad de la fuente). A igualdad de protocolo, la menor **métrica**.
@@ -2811,6 +4170,28 @@ interface g0/0.10
 
 ### NET-5.4 · Seguridad en la LAN y control de acceso
 
+:::facil
+**🧭 En pocas palabras.** Dentro de la red local hay ataques clásicos (suplantar ARP o el DHCP, saltar de VLAN, llenar la tabla del switch). Los switches tienen **funciones para pararlos**. Además, con **802.1X** solo se conecta a la red quien **se identifica**.
+
+**Imagínatelo así:** 802.1X es una **discoteca**:
+- **Suplicante**: el cliente que quiere entrar (el PC).
+- **Autenticador**: el **portero** (el switch o el punto de acceso).
+- **Servidor de autenticación**: **la lista de invitados** (RADIUS).
+
+El portero no decide: pregunta a la lista.
+
+Una **ACL** es la lista del portero **leída de arriba abajo**; al final siempre hay una norma invisible: **"si no estás en la lista, no pasas"**.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Port security* = seguridad de puerto (limitar las MAC por enchufe). *DHCP snooping* = **fisgonear** el DHCP (solo el puerto de confianza puede repartir IP). **DAI** = *Dynamic ARP Inspection*.
+- **802.1X**: *supplicant* (suplicante), *authenticator* (autenticador). **EAP** = *Extensible Authentication Protocol*; **EAPOL** = EAP **o**ver **L**AN.
+- **AAA** = *Authentication, Authorization, Accounting*: quién eres, qué puedes hacer y qué has hecho.
+- 🧠 Truco: **TACACS+ = "T-T": TCP y Todo cifrado**. **RADIUS = UDP y solo cifra la contraseña**.
+- 🧠 Truco de ACL: **estándar → cerca del Destino; eXtendida → cerca del Origen**.
+- **ACL** = *Access Control List*. *Wildcard* = comodín (la máscara al revés).
+:::
+
 | Ataque | Cómo funciona | Mitigación |
 |---|---|---|
 | **Desbordamiento de tabla MAC** (MAC flooding) | Llenar la CAM con MAC falsas → el switch inunda como un hub | **Port security** (máximo de MAC por puerto, `sticky`, acciones *shutdown/restrict/protect*) |
@@ -2841,6 +4222,30 @@ interface g0/0.10
 
 ### NET-6.1 · Seguridad perimetral: cortafuegos, DMZ, IDS/IPS y proxies
 
+:::facil
+**🧭 En pocas palabras.** La **seguridad perimetral** protege la frontera entre tu red e Internet:
+- El **cortafuegos** decide qué tráfico pasa.
+- La **DMZ** es una zona intermedia para los servidores que tienen que verse desde fuera.
+- El **IDS/IPS** detecta o bloquea ataques.
+- Los **proxies** hacen de intermediarios.
+
+**Imagínatelo así:**
+- La **DMZ** es la **recepción del edificio**: los visitantes llegan hasta ahí, pero no entran en las oficinas (la red interna).
+- El **IDS** es la **alarma** (suena y avisa).
+- El **IPS** es el **vigilante** que te para en la puerta.
+- Un firewall **con estado** es un portero **con memoria**: recuerda quién salió y le deja volver a entrar.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Firewall* = cortafuegos. *Stateful* = con estado (con memoria). **NGFW** = *Next-Generation Firewall*. **WAF** = *Web Application Firewall* (protege webs).
+- **DMZ** = *DeMilitarized Zone*, zona desmilitarizada.
+- **IDS** = *Intrusion **Detection** System* (detecta). **IPS** = *Intrusion **Prevention** System* (previene, bloquea).
+- *Proxy* = intermediario. *Forward proxy* = sale a Internet **por los usuarios**. *Reverse proxy* = recibe a los visitantes **delante de los servidores**.
+- *False positive* = falsa alarma. *False negative* = ataque que **no** se detecta (el peor).
+- **Zero Trust** = confianza cero: "nunca te fíes, verifica siempre".
+- 🧠 Truco: **IDS = D de Detectar (y avisar); IPS = P de Parar**.
+:::
+
 **Cortafuegos (firewall)**
 | Tipo | Capa | Características |
 |---|---|---|
@@ -2870,6 +4275,25 @@ interface g0/0.10
 
 ### NET-6.2 · VPN e IPsec
 
+:::facil
+**🧭 En pocas palabras.** Una **VPN** crea un **túnel cifrado** por Internet para unir dos sedes (sitio a sitio) o para que un empleado trabaje desde casa como si estuviera en la oficina (acceso remoto). **IPsec** es el conjunto de protocolos más usado para ello.
+
+**Imagínatelo así:** Internet es una **carretera pública**; la VPN es un **furgón blindado** que circula por ella.
+- **Modo túnel**: metes **el sobre entero** (con la dirección original) **dentro de otro sobre nuevo**.
+- **Modo transporte**: cifras **solo la carta** y el sobre original sigue a la vista.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **VPN** = *Virtual Private Network*, red privada virtual.
+- **IPsec** = *IP security*.
+  - **AH** = *Authentication Header*: cabecera de **autenticación**, un **sello** de que nadie lo ha tocado, pero **se puede leer**.
+  - **ESP** = *Encapsulating Security Payload*: **encapsula y cifra** la carga.
+- **IKE** = *Internet Key Exchange*, intercambio de claves (UDP 500). **NAT-T** = *NAT Traversal*, atravesar NAT (UDP 4500).
+- *Split tunneling* = túnel dividido: solo lo de la empresa va por la VPN.
+- 🧠 Truco: **AH Autentica (no oculta); ESP Esconde (cifra)**.
+- 🧠 Truco: **PPTP = "Pásalo, Probablemente Te Pillen"**: está roto, no se usa.
+:::
+
 - **VPN de sitio a sitio** (entre sedes, normalmente router/firewall a router/firewall) y **VPN de acceso remoto** (usuario a la red corporativa con un cliente).
 - **IPsec** (capa 3), conjunto de protocolos:
   - **AH** (Authentication Header, protocolo IP **51**): integridad y autenticación, **sin cifrado**; incompatible con NAT.
@@ -2889,6 +4313,29 @@ interface g0/0.10
 
 ### NET-6.3 · Monitorización y análisis de tráfico
 
+:::facil
+**🧭 En pocas palabras.** Monitorizar es **vigilar la red de forma continua**:
+- **SNMP**: estado de los equipos.
+- **NetFlow**: quién habla con quién.
+- **Syslog**: los logs.
+
+Cuando hay un problema concreto, se **captura el tráfico** con **Wireshark** o **tcpdump** para verlo paquete a paquete.
+
+**Imagínatelo así:** NetFlow es la **factura detallada del teléfono** (quién llamó a quién, cuándo y cuánto rato, pero no lo que dijeron); Wireshark es **grabar la llamada**.
+
+En Wireshark hay **dos filtros distintos**:
+- **De captura**: decide **qué se graba**.
+- **De visualización**: decide **qué ves** de lo que ya has grabado.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **BPF** = *Berkeley Packet Filter*, la sintaxis de los filtros de captura (`host 10.0.0.5`, `port 53`).
+- **SPAN** = *Switched Port ANalyzer*, puerto espejo. **TAP** = *Test Access Point*, el aparato que copia el tráfico del cable.
+- *Latency* = latencia (retardo). *Jitter* = **tembleque**: variación de la latencia. *Throughput* = rendimiento real. *Packet loss* = pérdida de paquetes.
+- **QoS** = *Quality of Service*. **DSCP** = *Differentiated Services Code Point*. **EF** = *Expedited Forwarding*, reenvío **acelerado** (para la voz).
+- 🧠 Truco: **captura = palabras (`host`, `port`); visualización = estilo programación con `==` (`ip.addr == 10.0.0.5`)**.
+:::
+
 - **SNMP** (consultas a contadores de interfaces, CPU…), **NetFlow/IPFIX/sFlow** (estadísticas de flujos: quién habla con quién y cuánto), **syslog** centralizado, **SIEM**.
 - Herramientas: **Nagios**, **Zabbix**, **PRTG**, **Cacti**, LibreNMS, Grafana + Prometheus; *Wireshark*, *tcpdump*; Microsoft **Network Monitor** (obsoleto) → `pktmon` y `netsh trace` en Windows.
 - **Puerto espejo (SPAN)** o **TAP** para capturar el tráfico de un switch (un switch no envía todo el tráfico a todos los puertos).
@@ -2904,6 +4351,27 @@ interface g0/0.10
 > ⚠️ Trampa: `ip.addr == x` es un filtro de **visualización**; en el filtro de **captura** se escribe `host x`.
 
 ### NET-6.4 · Diagnóstico profesional de red (metodología y casos)
+
+:::facil
+**🧭 En pocas palabras.** Diagnosticar una red es **ir de lo más cercano a lo más lejano** hasta encontrar dónde se rompe la cadena. Con 5 o 6 comandos localizas casi cualquier problema.
+
+**Imagínatelo así:** como una médica que revisa por orden:
+1. **¿Tengo pulso?** → `ping 127.0.0.1`.
+2. **¿Tengo voz?** → mi IP.
+3. **¿Puedo salir de casa?** → puerta de enlace.
+4. **¿Llego a la ciudad?** → 8.8.8.8.
+5. **¿Funciona mi agenda?** → un nombre (DNS).
+6. **¿Está abierta la tienda?** → el puerto del servicio.
+
+El primer paso que falla te dice dónde está el problema.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- *Troubleshooting* = resolución de problemas. *Bottom-up* = de abajo arriba. *Top-down* = de arriba abajo. *Divide and conquer* = divide y vencerás.
+- 🧠 Truco: **"Si funciona por IP pero no por nombre, es el DNS"** (y entre los administradores se dice que *casi siempre es el DNS*).
+- 🧠 Truco: **169.254 = DHCP; llega a su red pero no a otras = puerta de enlace; ping sí pero la web no = puerto o firewall**.
+- 🧠 Truco: **las páginas pequeñas cargan y las grandes se cuelgan = MTU**.
+:::
 
 **Metodología**: OSI **de abajo arriba** (físico → enlace → red → transporte → aplicación), de **arriba abajo**, o **divide y vencerás** (empezar por capa 3 con un ping). Documentar siempre.
 
@@ -2940,6 +4408,24 @@ interface g0/0.10
 - *¿Qué se usa para comprobar si un servidor acepta conexiones en el 443 desde PowerShell?* → `Test-NetConnection srv -Port 443`.
 
 ### NET-6.5 · Redes en la AGE y tendencias actuales
+
+:::facil
+**🧭 En pocas palabras.** En la Administración española las redes se conectan entre sí por la **Red SARA**, una especie de "Internet privada" de las Administraciones, que enlaza con Europa a través de **TESTA**. Todo diseño de red pública debe cumplir el **ENS**: segmentación, cortafuegos, VPN con doble factor y registros.
+
+En cuanto a tendencias, la red se está volviendo **software**:
+- **SDN** separa el "cerebro" de los "músculos".
+- **NFV** convierte los aparatos en máquinas virtuales.
+- **SD-WAN** y **SASE** llevan la red y la seguridad a la nube.
+:::
+:::ingles
+**🔤 Para recordarlo**
+- **SARA** = *Sistemas de Aplicaciones y Redes para las Administraciones*.
+- **TESTA** = *Trans European Services for Telematics between Administrations*, la red europea.
+- **SDN** = *Software-Defined Networking*, redes definidas por software. **NFV** = *Network Functions Virtualization*, funciones de red virtualizadas.
+- **SD-WAN** = WAN definida por software. **SASE** = *Secure Access Service Edge* (se pronuncia "sassy").
+- **ZTNA** = *Zero Trust Network Access*.
+- 🧠 Truco: **RedIRIS = universidades e investigación; Red SARA = Administraciones**.
+:::
 
 - **Red SARA** (Sistemas de Aplicaciones y Redes para las Administraciones): **intranet de las Administraciones Públicas** españolas. Conecta ministerios, CCAA, entidades locales (a través de las CCAA) y organismos; conexión con la red europea **TESTA** (sTESTA / TESTA-ng). Ofrece servicios comunes (Cl@ve, @firma, Notific@, SIR, etc.). Gestionada por la **Secretaría General de Administración Digital (SGAD)**.
 - **Esquema Nacional de Seguridad (RD 311/2022)**: medidas de **protección de las comunicaciones** (mp.com: perímetro seguro, protección de la confidencialidad, autenticidad e integridad, **segregación de redes**, medios alternativos), **control de acceso** (op.acc) y **monitorización del sistema** (op.mon: detección de intrusión, sistema de métricas, vigilancia).
@@ -3010,6 +4496,13 @@ function mdToHtml(src){
   const lines = src.split('\n'); let html = ''; let i = 0;
   while (i < lines.length){
     let l = lines[i];
+    let bx = l.match(/^:::(\w+)\s*$/);
+    if (bx){
+      let inner = []; i++;
+      while (i < lines.length && !/^:::\s*$/.test(lines[i])) { inner.push(lines[i]); i++; }
+      i++;
+      html += '<div class="box box-' + bx[1] + '">' + mdToHtml(inner.join('\n')) + '</div>'; continue;
+    }
     if (/^```/.test(l)){
       let code = []; i++;
       while (i < lines.length && !/^```/.test(lines[i])) { code.push(lines[i]); i++; }
@@ -3138,7 +4631,7 @@ function renderTheory(){
     view.innerHTML = '<div class="doc">' + mdToHtml(intro.join('\n')) + '</div>' +
       '<div class="grid">'+counts+'</div>' +
       '<div class="card"><h3 style="margin-top:0">Cómo usar esta web</h3><ul>' +
-      '<li><b>Teoría</b>: elige un tema en el índice. Marca cada tema como estudiado para ver tu avance.</li>' +
+      '<li><b>Teoría</b>: elige un tema en el índice. Cada tema empieza con dos recuadros: <b>🧭 En pocas palabras</b> (explicación sencilla) y <b>🔤 Para recordarlo</b> (el inglés de los comandos y trucos). Marca cada tema como estudiado para ver tu avance.</li>' +
       '<li><b>Test</b>: '+QS.length+' preguntas con explicación. Puedes filtrar por curso, nivel o tema, o hacer un simulacro con la penalización real (−1/3).</li>' +
       '<li><b>Consola</b>: '+EX.length+' ejercicios en los que escribes el comando (PowerShell, cmd, Linux y Cisco) y se corrige al momento.</li>' +
       '<li><b>Repaso</b>: tus fallos y las preguntas marcadas con ★ para volver a practicarlas.</li>' +
