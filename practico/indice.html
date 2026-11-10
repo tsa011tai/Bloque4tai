@@ -7,104 +7,132 @@
 <meta name="description" content="Índice de cursos prácticos del Bloque IV de la oposición TAI: Linux, Windows Server y PowerShell, Docker y Kubernetes, y Git.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0b0d12; --bg2:#11141b; --panel:#151922; --line:#262c38; --text:#e8ebf2; --muted:#9aa3b5;
-  --mono:"JetBrains Mono",Consolas,Menlo,monospace; --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --linux:#ffc531; --win:#7b7bff; --dock:#2ee88a; --git:#d9d9d2;
+  --bg:#ffffff; --text:#1f2330; --muted:#5d6475; --line:#e7e9f0; --soft:#f7f8fc;
+  --mono:"JetBrains Mono",Consolas,Menlo,monospace; --sans:"Nunito",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  /* color de cada curso: fuerte (texto/bordes) y suave (fondos) */
+  --linux:#0f9e8e; --linux-s:#e3f8f5; --linux-b:#5fd8c8;
+  --win:#4f4fd1;   --win-s:#ececfd;   --win-b:#a3a3f5;
+  --dock:#0a8a3e;  --dock-s:#e2f7e9;  --dock-b:#3ddc7a;
+  --git:#5a5e66;   --git-s:#f0f0ec;   --git-b:#cfcfc8;
+  --pink:#ff7eb6; --yellow:#ffd166;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
 body{
   background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh; overflow-x:hidden;
   background-image:
-    radial-gradient(1200px 600px at 10% -10%, rgba(123,123,255,.14), transparent 60%),
-    radial-gradient(900px 500px at 110% 10%, rgba(46,232,138,.10), transparent 60%),
-    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
-  background-size:auto, auto, 32px 32px, 32px 32px;
+    radial-gradient(520px 320px at 8% 0%, rgba(95,216,200,.20), transparent 70%),
+    radial-gradient(520px 320px at 95% 6%, rgba(163,163,245,.22), transparent 70%),
+    radial-gradient(600px 360px at 50% 105%, rgba(61,220,122,.14), transparent 70%),
+    radial-gradient(#dfe3ee 1.2px, transparent 1.3px);
+  background-size:auto,auto,auto,22px 22px;
 }
-/* scanlines */
-body::after{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px);opacity:.35;z-index:50}
 a{color:inherit}
-.wrap{max-width:1120px;margin:0 auto;padding:28px 16px 60px}
+.wrap{max-width:1120px;margin:0 auto;padding:26px 16px 60px}
 
-/* ---------- terminal header ---------- */
-.term{background:rgba(17,20,27,.85);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.45);backdrop-filter:blur(4px)}
-.bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#0f1218;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+/* ---------- estrellitas ---------- */
+.spark{position:fixed;pointer-events:none;font-size:18px;opacity:.55;animation:float 6s ease-in-out infinite;z-index:0}
+@keyframes float{50%{transform:translateY(-10px) rotate(12deg)}}
+
+/* ---------- terminal ---------- */
+.term{position:relative;z-index:1;background:#fff;border:2px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 12px 30px -12px rgba(79,79,209,.25)}
+.bar{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--soft);border-bottom:2px solid var(--line);font-family:var(--mono);font-size:12.5px;color:var(--muted)}
 .dot{width:12px;height:12px;border-radius:50%;display:inline-block}
-.d1{background:#ff5f57}.d2{background:#febc2e}.d3{background:#28c840}
+.d1{background:#ff8fa3}.d2{background:#ffd166}.d3{background:#6ee7a8}
 .bar .title{margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.screen{padding:20px 22px 24px;font-family:var(--mono);font-size:15px;line-height:1.7}
-.p{color:var(--dock)} .u{color:var(--win)} .path{color:var(--linux)}
+.bar .pet{margin-left:auto;white-space:nowrap}
+.screen{padding:18px 22px 24px;font-family:var(--mono);font-size:15px;line-height:1.7}
+.p{color:var(--dock);font-weight:600} .u{color:var(--win);font-weight:600} .path{color:var(--linux);font-weight:600}
 .out{color:var(--muted)}
-.cursor{display:inline-block;width:9px;height:1.1em;background:var(--dock);vertical-align:-3px;animation:blink 1s steps(1) infinite}
+.cursor{display:inline-block;width:9px;height:1.05em;background:var(--pink);border-radius:2px;vertical-align:-3px;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
-h1{font-family:var(--mono);font-weight:800;font-size:clamp(28px,6vw,54px);line-height:1.05;margin:14px 0 6px;letter-spacing:-1px}
-h1 .g{background:linear-gradient(90deg,var(--linux),var(--win) 35%,var(--dock) 65%,var(--git));-webkit-background-clip:text;background-clip:text;color:transparent}
-.sub{font-family:var(--sans);color:var(--muted);font-size:16px;margin:0}
-.ascii{color:#5a6478;font-size:11px;line-height:1.2;margin:0 0 6px;white-space:pre;overflow:hidden}
+.ascii{color:#a9adef;font-size:11px;line-height:1.2;margin:0 0 4px;white-space:pre;overflow:hidden;font-weight:800}
+h1{font-family:var(--sans);font-weight:900;font-size:clamp(30px,6vw,56px);line-height:1.05;margin:12px 0 8px;letter-spacing:-.5px}
+h1 .g{background:linear-gradient(90deg,var(--linux),var(--win) 40%,var(--dock) 75%,var(--git));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-family:var(--sans);color:var(--muted);font-size:17px;margin:0}
+.sub b{color:var(--text)}
 
-/* ---------- cards ---------- */
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:26px}
-.card{--c:#fff;position:relative;display:flex;flex-direction:column;gap:14px;text-decoration:none;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0)),var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 20px 18px;overflow:hidden;transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;isolation:isolate}
-.card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--c);box-shadow:0 0 18px var(--c)}
-.card::after{content:"";position:absolute;width:260px;height:260px;right:-90px;top:-90px;background:radial-gradient(circle,var(--c),transparent 65%);opacity:.10;z-index:-1;transition:opacity .2s}
-.card:hover,.card:focus-visible{transform:translateY(-4px);border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 14px 40px -10px var(--c);outline:none}
-.card:hover::after,.card:focus-visible::after{opacity:.22}
-.linux{--c:var(--linux)} .win{--c:var(--win)} .dock{--c:var(--dock)} .git{--c:var(--git)}
-.head{display:flex;align-items:center;gap:14px}
-.icon{flex:0 0 64px;width:64px;height:64px;border-radius:14px;display:grid;place-items:center;background:#0d1016;border:1px solid var(--line);box-shadow:inset 0 0 18px rgba(0,0,0,.6)}
+/* ---------- tarjetas ---------- */
+.grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:26px}
+.card{--c:#000;--s:#fff;--b:#ccc;position:relative;display:flex;flex-direction:column;gap:14px;text-decoration:none;background:linear-gradient(180deg,var(--s),#fff 46%);border:2px solid var(--line);border-radius:24px;padding:20px 20px 18px;overflow:hidden;transition:transform .2s cubic-bezier(.3,1.6,.5,1), border-color .2s, box-shadow .2s}
+.card::before{content:"";position:absolute;width:200px;height:200px;right:-70px;top:-70px;border-radius:50%;background:var(--b);opacity:.18}
+.card:hover,.card:focus-visible{transform:translateY(-6px) rotate(-.4deg);border-color:var(--b);box-shadow:0 18px 36px -16px var(--b), 0 0 0 4px var(--s);outline:none}
+.linux{--c:var(--linux);--s:var(--linux-s);--b:var(--linux-b)}
+.win{--c:var(--win);--s:var(--win-s);--b:var(--win-b)}
+.dock{--c:var(--dock);--s:var(--dock-s);--b:var(--dock-b)}
+.git{--c:var(--git);--s:var(--git-s);--b:var(--git-b)}
+.head{position:relative;display:flex;align-items:center;gap:14px}
+.icon{flex:0 0 66px;width:66px;height:66px;border-radius:20px;display:grid;place-items:center;background:#fff;border:2px solid var(--b);box-shadow:0 6px 14px -8px var(--b)}
 .icon svg{width:40px;height:40px}
-.kicker{font-family:var(--mono);font-size:12px;color:var(--c);letter-spacing:.5px}
-.card h2{margin:2px 0 0;font-size:22px;line-height:1.2}
-.desc{color:var(--muted);font-size:14.5px;line-height:1.55;margin:0}
+.card:hover .icon{animation:wiggle .5s ease}
+@keyframes wiggle{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.kicker{font-family:var(--mono);font-size:12px;color:var(--c);font-weight:600}
+.card h2{margin:2px 0 0;font-size:23px;line-height:1.2;font-weight:900}
+.desc{color:var(--muted);font-size:15px;line-height:1.55;margin:0}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
-.tag{font-family:var(--mono);font-size:12px;padding:3px 8px;border-radius:6px;background:#0d1016;border:1px solid var(--line);color:#c9cfdb}
+.tag{font-family:var(--mono);font-size:12px;padding:3px 9px;border-radius:999px;background:var(--s);border:1.5px solid var(--b);color:var(--c);font-weight:600}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.stat{background:#0d1016;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
-.stat b{display:block;font-family:var(--mono);font-size:18px;color:var(--c)}
-.stat span{font-size:12px;color:var(--muted)}
+.stat{background:#fff;border:2px dashed var(--line);border-radius:14px;padding:8px 10px}
+.stat b{display:block;font-family:var(--mono);font-size:19px;color:var(--c)}
+.stat span{font-size:12.5px;color:var(--muted);font-weight:600}
 .prog{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
-.meter{height:8px;border-radius:8px;background:#0d1016;border:1px solid var(--line);overflow:hidden;margin-top:6px}
-.meter i{display:block;height:100%;width:0;background:var(--c);box-shadow:0 0 10px var(--c);transition:width .8s ease}
+.meter{height:10px;border-radius:999px;background:var(--soft);border:1.5px solid var(--line);overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;width:0;border-radius:999px;background:repeating-linear-gradient(45deg,var(--b) 0 8px,var(--c) 8px 16px);transition:width .9s ease}
 .go{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:14px}
-.go .run{color:var(--c);font-weight:600}
-.go kbd{font-family:var(--mono);font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px}
+.go .run{color:#fff;background:var(--c);font-weight:600;padding:7px 14px;border-radius:999px;box-shadow:0 6px 14px -6px var(--c)}
+.go kbd{font-family:var(--mono);font-size:11.5px;color:var(--muted);background:#fff;border:1.5px solid var(--line);border-bottom-width:3px;border-radius:7px;padding:1px 7px}
 
-/* ---------- tip ---------- */
-.tip{margin-top:26px;display:flex;gap:14px;align-items:flex-start;background:rgba(17,20,27,.85);border:1px dashed var(--line);border-radius:14px;padding:16px 18px}
-.tip .lbl{font-family:var(--mono);font-size:12px;color:var(--linux);white-space:nowrap;padding-top:3px}
-.tip code{font-family:var(--mono);font-size:15px;color:#fff;background:#0d1016;border:1px solid var(--line);border-radius:6px;padding:2px 8px;display:inline-block;margin-bottom:4px;word-break:break-word}
-.tip p{margin:4px 0 0;color:var(--muted);font-size:14.5px}
-.tip button{margin-left:auto;flex:0 0 auto;font-family:var(--mono);font-size:12.5px;color:var(--text);background:#0d1016;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}
-.tip button:hover{border-color:var(--dock);color:var(--dock)}
+/* ---------- píldoras del día ---------- */
+.daily{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:26px}
+.pill{background:#fff;border:2px solid var(--line);border-radius:22px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.pill.cmd{border-color:#cdeee9;background:linear-gradient(180deg,#f2fcfa,#fff 50%)}
+.pill.trap{border-color:#ffd7e6;background:linear-gradient(180deg,#fff4f8,#fff 50%)}
+.pill h3{margin:0;font-size:17px;font-weight:900;display:flex;align-items:center;gap:8px}
+.pill h3 small{font-family:var(--mono);font-weight:600;font-size:11.5px;color:var(--muted);margin-left:auto}
+.pill code{font-family:var(--mono);font-size:15px;color:#fff;background:#1f2330;border-radius:12px;padding:8px 12px;display:block;word-break:break-word}
+.pill code::before{content:"$ ";color:#6ee7a8}
+.pill p{margin:0;color:var(--muted);font-size:15px;line-height:1.5}
+.claim{font-size:16px!important;color:var(--text)!important;font-weight:700}
+.vf{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font-family:var(--sans);font-weight:800;font-size:14px;border-radius:999px;padding:7px 14px;cursor:pointer;border:2px solid var(--line);background:#fff;color:var(--text);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.v{border-color:#6ee7a8;color:#0a8a3e}
+.btn.f{border-color:#ff9fb8;color:#c2255c}
+.btn.next{margin-left:auto;font-family:var(--mono);font-weight:600;font-size:12.5px}
+.ans{display:none;border-radius:14px;padding:10px 12px;font-size:14.5px;line-height:1.5}
+.ans.ok{display:block;background:#e3f7ea;color:#0b5d2c}
+.ans.ko{display:block;background:#ffe9f0;color:#9c1c4a}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
-footer{margin-top:34px;text-align:center;font-family:var(--mono);font-size:12.5px;color:#6b7385}
+footer{position:relative;z-index:1;margin-top:34px;text-align:center;font-family:var(--mono);font-size:12.5px;color:#8a90a0}
 footer .k{color:var(--muted)}
 
-.egg{position:fixed;left:50%;bottom:22px;transform:translate(-50%,40px);opacity:0;background:#0d1016;border:1px solid var(--dock);color:var(--dock);font-family:var(--mono);font-size:14px;padding:10px 16px;border-radius:10px;box-shadow:0 0 24px rgba(46,232,138,.35);transition:all .3s;z-index:60;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+.egg{position:fixed;left:50%;bottom:22px;transform:translate(-50%,40px);opacity:0;background:#fff;border:2px solid var(--pink);color:#c2255c;font-family:var(--mono);font-size:14px;padding:10px 16px;border-radius:999px;box-shadow:0 10px 30px -10px var(--pink);transition:all .3s;z-index:60;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
 .egg.show{opacity:1;transform:translate(-50%,0)}
 
 @media (max-width:760px){
-  .grid{grid-template-columns:1fr}
+  .grid,.daily{grid-template-columns:1fr}
   .screen{padding:16px;font-size:13.5px}
-  .ascii{display:none}
-  .tip{flex-wrap:wrap}
-  .tip button{margin-left:0}
+  .ascii,.bar .pet{display:none}
   .go kbd{display:none}
+  .spark{display:none}
 }
-@media (prefers-reduced-motion: reduce){
-  *{animation:none!important;transition:none!important}
-}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<span class="spark" style="top:90px;left:3%">✨</span>
+<span class="spark" style="top:340px;right:2.5%;animation-delay:1.5s">⭐</span>
+<span class="spark" style="bottom:120px;left:2%;animation-delay:3s">💚</span>
+<span class="spark" style="bottom:60px;right:4%;animation-delay:2s">✨</span>
+
 <div class="wrap">
 
   <section class="term" aria-label="Presentación">
-    <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="title">teresa@bloque4: ~/oposicion/tai — bash</span></div>
+    <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="title">teresa@bloque4: ~/oposicion/tai</span><span class="pet" aria-hidden="true">ฅ^•ﻌ•^ฅ</span></div>
     <div class="screen">
 <pre class="ascii" aria-hidden="true"> _____  _    ___     ____  _                        _____     __
 |_   _|/ \  |_ _|   | __ )| | ___   __ _ _   _  ___|_ _\ \   / /
@@ -115,7 +143,7 @@ footer .k{color:var(--muted)}
       <div><span class="p">teresa</span>@<span class="u">bloque4</span>:<span class="path">~/oposicion/tai</span>$ ls cursos/ <span class="out">--practico</span></div>
       <div class="out" id="typed"></div>
       <h1><span class="g">Bloque IV · práctico</span></h1>
-      <p class="sub">Cuatro cursos de cero a profesional, con teoría, test, consola y repaso de lo que peor llevas. Elige uno y <b>¡a por la plaza!</b> <span class="cursor" aria-hidden="true"></span></p>
+      <p class="sub">Cuatro cursos de cero a profesional, con teoría, test, consola y repaso de lo que peor llevas. Elige uno y <b>¡a por la plaza!</b> (•̀ᴗ•́)و <span class="cursor" aria-hidden="true"></span></p>
     </div>
   </section>
 
@@ -124,20 +152,21 @@ footer .k{color:var(--muted)}
     <a class="card linux" href="https://tsa011tai.github.io/Bloque4tai/practico/linux.html" data-key="1">
       <div class="head">
         <div class="icon" aria-hidden="true">
-          <svg viewBox="0 0 48 48" fill="none" stroke="#ffc531" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="40" height="32" rx="5"/><path d="M12 19l7 5-7 5"/><path d="M23 30h12"/></svg>
+          <svg viewBox="0 0 48 48" fill="none" stroke="#0f9e8e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="40" height="32" rx="7"/><path d="M12 19l7 5-7 5"/><path d="M23 30h12"/></svg>
         </div>
-        <div><div class="kicker">./linux.sh</div><h2>Linux</h2></div>
+        <div><div class="kicker">$ ./linux.sh</div><h2>Linux</h2></div>
       </div>
       <p class="desc">La terminal de verdad: ficheros, permisos, usuarios, procesos, servicios con systemd, red y scripts en Bash.</p>
       <div class="tags"><span class="tag">ls -la</span><span class="tag">chmod 750</span><span class="tag">systemctl</span><span class="tag">grep</span></div>
-      <div class="prog" id="p-linux">Tu progreso se guarda dentro del curso.</div>
-      <div class="go"><span class="run">$ abrir curso →</span><kbd>1</kbd></div>
+      <div class="stats"><div class="stat"><b>30</b><span>módulos</span></div><div class="stat"><b>6</b><span>niveles</span></div><div class="stat"><b>&gt;_</b><span>consola</span></div></div>
+      <div class="prog">Tu progreso se guarda dentro del curso.</div>
+      <div class="go"><span class="run">abrir curso →</span><kbd>1</kbd></div>
     </a>
 
     <a class="card win" href="https://tsa011tai.github.io/Bloque4tai/practico/ws.html" data-key="2">
       <div class="head">
         <div class="icon" aria-hidden="true">
-          <svg viewBox="0 0 48 48" fill="none" stroke="#7b7bff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14l10 8-10 8"/><path d="M21 33h9"/><circle cx="38" cy="10" r="4"/><circle cx="38" cy="38" r="4"/><circle cx="38" cy="24" r="3"/><path d="M38 14v7M38 27v7"/></svg>
+          <svg viewBox="0 0 48 48" fill="none" stroke="#4f4fd1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14l10 8-10 8"/><path d="M21 33h9"/><circle cx="38" cy="10" r="4"/><circle cx="38" cy="38" r="4"/><circle cx="38" cy="24" r="3"/><path d="M38 14v7M38 27v7"/></svg>
         </div>
         <div><div class="kicker">PS C:\&gt; .\ws.ps1</div><h2>Windows Server, PowerShell y Redes</h2></div>
       </div>
@@ -145,13 +174,13 @@ footer .k{color:var(--muted)}
       <div class="tags"><span class="tag">Get-ADUser</span><span class="tag">gpupdate /force</span><span class="tag">ipconfig /all</span><span class="tag">show ip route</span></div>
       <div class="stats"><div class="stat"><b>74</b><span>temas</span></div><div class="stat"><b>1006</b><span>preguntas</span></div><div class="stat"><b>175</b><span>ejercicios</span></div></div>
       <div class="prog" data-store="tai-ws-ps-redes-v1" data-topics="74" data-q="1006"></div>
-      <div class="go"><span class="run">PS&gt; abrir curso →</span><kbd>2</kbd></div>
+      <div class="go"><span class="run">abrir curso →</span><kbd>2</kbd></div>
     </a>
 
     <a class="card dock" href="https://tsa011tai.github.io/Bloque4tai/practico/modulares.html" data-key="3">
       <div class="head">
         <div class="icon" aria-hidden="true">
-          <svg viewBox="0 0 48 48" fill="none" stroke="#2ee88a" stroke-width="3" stroke-linejoin="round"><rect x="6" y="26" width="11" height="11" rx="1.5"/><rect x="19" y="26" width="11" height="11" rx="1.5"/><rect x="12.5" y="13" width="11" height="11" rx="1.5"/><path d="M38 7l7 4v8l-7 4-7-4v-8z"/><path d="M38 31l5 3v6l-5 3-5-3v-6z" opacity=".7"/><path d="M3 41h28" stroke-linecap="round"/></svg>
+          <svg viewBox="0 0 48 48" fill="none" stroke="#0a8a3e" stroke-width="3" stroke-linejoin="round"><rect x="6" y="26" width="11" height="11" rx="2.5"/><rect x="19" y="26" width="11" height="11" rx="2.5"/><rect x="12.5" y="13" width="11" height="11" rx="2.5"/><path d="M38 7l7 4v8l-7 4-7-4v-8z"/><path d="M38 31l5 3v6l-5 3-5-3v-6z" opacity=".7"/><path d="M3 41h28" stroke-linecap="round"/></svg>
         </div>
         <div><div class="kicker">$ docker compose up -d</div><h2>Docker y Kubernetes</h2></div>
       </div>
@@ -159,13 +188,13 @@ footer .k{color:var(--muted)}
       <div class="tags"><span class="tag">docker run -d -p</span><span class="tag">kubectl get pods</span><span class="tag">rollout undo</span></div>
       <div class="stats"><div class="stat"><b>31</b><span>temas</span></div><div class="stat"><b>915</b><span>preguntas</span></div><div class="stat"><b>205</b><span>ejercicios</span></div></div>
       <div class="prog" data-store="tai-docker-k8s-v1" data-topics="31" data-q="915"></div>
-      <div class="go"><span class="run">$ abrir curso →</span><kbd>3</kbd></div>
+      <div class="go"><span class="run">abrir curso →</span><kbd>3</kbd></div>
     </a>
 
     <a class="card git" href="https://tsa011tai.github.io/Bloque4tai/practico/git.html" data-key="4">
       <div class="head">
         <div class="icon" aria-hidden="true">
-          <svg viewBox="0 0 48 48" fill="none" stroke="#d9d9d2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"/><circle cx="12" cy="38" r="4"/><circle cx="36" cy="22" r="4"/><path d="M12 14v20"/><path d="M36 26c0 8-10 6-21 10"/><path d="M36 18c0-6-6-8-12-8h-8" opacity=".55"/></svg>
+          <svg viewBox="0 0 48 48" fill="none" stroke="#5a5e66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"/><circle cx="12" cy="38" r="4"/><circle cx="36" cy="22" r="4"/><path d="M12 14v20"/><path d="M36 26c0 8-10 6-21 10"/><path d="M36 18c0-6-6-8-12-8h-8" opacity=".55"/></svg>
         </div>
         <div><div class="kicker">$ git switch -c plaza</div><h2>Git</h2></div>
       </div>
@@ -173,19 +202,32 @@ footer .k{color:var(--muted)}
       <div class="tags"><span class="tag">git status</span><span class="tag">git merge --no-ff</span><span class="tag">git reflog</span></div>
       <div class="stats"><div class="stat"><b>18</b><span>temas</span></div><div class="stat"><b>535</b><span>preguntas</span></div><div class="stat"><b>158</b><span>ejercicios</span></div></div>
       <div class="prog" data-store="tai-git-v1" data-topics="18" data-q="535"></div>
-      <div class="go"><span class="run">$ abrir curso →</span><kbd>4</kbd></div>
+      <div class="go"><span class="run">abrir curso →</span><kbd>4</kbd></div>
     </a>
 
   </main>
 
-  <section class="tip" aria-live="polite">
-    <div class="lbl">// comando del día</div>
-    <div><code id="tipCmd"></code><p id="tipTxt"></p></div>
-    <button id="tipBtn" type="button">otro ↻</button>
+  <section class="daily">
+    <div class="pill cmd" aria-live="polite">
+      <h3>💡 Comando del día <small id="cmdN"></small></h3>
+      <code id="tipCmd"></code>
+      <p id="tipTxt"></p>
+      <div class="row"><button class="btn next" id="tipBtn" type="button">otro ↻</button></div>
+    </div>
+    <div class="pill trap" aria-live="polite">
+      <h3>🙀 Trampa del día <small id="trapN"></small></h3>
+      <p class="claim" id="trapQ"></p>
+      <div class="vf">
+        <button class="btn v" type="button" data-a="1">Verdadero</button>
+        <button class="btn f" type="button" data-a="0">Falso</button>
+        <button class="btn next" id="trapBtn" type="button">otra ↻</button>
+      </div>
+      <div class="ans" id="trapA"></div>
+    </div>
   </section>
 
   <footer>
-    <div>TAI · Bloque IV · supuesto práctico</div>
+    <div>TAI · Bloque IV · supuesto práctico · hecho con 💚 y mucho café ☕</div>
     <div class="k">atajos: pulsa 1–4 para abrir un curso · hay un código secreto 🎮</div>
   </footer>
 </div>
@@ -193,7 +235,7 @@ footer .k{color:var(--muted)}
 <div class="egg" id="egg" role="status"></div>
 
 <script>
-// Línea "tecleada" con los cursos
+// Línea "tecleada"
 (function(){
   const txt = 'linux.html  ws.html  modulares.html  git.html';
   const el = document.getElementById('typed');
@@ -206,7 +248,7 @@ document.querySelectorAll('.prog[data-store]').forEach(el => {
   let S = null;
   try { S = JSON.parse(localStorage.getItem(el.dataset.store) || 'null'); } catch(e){}
   const topics = +el.dataset.topics, total = +el.dataset.q;
-  if (!S){ el.innerHTML = 'Sin empezar · ¡primer commit pendiente!<div class="meter"><i></i></div>'; return; }
+  if (!S){ el.innerHTML = 'Sin empezar · ¡primer commit pendiente! (｡•ᴗ•｡)<div class="meter"><i></i></div>'; return; }
   const read = Object.values(S.read || {}).filter(Boolean).length;
   const qs = Object.values(S.q || {}); let ok = 0, ko = 0; qs.forEach(s => { ok += s.ok || 0; ko += s.ko || 0; });
   const pct = Math.round(100 * read / topics);
@@ -215,6 +257,8 @@ document.querySelectorAll('.prog[data-store]').forEach(el => {
   requestAnimationFrame(() => { el.querySelector('i').style.width = pct + '%'; });
 });
 
+const day = Math.floor(Date.now() / 86400000);
+
 // Comando del día
 const TIPS = [
   ['ls -la', 'Linux · lista todo, también los ocultos, con permisos y propietario.'],
@@ -222,7 +266,7 @@ const TIPS = [
   ['sudo systemctl enable --now nginx', 'Linux · arranca el servicio ya y en cada arranque del sistema.'],
   ['Get-Help Get-Service -Examples', 'PowerShell · los ejemplos de la ayuda: lo más útil para el examen.'],
   ['Get-Service | Where-Object Status -eq Running', 'PowerShell · filtra objetos por una propiedad.'],
-  ['gpupdate /force', 'Windows · vuelve a aplicar todas las directivas de grupo.'],
+  ['gpupdate /force', 'Windows · vuelve a aplicar todas las directivas de grupo (equipo y usuario).'],
   ['ipconfig /all', 'Redes · toda la configuración IP, con DNS, DHCP y MAC.'],
   ['docker run -d --name web -p 8080:80 nginx', 'Docker · -p es ANFITRIÓN:CONTENEDOR. ¡No le des la vuelta!'],
   ['docker compose down -v', 'Docker · para el proyecto y borra también sus volúmenes. Cuidado.'],
@@ -233,10 +277,50 @@ const TIPS = [
   ['git reflog', 'Git · la caja negra: recupera commits "perdidos" tras un reset --hard.'],
   ['git push origin v1.0', 'Git · git push no sube las etiquetas: hay que subirlas aparte.']
 ];
-let tipIdx = new Date().getDate() % TIPS.length;
-function showTip(){ document.getElementById('tipCmd').textContent = '$ ' + TIPS[tipIdx][0]; document.getElementById('tipTxt').textContent = TIPS[tipIdx][1]; }
+let tipIdx = day % TIPS.length;
+function showTip(){
+  document.getElementById('tipCmd').textContent = TIPS[tipIdx][0];
+  document.getElementById('tipTxt').textContent = TIPS[tipIdx][1];
+  document.getElementById('cmdN').textContent = (tipIdx + 1) + '/' + TIPS.length;
+}
 document.getElementById('tipBtn').onclick = () => { tipIdx = (tipIdx + 1) % TIPS.length; showTip(); };
 showTip();
+
+// Trampa del día: [afirmación, ¿es verdadera?, explicación]
+const TRAPS = [
+  ['git commit -a también incluye los ficheros nuevos que nunca has añadido.', false, 'Git · -a solo prepara los ficheros que Git YA controlaba. Los nuevos necesitan git add.'],
+  ['docker run -p 80:8080 publica el puerto 8080 del equipo.', false, 'Docker · el orden es ANFITRIÓN:CONTENEDOR: el 80 del equipo va al 8080 del contenedor.'],
+  ['El modo por defecto de git reset es --soft.', false, 'Git · el modo por defecto es --mixed: mueve la rama y vacía el área de preparación.'],
+  ['git fetch modifica tu rama local y tus ficheros.', false, 'Git · fetch solo trae y actualiza origin/…; quien integra en tu rama es pull (fetch + merge).'],
+  ['chmod 755 da permiso de escritura al grupo.', false, 'Linux · 7 = rwx (dueño), 5 = r-x (grupo), 5 = r-x (otros). El grupo no escribe.'],
+  ['En PowerShell, -eq distingue mayúsculas y minúsculas.', false, 'PowerShell · -eq NO las distingue. Para distinguirlas se usa -ceq.'],
+  ['git push sube también las etiquetas.', false, 'Git · hay que subirlas aparte: git push origin v1.0 o git push --tags.'],
+  ['Un Service de Kubernetes de tipo ClusterIP es accesible desde fuera del clúster.', false, 'Kubernetes · ClusterIP solo es accesible dentro del clúster; desde fuera, NodePort, LoadBalancer o Ingress/Gateway.'],
+  ['docker compose down borra los volúmenes con nombre.', false, 'Docker · solo los borra con -v (--volumes). Sin -v, los datos se conservan.'],
+  ['git revert borra el commit original de la historia.', false, 'Git · revert crea un commit NUEVO que deshace el otro; ambos quedan en la historia.'],
+  ['kubectl apply -f app.yaml es la forma declarativa de gestionar recursos.', true, 'Kubernetes · ¡Correcto! apply es declarativo; create es imperativo.'],
+  ['Una red /26 tiene 64 direcciones y 62 hosts utilizables.', true, 'Redes · ¡Correcto! 2^6 = 64, menos red y broadcast = 62.'],
+  ['ipconfig /renew libera la dirección IP obtenida por DHCP.', false, 'Redes · la libera /release; /renew pide una nueva concesión.'],
+  ['Añadir un fichero ya controlado al .gitignore hace que Git deje de controlarlo.', false, 'Git · .gitignore no afecta a lo ya controlado: primero git rm --cached fichero.'],
+  ['systemctl enable nginx arranca el servicio en ese mismo momento.', false, 'Linux · enable solo lo activa para el arranque. Para arrancarlo ya: start, o enable --now.'],
+  ['Docker Compose v2 se usa como "docker compose", sin guion.', true, 'Docker · ¡Correcto! docker-compose (v1, con guion) ya no recibe actualizaciones.'],
+  ['git branch nueva crea la rama y te cambia a ella.', false, 'Git · solo la crea. Para crear y cambiar: git switch -c nueva (o git checkout -b nueva).'],
+  ['En Linux, las contraseñas (en hash) de los usuarios se guardan en /etc/shadow.', true, 'Linux · ¡Correcto! /etc/passwd tiene los usuarios y /etc/shadow los hashes.']
+];
+let trapIdx = (day * 7) % TRAPS.length;
+function showTrap(){
+  document.getElementById('trapQ').textContent = '«' + TRAPS[trapIdx][0] + '»';
+  document.getElementById('trapN').textContent = (trapIdx + 1) + '/' + TRAPS.length;
+  const a = document.getElementById('trapA'); a.className = 'ans'; a.textContent = '';
+}
+document.querySelectorAll('.btn[data-a]').forEach(b => b.onclick = () => {
+  const t = TRAPS[trapIdx], ok = (b.dataset.a === '1') === t[1];
+  const a = document.getElementById('trapA');
+  a.className = 'ans ' + (ok ? 'ok' : 'ko');
+  a.textContent = (ok ? '✔ ¡Bien visto! ' : '✘ ¡Te ha pillado! ') + 'Es ' + (t[1] ? 'VERDADERO' : 'FALSO') + '. ' + t[2];
+});
+document.getElementById('trapBtn').onclick = () => { trapIdx = (trapIdx + 1) % TRAPS.length; showTrap(); };
+showTrap();
 
 // Atajos 1-4
 const cards = [...document.querySelectorAll('.card')];
@@ -255,7 +339,7 @@ document.addEventListener('keydown', e => {
   if (kp === K.length){
     kp = 0;
     const egg = document.getElementById('egg');
-    egg.textContent = '> sudo aprobar --oposicion TAI ... [ OK ]  +30 de vida 🎮';
+    egg.textContent = '> sudo aprobar --oposicion TAI ... [ OK ] ✨ +30 de vida 🎮';
     egg.classList.add('show'); setTimeout(() => egg.classList.remove('show'), 3500);
   }
 });
